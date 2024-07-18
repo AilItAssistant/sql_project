@@ -6,6 +6,8 @@ import { accommodations } from "./routes/accommodations.routes.mjs";
 
 import { alumnos } from "./routes/alumnos.routes.mjs";
 
+import { exam } from "./routes/pdf.routes.mjs";
+
 const app = express();
 
 //? MIDDLEWARES
@@ -22,6 +24,8 @@ app.use(
 
 app.use("/api/accommodations", accommodations);
 
-app.use("/api/alumnos", alumnos)
+app.use("/api/alumnos", alumnos);
+
+app.use("/api/pdf", exam);
 
 export default app;
