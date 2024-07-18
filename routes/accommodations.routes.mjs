@@ -10,3 +10,4 @@ export const accommodations = Router();
 //?GET ALL ACCOMMODATIONS
 
 accommodations.get("/", getAccommodations);
+

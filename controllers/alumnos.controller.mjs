@@ -1,9 +1,9 @@
 import "dotenv/config";
 import mariadb from "mariadb";
 
-//?GET ALL ACCOMMODATIOS accommodations.get("/", getAccommodations);
+//?GET ALL ALUMNOS alumnos.get("/", getAlumnos);
 
-export const getAccommodations = async (req, res) => {
+export const getAlumnos = async (req, res) => {
     let conn;
     const pool = mariadb.createPool({
         host: process.env.SQL_HOST,
@@ -14,7 +14,10 @@ export const getAccommodations = async (req, res) => {
     });
     try {
         conn = await pool.getConnection();
-        let rows = await conn.query("select * from accommodation");
+        let rows = await conn.query("select * from alumnos");
+        rows.forEach(element => {
+            element.telefono_alumno = element.telefono_alumno.toString()
+        });
         res.json(rows);
     } catch (error) {
         console.log(error);

@@ -4,6 +4,8 @@ import cors from "cors";
 
 import { accommodations } from "./routes/accommodations.routes.mjs";
 
+import { alumnos } from "./routes/alumnos.routes.mjs";
+
 const app = express();
 
 //? MIDDLEWARES
@@ -19,5 +21,7 @@ app.use(
 //? ROUTES
 
 app.use("/api/accommodations", accommodations);
+
+app.use("/api/alumnos", alumnos)
 
 export default app;
