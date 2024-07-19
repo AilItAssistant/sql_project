@@ -3,7 +3,7 @@ import { Router } from "express";
 import {
     getAlumnos,
     
-} from "../controllers/alumnos/alumnos.controller.mjs";
+} from "../../controllers/alumnos/alumnos.controller.mjs";
 
 export const alumnos = Router();
 
