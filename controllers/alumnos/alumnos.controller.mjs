@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { pool } from "../index.mjs"
+import { pool } from "../../index.mjs"
 
 //?GET ALL ALUMNOS alumnos.get("/", getAlumnos);
 

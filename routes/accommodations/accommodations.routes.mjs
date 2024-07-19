@@ -3,7 +3,7 @@ import { Router } from "express";
 import {
     getAccommodations,
     
-} from "../controllers/accommodations.controller.mjs";
+} from "../controllers/accommodations/accommodations.controller.mjs";
 
 export const accommodations = Router();
 
