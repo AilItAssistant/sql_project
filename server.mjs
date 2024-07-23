@@ -6,9 +6,7 @@ import { accommodations } from "./routes/accommodations/accommodations.routes.mj
 
 import { alumnos } from "./routes/alumnos/alumnos.routes.mjs";
 
-import { examPdf } from "./routes/exams/examPdf.routes.mjs";
-
-import { examsA1 } from "./routes/exams/examsA1.routes.mjs";
+import { exams } from "./routes/exams/exams.routes.mjs";
 
 const app = express();
 
@@ -30,10 +28,7 @@ app.use("/api/accommodations", accommodations);
 //ALUMNOS
 app.use("/api/alumnos", alumnos);
 
-//EXAMS PDF
-app.use("/api/pdf", examPdf);
-
-//EXAMS A1
-app.use("/api/examsA1", examsA1);
+//EXAMS
+app.use("/api/exams", exams);
 
 export default app;
