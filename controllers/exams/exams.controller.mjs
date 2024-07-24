@@ -2762,13 +2762,13 @@ export const postQuestions = async (req, res) => {
         add.responses.push({letter: "E", response: req.body.responseE})
       }
 
-      //exams[req.body.block].question.push(add)
-    
-      //exams[req.body.block].question = Object.assign({add}, exams[req.body.block]);
-    
-    //console.log(exams[req.body.block]);
-    //console.log(add.responses)
-    console.log(exams)
+      for(let i = 0; exams.length > i; i++){
+        if(exams[i].name === req.body.block){
+          exams[i].question.push(add)
+        }
+      }
+
+    console.log(exams[0].question.responses);
 
     res.json(add)
   } catch (error) {
@@ -2779,7 +2779,6 @@ export const postQuestions = async (req, res) => {
 }
 
 /*export const postExamsA1 = async (req, res) => {
-
 
   function buildPDF(dataCallback, endCallback) {
     const doc = new PDFDocument();
