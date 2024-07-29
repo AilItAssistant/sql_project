@@ -3,7 +3,8 @@ import { Router } from "express";
 import {
     getExams,
     postQuestions,
-    deleteQuestions
+    deleteQuestions,
+    editQuestions
     
 } from "../../controllers/exams/exams.controller.mjs";
 
@@ -19,4 +20,8 @@ exams.post("/", postQuestions);
 
 //? DELETE QUESTIONS
 
-exams.put("/", deleteQuestions)
+exams.put("/", deleteQuestions);
+
+//? EDIT QUESTIONS
+
+exams.put("/edit", editQuestions)

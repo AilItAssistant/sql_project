@@ -2778,7 +2778,7 @@ export const postQuestions = async (req, res) => {
   }
 };
 
-//? ADD QUESTIONS
+//? DELETE QUESTIONS
 
 export const deleteQuestions = async (req, res) => {
   let conn;
@@ -5529,7 +5529,22 @@ export const editQuestions = async (req, res) => {
       ],
     },
   ];
+  
+  try {
+    conn = await pool.getConnection();
+    let rows = await conn.query("select * from alumnos");
+    console.log(req.body);
 
+    
+
+    res.json(exams);
+} catch (error) {
+    console.log(error);
+} finally {
+    if (conn) return conn.end();
+}
+
+/*
   try {
     conn = await pool.getConnection();
     let rows = await conn.query("select * from accommodation");
@@ -5582,7 +5597,7 @@ export const editQuestions = async (req, res) => {
     console.log(error);
   } finally {
     if (conn) return conn.end();
-  }
+  }*/
 };
 
 
