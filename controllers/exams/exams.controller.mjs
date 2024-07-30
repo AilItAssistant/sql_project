@@ -5600,6 +5600,30 @@ export const editQuestions = async (req, res) => {
   }*/
 };
 
+//? DELETE UNVALIDATED QUESTION
+
+export const deleteUnvalidated = async (req, res) => {
+
+};
+
+//? EDIT UNVALIDATED QUESTIONS
+
+export const editUnvalidated = async (req, res) => {
+
+};
+
+//? VALIDATED QUESTIONS
+
+export const validatedQuestion = async (req, res) => {
+
+};
+
+//? GET UNVALIDATED ALL EXAMS
+
+export const getUnvalidated = async (req, res) => {
+  
+};
+
 
 /*export const postExamsA1 = async (req, res) => {
 

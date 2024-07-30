@@ -4,13 +4,17 @@ import {
     getExams,
     postQuestions,
     deleteQuestions,
-    editQuestions
+    editQuestions,
+    deleteUnvalidated,
+    editUnvalidated,
+    validatedQuestion,
+    getUnvalidated
     
 } from "../../controllers/exams/exams.controller.mjs";
 
 export const exams = Router();
 
-//?GET ALL EXAMS
+//? GET ALL EXAMS
 
 exams.get("/", getExams);
 
@@ -24,4 +28,20 @@ exams.put("/", deleteQuestions);
 
 //? EDIT QUESTIONS
 
-exams.put("/edit", editQuestions)
+exams.put("/edit", editQuestions);
+
+//? DELETE UNVALIDATED QUESTION
+
+//exams.put("/delete", deleteUnvalidated);
+
+//? EDIT UNVALIDATED QUESTIONS
+
+//exams.put("/editUnvalidated", editUnvalidated);
+
+//? VALIDATED QUESTIONS
+
+//exams.put("/validate", validatedQuestion);
+
+//? GET UNVALIDATED ALL EXAMS
+
+//exams.get("/unvalidated", getUnvalidated);
