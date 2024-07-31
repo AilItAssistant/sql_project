@@ -8,7 +8,8 @@ import {
     deleteUnvalidated,
     editUnvalidated,
     validatedQuestion,
-    getUnvalidated
+    getUnvalidated,
+    getOnlineExam
     
 } from "../../controllers/exams/exams.controller.mjs";
 
@@ -32,16 +33,20 @@ exams.put("/edit", editQuestions);
 
 //? DELETE UNVALIDATED QUESTION
 
-//exams.put("/delete", deleteUnvalidated);
+exams.put("/delete", deleteUnvalidated);
 
 //? EDIT UNVALIDATED QUESTIONS
 
-//exams.put("/editUnvalidated", editUnvalidated);
+exams.put("/editUnvalidated", editUnvalidated);
 
 //? VALIDATED QUESTIONS
 
-//exams.put("/validate", validatedQuestion);
+exams.put("/validate", validatedQuestion);
 
 //? GET UNVALIDATED ALL EXAMS
 
-//exams.get("/unvalidated", getUnvalidated);
+exams.get("/unvalidated", getUnvalidated);
+
+//? GET EXAM BY STUDENT ID
+
+exams.get("/onlineExam", getOnlineExam);

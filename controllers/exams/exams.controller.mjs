@@ -5624,6 +5624,9 @@ export const getUnvalidated = async (req, res) => {
   
 };
 
+export const getOnlineExam = async (req, res) => {
+  
+};
 
 /*export const postExamsA1 = async (req, res) => {
 
