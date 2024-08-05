@@ -4,7 +4,7 @@ import "dotenv/config";
 import app from "./server.mjs";
 
 app.listen(4000, () => {
-    console.log(`Server running at http://localhost:4000`);
+    console.log(`Server running at http://127.0.0.1:4000`);
     });
 
 export const pool = mariadb.createPool({
