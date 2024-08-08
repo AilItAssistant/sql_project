@@ -29,4 +29,25 @@ app.use("/api/alumnos", alumnos);
 //EXAMS
 app.use("/api/exams", exams);
 
+//STRUCTURE
+//app.use("/api/structure", structure);
+
+//STUDENTS
+//app.use("/api/students", students);
+
+//TEACHERS
+//app.use("/api/teachers", teachers);
+
+//USERS
+//app.use("/api/users", users);
+
+//QUESTIONS
+//app.use("/api/questions", questions);
+
+//CLASSES
+//app.use("/api/classes", classes);
+
+//COMPLETE EXAMS
+//app.use("/api/completeExams", completeExams);
+
 export default app;
