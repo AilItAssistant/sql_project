@@ -7,10 +7,13 @@ export const getAlumnos = async (req, res) => {
     let conn;
     try {
         conn = await pool.getConnection();
-        let rows = await conn.query("select * from alumnos");
+        let rows = await conn.query("SELECT * from students");
         rows.forEach(element => {
-            element.telefono_alumno = element.telefono_alumno.toString()
+            element.id = element.id.toString();
+            element.class_id = element.class_id.toString();
         });
+        console.log(rows)
+        
         res.json(rows);
     } catch (error) {
         console.log(error);
