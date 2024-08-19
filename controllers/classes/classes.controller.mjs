@@ -11,13 +11,10 @@ export const getClasses = async (req, res) => {
         rows.forEach(element => {
             element.class_id = element.class_id.toString();
         });
-
         let response = [];
-
         for(let i = 0; rows.length > i; i++) {
             let x;
             if(i >= 1) {x = i - 1;} else {x = 0;}
-
             if(i === 0 || rows[i].class_id !== rows[x].class_id){
                 
                 let add = {
@@ -57,8 +54,6 @@ export const getClasses = async (req, res) => {
                 response[response.length -1].students.push(add);
             };
         };
-        console.log(response)
-        
         res.json(response);
     } catch (error) {
         console.log(error);

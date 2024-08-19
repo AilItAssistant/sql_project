@@ -48,7 +48,6 @@ export const getTeachers = async (req, res) => {
                 response[response.length -1].classes.push(add);
             };
         };
-        
         res.json(response);
     } catch (error) {
         console.log(error);
