@@ -6,7 +6,7 @@ import { accommodations } from "./routes/accommodations/accommodations.routes.mj
 import { alumnos } from "./routes/alumnos/alumnos.routes.mjs";
 import { exams } from "./routes/exams/exams.routes.mjs";
 import { teachers } from "./routes/teachers/teachers.routes.mjs";
-//import { classes } from "./routes/classes/classes.routes.mjs";
+import { classes } from "./routes/classes/classes.routes.mjs";
 
 const app = express();
 
@@ -47,7 +47,7 @@ app.use("/api/teachers", teachers);
 //app.use("/api/questions", questions);
 
 //CLASSES
-//app.use("/api/classes", classes);
+app.use("/api/classes", classes);
 
 //COMPLETE EXAMS
 //app.use("/api/completeExams", completeExams);
