@@ -5,6 +5,8 @@ import cors from "cors";
 import { accommodations } from "./routes/accommodations/accommodations.routes.mjs";
 import { alumnos } from "./routes/alumnos/alumnos.routes.mjs";
 import { exams } from "./routes/exams/exams.routes.mjs";
+import { teachers } from "./routes/teachers/teachers.routes.mjs";
+//import { classes } from "./routes/classes/classes.routes.mjs";
 
 const app = express();
 
@@ -36,7 +38,7 @@ app.use("/api/exams", exams);
 //app.use("/api/students", students);
 
 //TEACHERS
-//app.use("/api/teachers", teachers);
+app.use("/api/teachers", teachers);
 
 //USERS
 //app.use("/api/users", users);
