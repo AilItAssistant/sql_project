@@ -33,11 +33,6 @@ export const postStatements = async (req, res) => {
         console.log(req.body);
         conn = await pool.getConnection();
         let rows = await conn.query(`INSERT INTO statements (content, skill_id, text, score, level_id) VALUES ('${req.body.statement}', ${req.body.skills}, '${req.body.text}', ${req.body.puntuation}, ${req.body.level});`);
-        // rows.forEach(element => {
-        //     element.id = element.id.toString();
-        //     element.exam_id = element.exam_id.toString();
-        //     element.skill_id = element.skill_id.toString();
-        // });
         console.log(rows)
         
         res.json(200);
