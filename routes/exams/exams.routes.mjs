@@ -2,12 +2,6 @@ import { Router } from "express";
 
 import {
     getExams,
-    postQuestions,
-    deleteQuestions,
-    editQuestions,
-    deleteUnvalidated,
-    editUnvalidated,
-    validatedQuestion,
     getUnvalidated,
     getOnlineExam
     

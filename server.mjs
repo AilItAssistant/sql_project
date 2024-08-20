@@ -6,6 +6,10 @@ import { alumnos } from "./routes/alumnos/alumnos.routes.mjs";
 import { exams } from "./routes/exams/exams.routes.mjs";
 import { teachers } from "./routes/teachers/teachers.routes.mjs";
 import { classes } from "./routes/classes/classes.routes.mjs";
+import { questions } from "./routes/questions/questions.routes.mjs";
+import { statements } from "./routes/stataments/statements.routes.mjs";
+import { levels } from "./routes/level/level.routes.mjs";
+import { skills } from "./routes/skill/skill.routes.mjs";
 
 const app = express();
 
@@ -27,23 +31,29 @@ app.use("/api/alumnos", alumnos);
 //EXAMS
 app.use("/api/exams", exams);
 
-//STRUCTURE
-//app.use("/api/structure", structure);
+//SKILLS
+app.use("/api/skills", skills)
 
-//STUDENTS
-//app.use("/api/students", students);
+//LEVELS
+app.use("/api/levels", levels);
 
 //TEACHERS
 app.use("/api/teachers", teachers);
 
-//USERS
-//app.use("/api/users", users);
-
 //QUESTIONS
-//app.use("/api/questions", questions);
+app.use("/api/questions", questions);
+
+//STATEMENTS
+app.use("/api/statements", statements)
 
 //CLASSES
 app.use("/api/classes", classes);
+
+//STRUCTURE
+//app.use("/api/structure", structure);
+
+//USERS
+//app.use("/api/users", users);
 
 //COMPLETE EXAMS
 //app.use("/api/completeExams", completeExams);
