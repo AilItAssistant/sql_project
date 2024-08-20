@@ -2,7 +2,6 @@ import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 
-import { accommodations } from "./routes/accommodations/accommodations.routes.mjs";
 import { alumnos } from "./routes/alumnos/alumnos.routes.mjs";
 import { exams } from "./routes/exams/exams.routes.mjs";
 import { teachers } from "./routes/teachers/teachers.routes.mjs";
@@ -21,9 +20,6 @@ app.use(
 );
 
 //? ROUTES
-
-//ACOMODATIONS
-app.use("/api/accommodations", accommodations);
 
 //ALUMNOS
 app.use("/api/alumnos", alumnos);

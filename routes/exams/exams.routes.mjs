@@ -19,30 +19,6 @@ export const exams = Router();
 
 exams.get("/", getExams);
 
-//? ADD QUESTIONS
-
-exams.post("/", postQuestions);
-
-//? DELETE QUESTIONS
-
-exams.put("/", deleteQuestions);
-
-//? EDIT QUESTIONS
-
-exams.put("/edit", editQuestions);
-
-//? DELETE UNVALIDATED QUESTION
-
-exams.put("/delete", deleteUnvalidated);
-
-//? EDIT UNVALIDATED QUESTIONS
-
-exams.put("/editUnvalidated", editUnvalidated);
-
-//? VALIDATED QUESTIONS
-
-exams.put("/validate", validatedQuestion);
-
 //? GET UNVALIDATED ALL EXAMS
 
 exams.get("/unvalidated", getUnvalidated);
