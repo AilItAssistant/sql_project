@@ -9,14 +9,34 @@ export const getStatements = async (req, res) => {
     try {
         conn = await pool.getConnection();
         let rows = await conn.query("select * from statements ;");
-        console.log(rows)
         rows.forEach(element => {
             element.id = element.id.toString();
             element.exam_id = element.exam_id.toString();
             element.skill_id = element.skill_id.toString();
+            element.level_id = element.level_id.toString();
         });
-        console.log(rows)
         
+        res.json(rows);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        if (conn) return conn.end();
+    }
+};
+
+//?GET STATEMENTS BY ID
+
+export const getStatementsById = async (req, res) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        let rows = await conn.query(`SELECT * FROM statements WHERE id = ${req.params.statementId};`);
+        rows.forEach(element => {
+            element.id = element.id.toString();
+            element.exam_id = element.exam_id.toString();
+            element.skill_id = element.skill_id.toString();
+            element.level_id = element.level_id.toString();
+        });
         res.json(rows);
     } catch (error) {
         console.log(error);

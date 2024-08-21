@@ -12,7 +12,6 @@ export const getLevels = async (req, res) => {
         rows.forEach(element => {
             element.id = element.id.toString();
         });
-        console.log(rows)
         
         res.json(rows);
     } catch (error) {
