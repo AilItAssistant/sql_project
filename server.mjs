@@ -10,6 +10,7 @@ import { questions } from "./routes/questions/questions.routes.mjs";
 import { statements } from "./routes/stataments/statements.routes.mjs";
 import { levels } from "./routes/level/level.routes.mjs";
 import { skills } from "./routes/skill/skill.routes.mjs";
+import { blocks } from "./routes/blocks/blocks.routes.mjs";
 
 const app = express();
 
@@ -48,6 +49,9 @@ app.use("/api/statements", statements)
 
 //CLASSES
 app.use("/api/classes", classes);
+
+//STRUCTURE
+app.use("/api/blocks", blocks);
 
 //STRUCTURE
 //app.use("/api/structure", structure);
