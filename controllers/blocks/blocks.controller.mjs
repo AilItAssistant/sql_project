@@ -12,7 +12,6 @@ export const getBlocks = async (req, res) => {
             element.id = element.id.toString();
             element.skill_id = element.skill_id.toString();
         });
-        
         res.json(rows);
     } catch (error) {
         console.log(error);

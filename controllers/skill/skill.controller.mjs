@@ -11,8 +11,8 @@ export const getSkills = async (req, res) => {
         
         rows.forEach(element => {
             element.id = element.id.toString();
+            if(element.level_id){element.level_id = element.level_id.toString();}
         });
-        
         res.json(rows);
     } catch (error) {
         console.log(error);
