@@ -1,6 +1,5 @@
 import "dotenv/config";
-import { pool } from "../../index.mjs"
-
+import { pool } from "../../index.mjs";
 
 //?GET ALL STATEMENTS
 
@@ -9,13 +8,19 @@ export const getStatements = async (req, res) => {
     try {
         conn = await pool.getConnection();
         let rows = await conn.query("select * from statements ;");
-        rows.forEach(element => {
+        rows.forEach((element) => {
             element.id = element.id.toString();
-            if(element.exam_id){element.exam_id = element.exam_id.toString();}
-            if(element.skill_id){element.skill_id = element.skill_id.toString();}
-            if(element.level_id){element.level_id = element.level_id.toString();}
+            if (element.exam_id) {
+                element.exam_id = element.exam_id.toString();
+            }
+            if (element.skill_id) {
+                element.skill_id = element.skill_id.toString();
+            }
+            if (element.level_id) {
+                element.level_id = element.level_id.toString();
+            }
         });
-        
+
         res.json(rows);
     } catch (error) {
         console.log(error);
@@ -30,8 +35,10 @@ export const getStatementsById = async (req, res) => {
     let conn;
     try {
         conn = await pool.getConnection();
-        let rows = await conn.query(`SELECT * FROM statements WHERE id = ${req.params.statementId};`);
-        rows.forEach(element => {
+        let rows = await conn.query(
+            `SELECT * FROM statements WHERE id = ${req.params.statementId};`
+        );
+        rows.forEach((element) => {
             element.id = element.id.toString();
             element.exam_id = element.exam_id.toString();
             element.skill_id = element.skill_id.toString();
@@ -52,9 +59,11 @@ export const postStatements = async (req, res) => {
     try {
         console.log(req.body);
         conn = await pool.getConnection();
-        let rows = await conn.query(`INSERT INTO statements (content, skill_id, text, score, level_id) VALUES ('${req.body.statement}', ${req.body.skills}, '${req.body.text}', ${req.body.puntuation}, ${req.body.level});`);
-        console.log(rows)
-        
+        let rows = await conn.query(
+            `INSERT INTO statements (content, skill_id, text, score, level_id) VALUES ('${req.body.statement}', ${req.body.skills}, '${req.body.text}', ${req.body.puntuation}, ${req.body.level});`
+        );
+        console.log(rows);
+
         res.json(200);
     } catch (error) {
         console.log(error);
@@ -69,17 +78,20 @@ export const getStatementsAndDetails = async (req, res) => {
     let conn;
     try {
         conn = await pool.getConnection();
-        let rows = await conn.query("select s.id as statement_id, s.content as statement_content, q.id as question_id, q.statement_id as question_to_statement_id, q.content as question_content, a.id as answer_id, a.question_id as answer_to_question_id, a.content as answer_content, a.is_correct from statements s left join questions q on s.id = q.statement_id left join answers a on q.id = a.question_id order by s.id, q.id, a.id; ");
-        rows.forEach(element => {
-            if(element.statement_id){element.statement_id = element.statement_id.toString();}
-            if(element.question_id){element.question_id = element.question_id.toString();}
-            if(element.answer_id){element.answer_id = element.answer_id.toString();}
-            if(element.question_to_statement_id){element.question_to_statement_id = element.question_to_statement_id.toString();}
-            if(element.answer_to_question_id){element.answer_to_question_id = element.answer_to_question_id.toString();}
-        });
-        console.log(rows)
+        let rows = await conn.query(
+            `SELECT CONCAT('[',GROUP_CONCAT(CONCAT('{','"statement_id": ', s.id, ', ','"statement_content": "', REPLACE(s.content, '"', '\\"'), '", ','"questions": [',IFNULL(q.questions, ''),']','}')ORDER BY s.id SEPARATOR ', '),']') AS result FROM statements s LEFT JOIN (SELECT q.statement_id,GROUP_CONCAT(CONCAT('{','"question_id": ', q.id, ', ','"question_to_statement_id": ', q.statement_id, ', ','"question_content": "', REPLACE(q.content, '"', '\\"'), '", ','"answers": [', IFNULL(a.answers, ''), ']','}')ORDER BY q.id SEPARATOR ', ') AS questions FROM questions q LEFT JOIN (SELECT a.question_id,GROUP_CONCAT(CONCAT('{','"answer_id": ', a.id, ', ','"answer_to_question_id": ', a.question_id, ', ','"answer_content": "', REPLACE(a.content, '"', '\\"'), '", ','"is_correct": ', a.is_correct,'}')ORDER BY a.id SEPARATOR ', ') AS answers FROM answers a GROUP BY a.question_id) a ON q.id = a.question_id GROUP BY q.statement_id) q ON s.id = q.statement_id GROUP BY s.id; `
+        );
 
-        res.json(rows);
+        let resp = [];
+
+        for (let i = 0; rows.length > i; i++) {
+            console.log(rows[i].result);
+            let comodin = JSON.parse(rows[i].result);
+            console.log(comodin);
+            resp.push(comodin[0]);
+        }
+
+        res.json(resp);
     } catch (error) {
         console.log(error);
     } finally {
