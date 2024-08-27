@@ -86,7 +86,6 @@ export const getStatementsAndDetails = async (req, res) => {
             let comodin = JSON.parse(rows[i].result);
             resp.push(comodin[0]);
         }
-
         res.json(resp);
     } catch (error) {
         console.log(error);
