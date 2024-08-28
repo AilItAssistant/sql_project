@@ -12,7 +12,7 @@ export const statements = Router();
 //?GET ALL STATEMENTS
 statements.get("/", getStatements);
 
-//?POST STATEMENTS
+//?GET STATEMENTS AND DETAILS
 statements.get("/details", getStatementsAndDetails);
 
 //?GET STATEMENTS BY ID

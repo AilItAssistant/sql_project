@@ -8,5 +8,7 @@ import {
 export const skills = Router();
 
 //?GET ALL SKILLS
-
 skills.get("/", getSkills);
+
+//?ACTIVATE AND DESACTIVATE SKILLS
+//skill.
