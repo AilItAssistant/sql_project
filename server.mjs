@@ -11,6 +11,7 @@ import { statements } from "./routes/stataments/statements.routes.mjs";
 import { levels } from "./routes/level/level.routes.mjs";
 import { skills } from "./routes/skill/skill.routes.mjs";
 import { blocks } from "./routes/blocks/blocks.routes.mjs";
+import { users } from "./routes/users/users.routes.mjs";
 
 const app = express();
 
@@ -57,7 +58,7 @@ app.use("/api/blocks", blocks);
 //app.use("/api/structure", structure);
 
 //USERS
-//app.use("/api/users", users);
+app.use("/api/users", users);
 
 //COMPLETE EXAMS
 //app.use("/api/completeExams", completeExams);
