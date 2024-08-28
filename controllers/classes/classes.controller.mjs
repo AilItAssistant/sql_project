@@ -7,7 +7,7 @@ export const getClasses = async (req, res) => {
     let conn;
     try {
         conn = await pool.getConnection();
-        let rows = await conn.query("select c.id as class_id, c.name as class_name, c.level as class_level, c.schedule, c.room_number, t.name as teacher_name, t.last_name as teacher_last_name, coalesce(s.name, 'No tiene alumnos') as student_name, coalesce(s.last_name, '') as student_last_name, coalesce(s.phone_number, '') as student_phone, coalesce(s.enrollment_date, '') as enrollment_date, coalesce(s.city, '') as student_city, coalesce(s.id, '') as student_id, coalesce(s.email, '') as student_email from classes c left join teachers t on c.teacher_id = t.id left join student_classes sc on c.id = sc.class_id left join students s on sc.student_id = s.id order by c.id, s.id; ");
+        let rows = await conn.query("SELECT c.id AS class_id, c.name AS class_name, c.level AS class_level, c.schedule, c.room_number, c.status AS class_status, t.name AS teacher_name, t.last_name AS teacher_last_name, t.status AS teacher_status, COALESCE(s.name, 'No tiene alumnos') AS student_name, COALESCE(s.last_name, '') AS student_last_name, COALESCE(s.phone_number, '') AS student_phone, COALESCE(s.enrollment_date, '') AS enrollment_date, COALESCE(s.city, '') AS student_city, COALESCE(s.id, '') AS student_id, COALESCE(s.email, '') AS student_email, COALESCE(s.status, 'N/A') AS student_status FROM classes c LEFT JOIN teachers t ON c.teacher_id = t.id LEFT JOIN student_classes sc ON c.id = sc.class_id LEFT JOIN students s ON sc.student_id = s.id ORDER BY c.id, s.id;  ");
         rows.forEach(element => {
             element.class_id = element.class_id.toString();
         });
@@ -26,6 +26,7 @@ export const getClasses = async (req, res) => {
                     class_level: rows[i].class_level,
                     teacher_name: rows[i].teacher_name,
                     teacher_last_name: rows[i].teacher_last_name,
+                    class_status: rows[i].class_status,
                     students: []
                 }
                 response.push(add);

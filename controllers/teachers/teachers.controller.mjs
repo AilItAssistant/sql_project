@@ -7,7 +7,7 @@ export const getTeachers = async (req, res) => {
     let conn;
     try {
         conn = await pool.getConnection();
-        let rows = await conn.query("select t.id as teacher_id, t.name as teacher_name, t.last_name as teacher_last_name, t.phone_number as teacher_phone_number, t.email, t.department, coalesce(c.id, 'N/A') as class_id, coalesce(c.name, 'No tiene clase') as class_name, coalesce(c.level, 'N/A') as class_level from teachers t left join classes c on t.id = c.teacher_id order by t.id, c.id; ");
+        let rows = await conn.query("SELECT t.id AS teacher_id, t.name AS teacher_name, t.last_name AS teacher_last_name, t.phone_number AS teacher_phone_number, t.email, t.department, t.status AS teacher_status, COALESCE(c.id, 'N/A') AS class_id, COALESCE(c.name, 'No tiene clase') AS class_name, COALESCE(c.level, 'N/A') AS class_level FROM teachers t LEFT JOIN classes c ON t.id = c.teacher_id ORDER BY t.id, c.id; ");
         rows.forEach(element => {
             element.teacher_id = element.teacher_id.toString();
         });
@@ -26,6 +26,7 @@ export const getTeachers = async (req, res) => {
                     last_name: rows[i].teacher_last_name,
                     name: rows[i].teacher_name,
                     departament: rows[i].departament,
+                    teacher_status: rows[i].teacher_status,
                     classes: []
                 };
                 response.push(add);
