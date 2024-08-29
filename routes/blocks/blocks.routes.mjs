@@ -3,7 +3,9 @@ import { Router } from "express";
 import {
     getBlocks,
     editBlock,
-    statusBlock
+    statusBlock,
+    addBlock,
+    deleteBlock
 } from "../../controllers/blocks/blocks.controller.mjs";
 
 export const blocks = Router();
@@ -16,3 +18,9 @@ blocks.put("/edit", editBlock);
 
 //?BLOCKS CHANGE STATUS
 blocks.put("/status", statusBlock);
+
+//?ADD BLOCKS 
+blocks.post("/add", addBlock);
+
+//?DELETE BLOCKS
+blocks.put("/delete", deleteBlock);
