@@ -2,8 +2,8 @@ import { Router } from "express";
 
 import {
     getLevels,
-    editLevel
-    
+    editLevel,
+    statusLevel
 } from "../../controllers/level/level.controller.mjs";
 
 export const levels = Router();
@@ -14,3 +14,6 @@ levels.get("/", getLevels);
 
 //?EDIT LEVEL
 levels.put("/edit", editLevel);
+
+//?LEVEL CHANGE STATUS
+levels.put("/status", statusLevel);
