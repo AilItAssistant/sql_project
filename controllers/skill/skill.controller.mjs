@@ -94,7 +94,7 @@ export const searchSkill = async (req, res) => {
             });
             res.json(rows);
         } else if( req.body.level !== "" && req.body.name !== "" ){
-            let rows = await conn.query(`select s.id as id, s.name as name, s.status as status, s.level_id as level_id, l.name as level_name from skills s left join levels l on s.level_id = l.id WHERE s.name LIKE '${req.body.name}%' OR level_id = ${req.body.level};`);
+            let rows = await conn.query(`select s.id as id, s.name as name, s.status as status, s.level_id as level_id, l.name as level_name from skills s left join levels l on s.level_id = l.id WHERE s.name LIKE '${req.body.name}%' AND level_id = ${req.body.level};`);
             rows.forEach(element => {
                 element.id = element.id.toString();
                 if(element.level_id){element.level_id = element.level_id.toString();}
