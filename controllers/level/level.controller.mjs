@@ -69,3 +69,21 @@ export const deleteLevel = async (req, res) => {
         if (conn) return conn.end();
     }
 };
+
+export const searchLevel = async (req, res) => {
+    let conn;
+    try {
+        console.log(req.body.name)
+        conn = await pool.getConnection();
+        let rows = await conn.query(`SELECT * FROM levels WHERE name LIKE '${req.body.name}%';`);
+        rows.forEach(element => {
+            element.id = element.id.toString();
+        });
+        console.log(rows)
+        res.json(rows);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        if (conn) return conn.end();
+    }
+}

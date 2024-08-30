@@ -5,7 +5,8 @@ import {
     editSkill,
     statusSkill,
     addSkill,
-    deleteSkill
+    deleteSkill,
+    searchSkill
 } from "../../controllers/skill/skill.controller.mjs";
 
 export const skills = Router();
@@ -24,3 +25,6 @@ skills.post("/add", addSkill);
 
 //?DELETE SKILL
 skills.put("/delete", deleteSkill);
+
+//?SEARCH SKILL
+skills.put("/search", searchSkill)

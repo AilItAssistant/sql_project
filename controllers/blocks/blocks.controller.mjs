@@ -62,7 +62,6 @@ export const addBlock = async (req, res) => {
 export const deleteBlock = async (req, res) => {
     let conn;
     try {
-        console.log(req.body)
         conn = await pool.getConnection();
         let rows = await conn.query(`DELETE FROM blocks WHERE id = ${req.body.id};`);
         res.json(200);
@@ -72,3 +71,37 @@ export const deleteBlock = async (req, res) => {
         if (conn) return conn.end();
     }
 };
+
+export const searchBlock = async (req, res) => {
+    let conn;
+    try {
+        console.log(req.body)
+        conn = await pool.getConnection();
+        if ( req.body.name === "" ){
+            let rows = await conn.query(`select b.id as id, b.name as name, b.status as status, b.skill_id as skill_id, s.name as skill_name from blocks b left join skills s on b.skill_id = s.id WHERE skill_id LIKE ${req.body.skill};`);
+            rows.forEach(element => {
+            element.id = element.id.toString();
+            if(element.skill_id){element.skill_id = element.skill_id.toString();}
+        });
+            res.json(rows);
+        } else if( req.body.skill === "" ){
+            let rows = await conn.query(`select b.id as id, b.name as name, b.status as status, b.skill_id as skill_id, s.name as skill_name from blocks b left join skills s on b.skill_id = s.id WHERE b.name LIKE '${req.body.name}%';`);
+            rows.forEach(element => {
+            element.id = element.id.toString();
+            if(element.skill_id){element.skill_id = element.skill_id.toString();}
+        });
+            res.json(rows);
+        } else if( req.body.skill !== "" && req.body.name !== "" ){
+            let rows = await conn.query(`select b.id as id, b.name as name, b.status as status, b.skill_id as skill_id, s.name as skill_name from blocks b left join skills s on b.skill_id = s.id WHERE b.name LIKE '${req.body.name}%' AND skill_id = ${req.body.skill};`);
+            rows.forEach(element => {
+            element.id = element.id.toString();
+            if(element.skill_id){element.skill_id = element.skill_id.toString();}
+        });
+            res.json(rows);
+        }
+    } catch (error) {
+        console.log(error);
+    } finally {
+        if (conn) return conn.end();
+    }
+}

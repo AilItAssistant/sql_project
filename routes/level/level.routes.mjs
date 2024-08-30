@@ -5,7 +5,8 @@ import {
     editLevel,
     statusLevel,
     addLevel,
-    deleteLevel
+    deleteLevel,
+    searchLevel
 } from "../../controllers/level/level.controller.mjs";
 
 export const levels = Router();
@@ -25,3 +26,6 @@ levels.post("/add", addLevel);
 
 //?DELETE LEVEL
 levels.put("/delete", deleteLevel);
+
+//?SEARCH LEVELS
+levels.put("/search", searchLevel)

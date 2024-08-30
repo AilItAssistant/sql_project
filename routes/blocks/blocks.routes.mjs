@@ -5,7 +5,8 @@ import {
     editBlock,
     statusBlock,
     addBlock,
-    deleteBlock
+    deleteBlock,
+    searchBlock
 } from "../../controllers/blocks/blocks.controller.mjs";
 
 export const blocks = Router();
@@ -24,3 +25,6 @@ blocks.post("/add", addBlock);
 
 //?DELETE BLOCKS
 blocks.put("/delete", deleteBlock);
+
+//?SEARCH BLOCKS
+blocks.put("/search", searchBlock)
