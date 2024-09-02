@@ -8,6 +8,7 @@ export const getTeachers = async (req, res) => {
     try {
         conn = await pool.getConnection();
         let rows = await conn.query("SELECT t.id AS teacher_id, t.name AS teacher_name, t.last_name AS teacher_last_name, t.phone_number AS teacher_phone_number, t.email, t.department, t.status AS teacher_status, COALESCE(c.id, 'N/A') AS class_id, COALESCE(c.name, 'No tiene clase') AS class_name, COALESCE(c.level, 'N/A') AS class_level FROM teachers t LEFT JOIN classes c ON t.id = c.teacher_id ORDER BY t.id, c.id; ");
+        console.log(rows)
         rows.forEach(element => {
             element.teacher_id = element.teacher_id.toString();
         });
@@ -25,7 +26,7 @@ export const getTeachers = async (req, res) => {
                     phone_number: rows[i].teacher_phone_number, 
                     last_name: rows[i].teacher_last_name,
                     name: rows[i].teacher_name,
-                    departament: rows[i].departament,
+                    department: rows[i].department,
                     teacher_status: rows[i].teacher_status,
                     classes: []
                 };
@@ -49,6 +50,7 @@ export const getTeachers = async (req, res) => {
                 response[response.length -1].classes.push(add);
             };
         };
+        console.log(response)
         res.json(response);
     } catch (error) {
         console.log(error);
