@@ -105,3 +105,6 @@ export const searchBlock = async (req, res) => {
         if (conn) return conn.end();
     }
 }
+
+
+//SELECT c.id AS class_id, c.name AS class_name, c.level AS class_level, c.schedule, c.room_number, c.status AS class_status, t.name AS teacher_name, t.last_name AS teacher_last_name, t.status AS teacher_status, COALESCE(s.name, 'No tiene alumnos') AS student_name, COALESCE(s.last_name, '') AS student_last_name, COALESCE(s.phone_number, '') AS student_phone, COALESCE(s.enrollment_date, '') AS enrollment_date, COALESCE(s.city, '') AS student_city, COALESCE(s.id, '') AS student_id, COALESCE(s.email, '') AS student_email, COALESCE(s.status, 'N/A') AS student_status FROM classes c LEFT JOIN teachers t ON c.teacher_id = t.id LEFT JOIN student_classes sc ON c.id = sc.class_id LEFT JOIN students s ON sc.student_id = s.id WHERE t.last_name LIKE '%' AND c.room_number = '%' AND c.level = '%' AND c.name = '%' ORDER BY c.id, s.id;
