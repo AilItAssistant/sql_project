@@ -77,14 +77,14 @@ export const searchBlock = async (req, res) => {
     try {
         console.log(req.body)
         conn = await pool.getConnection();
-        if ( req.body.name === "" ){
+        if ( req.body.name === "" || req.body.name === null ){
             let rows = await conn.query(`select b.id as id, b.name as name, b.status as status, b.skill_id as skill_id, s.name as skill_name from blocks b left join skills s on b.skill_id = s.id WHERE skill_id LIKE ${req.body.skill};`);
             rows.forEach(element => {
             element.id = element.id.toString();
             if(element.skill_id){element.skill_id = element.skill_id.toString();}
         });
             res.json(rows);
-        } else if( req.body.skill === "" ){
+        } else if( req.body.skill === ""  || req.body.skill === null ){
             let rows = await conn.query(`select b.id as id, b.name as name, b.status as status, b.skill_id as skill_id, s.name as skill_name from blocks b left join skills s on b.skill_id = s.id WHERE b.name LIKE '${req.body.name}%';`);
             rows.forEach(element => {
             element.id = element.id.toString();

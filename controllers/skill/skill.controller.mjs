@@ -78,14 +78,14 @@ export const searchSkill = async (req, res) => {
     try {
         console.log(req.body)
         conn = await pool.getConnection();
-        if ( req.body.name === "" ){
+        if ( req.body.name === "" || req.body.name === null ){
             let rows = await conn.query(`select s.id as id, s.name as name, s.status as status, s.level_id as level_id, l.name as level_name from skills s left join levels l on s.level_id = l.id WHERE level_id LIKE ${req.body.level};`);
             rows.forEach(element => {
                 element.id = element.id.toString();
                 if(element.level_id){element.level_id = element.level_id.toString();}
             });
             res.json(rows);
-        } else if( req.body.level === "" ){
+        } else if( req.body.level === "" || req.body.level === null ){
             let rows = await conn.query(`select s.id as id, s.name as name, s.status as status, s.level_id as level_id, l.name as level_name from skills s left join levels l on s.level_id = l.id WHERE s.name LIKE '${req.body.name}%';`);
             console.log(req.body)
             rows.forEach(element => {
