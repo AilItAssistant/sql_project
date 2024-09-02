@@ -11,4 +11,4 @@ export const alumnos = Router();
 alumnos.get("/", getAlumnos);
 
 //??GET ALUMNOS 
-alumnos.put("/", filterAlumnos);
+alumnos.put("/filter", filterAlumnos);

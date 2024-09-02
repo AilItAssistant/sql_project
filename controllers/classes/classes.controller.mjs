@@ -148,7 +148,6 @@ export const filterClasses = async (req, res) => {
                     response[response.length -1].students.push(add);
                 };
             };
-            console.log(response)
             res.json(response);
     } catch (error) {
         console.log(error);

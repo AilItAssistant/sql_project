@@ -68,6 +68,7 @@ export const getAlumnos = async (req, res) => {
 export const filterAlumnos = async (req, res) => {
     let conn;
     try {
+        console.log(req.body)
         conn = await pool.getConnection();
         let rows = await conn.query(
             `SELECT
