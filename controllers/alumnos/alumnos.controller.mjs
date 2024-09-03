@@ -8,7 +8,7 @@ export const getAlumnos = async (req, res) => {
     try {
         conn = await pool.getConnection();
         let rows = await conn.query(
-            "SELECT s.id AS student_id, s.name AS student_name, s.phone_number AS student_phone_number, s.last_name AS student_last_name, s.email, s.level AS student_level, s.city, s.identification_document, s.status AS student_status, COALESCE(c.name, 'No tiene clase') AS class_name, COALESCE(c.id, 'No tiene id') AS class_id, COALESCE(c.level, 'N/A') AS class_level, COALESCE(t.name, 'N/A') AS teacher_name FROM students s LEFT JOIN student_classes sc ON s.id = sc.student_id LEFT JOIN classes c ON sc.class_id = c.id LEFT JOIN teachers t ON c.teacher_id = t.id ORDER BY s.id, c.id;"
+            "SELECT s.id AS student_id, s.name AS student_name, s.phone_number AS student_phone_number, s.last_name AS student_last_name, s.email, s.city, s.identification_document, s.status AS student_status, COALESCE(c.name, 'No tiene clase') AS class_name, COALESCE(c.id, 'No tiene id') AS class_id, COALESCE(c.level, 'N/A') AS class_level, COALESCE(t.name, 'N/A') AS teacher_name FROM students s LEFT JOIN student_classes sc ON s.id = sc.student_id LEFT JOIN classes c ON sc.class_id = c.id LEFT JOIN teachers t ON c.teacher_id = t.id ORDER BY s.id, c.id;"
         );
         console.log(rows)
         rows.forEach((element) => {
