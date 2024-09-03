@@ -150,3 +150,59 @@ export const filterAlumnos = async (req, res) => {
         if (conn) return conn.end();
     }
 };
+
+export const statusAlumnos = async (req, res) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        let rows = await conn.query(``);
+        
+        res.json(200);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        if (conn) return conn.end();
+    }
+};
+
+export const deleteAlumnos = async (req, res) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        let rows = await conn.query(``);
+        
+        res.json(200);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        if (conn) return conn.end();
+    }
+};
+
+export const addAlumnos = async (req, res) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        let rows = await conn.query(``);
+        
+        res.json(200);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        if (conn) return conn.end();
+    }
+};
+
+export const editAlumnos = async (req, res) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        let rows = await conn.query(``);
+        
+        res.json(200);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        if (conn) return conn.end();
+    }
+};
