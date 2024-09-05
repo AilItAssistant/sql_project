@@ -151,7 +151,7 @@ export const filterAlumnos = async (req, res) => {
     }
 };
 
-export const statusAlumnos = async (req, res) => {
+export const statusAlumno = async (req, res) => {
     let conn;
     try {
         conn = await pool.getConnection();
@@ -165,7 +165,7 @@ export const statusAlumnos = async (req, res) => {
     }
 };
 
-export const deleteAlumnos = async (req, res) => {
+export const deleteAlumno = async (req, res) => {
     let conn;
     try {
         conn = await pool.getConnection();
@@ -179,7 +179,7 @@ export const deleteAlumnos = async (req, res) => {
     }
 };
 
-export const addAlumnos = async (req, res) => {
+export const addAlumno = async (req, res) => {
     let conn;
     try {
         conn = await pool.getConnection();
@@ -193,7 +193,7 @@ export const addAlumnos = async (req, res) => {
     }
 };
 
-export const editAlumnos = async (req, res) => {
+export const editAlumno = async (req, res) => {
     let conn;
     try {
         conn = await pool.getConnection();

@@ -3,10 +3,10 @@ import { Router } from "express";
 import {
     getClasses,
     filterClasses,
-    statusClasse,
-    deleteClasse,
-    editClasse,
-    addClasse
+    statusClass,
+    deleteClass,
+    editClass,
+    addClass
 } from "../../controllers/classes/classes.controller.mjs";
 
 export const classes = Router();
@@ -18,13 +18,13 @@ classes.get("/", getClasses);
 classes.put("/filter", filterClasses);
 
 //?MODIFY STATUS TO CLASSES
-classes.put("/status", statusClasse);
+classes.put("/status", statusClass);
 
 //?DELETE CLASSES
-classes.put("/delete", deleteClasse);
+classes.put("/delete", deleteClass);
 
 //?EDIT CLASSES
-classes.put("/edit", editClasse);
+classes.put("/edit", editClass);
 
 //?ADD CLASSES
-classes.post("/add", addClasse);
+classes.post("/add", addClass);
