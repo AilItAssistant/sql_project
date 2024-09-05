@@ -7,7 +7,39 @@ export const getClasses = async (req, res) => {
     let conn;
     try {
         conn = await pool.getConnection();
-        let rows = await conn.query("SELECT c.id AS class_id, c.name AS class_name, c.level AS class_level, c.schedule, c.room_number, c.status AS class_status, t.name AS teacher_name, t.last_name AS teacher_last_name, t.status AS teacher_status, COALESCE(s.name, 'No tiene alumnos') AS student_name, COALESCE(s.last_name, '') AS student_last_name, COALESCE(s.phone_number, '') AS student_phone, COALESCE(s.enrollment_date, '') AS enrollment_date, COALESCE(s.city, '') AS student_city, COALESCE(s.id, '') AS student_id, COALESCE(s.email, '') AS student_email, COALESCE(s.status, 'N/A') AS student_status FROM classes c LEFT JOIN teachers t ON c.teacher_id = t.id LEFT JOIN student_classes sc ON c.id = sc.class_id LEFT JOIN students s ON sc.student_id = s.id ORDER BY c.id, s.id;  ");
+        let rows = await conn.query(`
+           SELECT 
+                c.id AS class_id, 
+                c.name AS class_name, 
+                COALESCE(l.name, 'N/A') AS class_level, 
+                c.schedule, 
+                c.room_number, 
+                c.status AS class_status, 
+                t.name AS teacher_name, 
+                t.last_name AS teacher_last_name, 
+                t.status AS teacher_status, 
+                COALESCE(s.name, 'No tiene alumnos') AS student_name, 
+                COALESCE(s.last_name, '') AS student_last_name, 
+                COALESCE(s.phone_number, '') AS student_phone, 
+                COALESCE(s.enrollment_date, '') AS enrollment_date,
+                COALESCE(s.city, '') AS student_city, 
+                COALESCE(s.id, '') AS student_id, 
+                COALESCE(s.email, '') AS student_email, 
+                COALESCE(s.status, 'N/A') AS student_status 
+            FROM 
+                classes c 
+            LEFT JOIN 
+                teachers t ON c.teacher_id = t.id 
+            LEFT JOIN 
+                student_classes sc ON c.id = sc.class_id 
+            LEFT JOIN 
+                students s ON sc.student_id = s.id
+            LEFT JOIN 
+                levels l ON c.level_id = l.id
+            ORDER BY 
+                c.id, 
+                s.id;
+        `);
         rows.forEach(element => {
             element.class_id = element.class_id.toString();
         });
@@ -159,8 +191,36 @@ export const filterClasses = async (req, res) => {
 export const statusClass = async (req, res) => {
     let conn;
     try {
+        console.log(req.body)
         conn = await pool.getConnection();
-        let rows = await conn.query(``);
+        if( req.body.status === "active" ) {
+            let rows = await conn.query(`
+                UPDATE 
+                    classes
+                SET 
+                    status = 'inactive'
+                WHERE 
+                    id = ${req.body.id};
+            `);
+        } else if( req.body.status === "inactive" ) {
+            let rows = await conn.query(`
+                UPDATE 
+                    classes
+                SET 
+                    status = 'active'
+                WHERE 
+                    id = ${req.body.id};
+            `);
+        }else {
+            let rows = await conn.query(`
+                UPDATE 
+                    classes
+                SET 
+                    status = 'active'
+                WHERE 
+                    id = ${req.body.id};
+            `);
+        };
         
         res.json(200);
     } catch (error) {
@@ -174,7 +234,12 @@ export const deleteClass = async (req, res) => {
     let conn;
     try {
         conn = await pool.getConnection();
-        let rows = await conn.query(``);
+        let rows = await conn.query(`
+            DELETE FROM 
+                classes
+            WHERE 
+                id = ${req.body.id};
+                `);
         
         res.json(200);
     } catch (error) {
