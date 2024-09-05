@@ -20,15 +20,20 @@ export const getTeachers = async (req, res) => {
                 t.status AS teacher_status, 
                 COALESCE(c.id, 'N/A') AS class_id, 
                 COALESCE(c.name, 'No tiene clase') AS class_name,
-                COALESCE(c.level, 'N/A') AS class_level 
+                COALESCE(l.name, 'N/A') AS class_level 
             FROM 
                 teachers t 
             LEFT JOIN 
                 classes c 
             ON 
                 t.id = c.teacher_id 
+            LEFT JOIN 
+                levels l 
+            ON 
+                c.level_id = l.id
             ORDER BY 
-                t.id, c.id; 
+                t.id, 
+                c.id;
             `);
         console.log(rows)
         rows.forEach(element => {

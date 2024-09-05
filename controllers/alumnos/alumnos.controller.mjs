@@ -8,11 +8,54 @@ export const getAlumnos = async (req, res) => {
     try {
         conn = await pool.getConnection();
         let rows = await conn.query(
-            "SELECT s.id AS student_id, s.name AS student_name, s.phone_number AS student_phone_number, s.last_name AS student_last_name, s.email, s.city, s.identification_document, s.status AS student_status, COALESCE(c.name, 'No tiene clase') AS class_name, COALESCE(c.id, 'No tiene id') AS class_id, COALESCE(c.level, 'N/A') AS class_level, COALESCE(t.name, 'N/A') AS teacher_name FROM students s LEFT JOIN student_classes sc ON s.id = sc.student_id LEFT JOIN classes c ON sc.class_id = c.id LEFT JOIN teachers t ON c.teacher_id = t.id ORDER BY s.id, c.id;"
+            `SELECT
+                s.id AS student_id, 
+                s.name AS student_name, 
+                s.phone_number AS student_phone_number, 
+                s.last_name AS student_last_name, 
+                s.email, 
+                s.date_of_birth,
+                s.city, 
+                s.enrollment_date,
+                s.address,
+                s.identification_document, 
+                s.status AS student_status, 
+                COALESCE(c.name, 'No tiene clase') AS class_name, 
+                COALESCE(c.id, 'No tiene id') AS class_id, 
+                COALESCE(cl.name, 'N/A') AS class_level, 
+                COALESCE(sl.name, 'N/A') AS student_level, 
+                COALESCE(t.name, 'N/A') AS teacher_name 
+            FROM 
+                students s 
+            LEFT JOIN 
+                student_classes sc 
+            ON 
+                s.id = sc.student_id 
+            LEFT JOIN 
+                classes c 
+            ON 
+                sc.class_id = c.id 
+            LEFT JOIN 
+                teachers t 
+            ON 
+                c.teacher_id = t.id 
+            LEFT JOIN 
+                levels cl 
+            ON 
+                c.level_id = cl.id
+            LEFT JOIN 
+                levels sl 
+            ON 
+                s.level_id = sl.id
+            ORDER BY 
+                s.id, 
+                c.id;`
         );
         console.log(rows)
         rows.forEach((element) => {
             element.student_id = element.student_id.toString();
+            if(element.enrollment_date){element.enrollment_date = element.enrollment_date.toLocaleDateString('es-ES', {year: 'numeric', month: 'numeric', day: 'numeric',});}
+            if(element.date_of_birth){element.date_of_birth = element.date_of_birth.toLocaleDateString('es-ES', {year: 'numeric', month: 'numeric', day: 'numeric',});}
         });
         let response = [];
         for (let i = 0; rows.length > i; i++) {
@@ -21,7 +64,7 @@ export const getAlumnos = async (req, res) => {
                 x = i - 1;
             } else {
                 x = 0;
-            }
+            };
 
             if (i === 0 || rows[i].student_id !== rows[x].student_id) {
                 let add = {
@@ -32,7 +75,10 @@ export const getAlumnos = async (req, res) => {
                     id_document: rows[i].identification_document,
                     student_level: rows[i].student_level,
                     name: rows[i].student_name,
+                    birthday: rows[i].date_of_birth,
                     city: rows[i].city,
+                    enrollment_date: rows[i].enrollment_date,
+                    address: rows[i].address,
                     student_phone: rows[i].student_phone,
                     student_status: rows[i].student_status,
                     classes: [],
@@ -152,10 +198,38 @@ export const filterAlumnos = async (req, res) => {
 };
 
 export const statusAlumno = async (req, res) => {
+    console.log(req.body)
     let conn;
     try {
         conn = await pool.getConnection();
-        let rows = await conn.query(``);
+        if( req.body.status === "active" ) {
+            let rows = await conn.query(`
+                UPDATE 
+                    students
+                SET 
+                    status = 'inactive'
+                WHERE 
+                    id = ${req.body.id};
+            `);
+        } else if( req.body.status === "inactive" ) {
+            let rows = await conn.query(`
+                UPDATE 
+                    students
+                SET 
+                    status = 'active'
+                WHERE 
+                    id = ${req.body.id};
+            `);
+        }else {
+            let rows = await conn.query(`
+                UPDATE 
+                    students
+                SET 
+                    status = 'active'
+                WHERE 
+                    id = ${req.body.id};
+            `);
+        };
         
         res.json(200);
     } catch (error) {
@@ -167,9 +241,15 @@ export const statusAlumno = async (req, res) => {
 
 export const deleteAlumno = async (req, res) => {
     let conn;
+    console.log(req.body)
     try {
         conn = await pool.getConnection();
-        let rows = await conn.query(``);
+        let rows = await conn.query(`
+            DELETE FROM 
+                students
+            WHERE 
+                id = ${req.body.id};
+                `);
         
         res.json(200);
     } catch (error) {
@@ -182,8 +262,36 @@ export const deleteAlumno = async (req, res) => {
 export const addAlumno = async (req, res) => {
     let conn;
     try {
+        console.log(req.body)
         conn = await pool.getConnection();
-        let rows = await conn.query(``);
+        let rows = await conn.query(`
+                INSERT INTO 
+                    students (
+                        name, 
+                        last_name, 
+                        email, 
+                        date_of_birth, 
+                        enrollment_date, 
+                        phone_number, 
+                        address, 
+                        identification_document, 
+                        city, 
+                        level_id, 
+                        status) 
+                    VALUES (
+                        '${req.body.name}', 
+                        '${req.body.last_name}', 
+                        '${req.body.email}', 
+                        '${req.body.birthday}', 
+                        ${req.body.enrollment_date}, 
+                        '${req.body.phone_number}', 
+                        '${req.body.address}', 
+                        '${req.body.document}', 
+                        '${req.body.city}', 
+                        ${req.body.level}, 
+                        '${req.body.status}'
+                    );
+            `);
         
         res.json(200);
     } catch (error) {
@@ -195,9 +303,26 @@ export const addAlumno = async (req, res) => {
 
 export const editAlumno = async (req, res) => {
     let conn;
+    console.log(req.body)
     try {
         conn = await pool.getConnection();
-        let rows = await conn.query(``);
+        let rows = await conn.query(`
+               UPDATE 
+                students
+                SET 
+                    name = IF('${req.body.name}' != '', '${req.body.name}', name),
+                    last_name = IF('${req.body.last_name}' != '', '${req.body.last_name}', last_name),
+                    email = IF('${req.body.email}' != '', '${req.body.email}', email),
+                    enrollment_date = IF('${req.body.enrollment_date}' != '', '${req.body.enrollment_date}', enrollment_date),
+                    phone_number = IF('${req.body.phone_number}' != '', '${req.body.phone_number}', phone_number),
+                    address = IF('${req.body.address}' != '', '${req.body.address}', address),
+                    date_of_birth = IF('${req.body.birthday}' != '', '${req.body.birthday}', date_of_birth),
+                    city = IF('${req.body.city}' != '', '${req.body.city}', city),
+                    level_id = IF('${req.body.level}' != '' AND EXISTS (SELECT 1 FROM levels WHERE id = '${req.body.level}'), '${req.body.level}', level_id),
+                    identification_document = IF('${req.body.document}' != '', '${req.body.document}', identification_document)
+                WHERE 
+    id = ${req.body.id};
+            `);
         
         res.json(200);
     } catch (error) {
