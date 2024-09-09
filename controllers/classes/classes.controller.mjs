@@ -308,3 +308,43 @@ export const editClass = async (req, res) => {
         if (conn) return conn.end();
     }
 };
+
+export const getClassesByStudentId = async (req, res) => {
+    console.log(req.body);
+
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        let rows = await conn.query(`
+            SELECT 
+                c.id AS class_id, 
+                c.name AS class_name, 
+                c.schedule, 
+                c.room_number, 
+                c.status AS class_status, 
+                t.name AS teacher_name, 
+                t.last_name AS teacher_last_name, 
+                t.status AS teacher_status
+            FROM 
+                student_classes sc
+            JOIN 
+                classes c ON sc.class_id = c.id
+            JOIN 
+                teachers t ON c.teacher_id = t.id
+            WHERE 
+                sc.student_id = 1;
+            `);
+
+            rows.forEach(element => {
+                element.class_id = element.class_id.toString();
+                if(element.teacher_id){element.teacher_id = element.teacher_id.toString();}
+                if(element.level_id){element.level_id = element.level_id.toString();}
+            });
+        
+        res.json(rows);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        if (conn) return conn.end();
+    }
+};

@@ -54,9 +54,6 @@ app.use("/api/classes", classes);
 //STRUCTURE
 app.use("/api/blocks", blocks);
 
-//STRUCTURE
-//app.use("/api/structure", structure);
-
 //USERS
 app.use("/api/users", users);
 

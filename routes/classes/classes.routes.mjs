@@ -6,7 +6,8 @@ import {
     statusClass,
     deleteClass,
     editClass,
-    addClass
+    addClass, 
+    getClassesByStudentId
 } from "../../controllers/classes/classes.controller.mjs";
 
 export const classes = Router();
@@ -28,3 +29,6 @@ classes.put("/edit", editClass);
 
 //?ADD CLASSES
 classes.post("/add", addClass);
+
+//?SEARCH CLASSES BY ALUMNO ID
+classes.put("/studentId", getClassesByStudentId);
