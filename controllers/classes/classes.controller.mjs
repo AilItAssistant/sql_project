@@ -13,6 +13,8 @@ export const getClasses = async (req, res) => {
                 c.name AS class_name, 
                 COALESCE(l.name, 'N/A') AS class_level, 
                 c.schedule, 
+                c.teacher_id,
+                c.level_id,
                 c.room_number, 
                 c.status AS class_status, 
                 t.name AS teacher_name, 
@@ -42,6 +44,8 @@ export const getClasses = async (req, res) => {
         `);
         rows.forEach(element => {
             element.class_id = element.class_id.toString();
+            if(element.teacher_id){element.teacher_id = element.teacher_id.toString();}
+            if(element.level_id){element.level_id = element.level_id.toString();}
         });
         let response = [];
         for(let i = 0; rows.length > i; i++) {
@@ -53,10 +57,12 @@ export const getClasses = async (req, res) => {
                     class_id: rows[i].class_id,
                     class_name: rows[i].class_name, 
                     class_level: rows[i].class_level, 
+                    level_id: rows[i].level_id,
                     schedule: rows[i].schedule,
                     room_number: rows[i].room_number, 
                     class_level: rows[i].class_level,
                     teacher_name: rows[i].teacher_name,
+                    teacher_id: rows[i].teacher_id,
                     teacher_last_name: rows[i].teacher_last_name,
                     class_status: rows[i].class_status,
                     students: []
@@ -191,7 +197,6 @@ export const filterClasses = async (req, res) => {
 export const statusClass = async (req, res) => {
     let conn;
     try {
-        console.log(req.body)
         conn = await pool.getConnection();
         if( req.body.status === "active" ) {
             let rows = await conn.query(`
@@ -253,7 +258,23 @@ export const addClass = async (req, res) => {
     let conn;
     try {
         conn = await pool.getConnection();
-        let rows = await conn.query(``);
+        let rows = await conn.query(`
+                INSERT INTO classes (
+                    name, 
+                    teacher_id, 
+                    schedule, 
+                    room_number, 
+                    level_id, 
+                    status
+                ) VALUES (
+                    '${req.body.name}',
+                    ${req.body.teacher_id},
+                    '${req.body.schedule}',  
+                    '${req.body.class}',
+                    ${req.body.level},
+                    '${req.body.status}'
+                );
+            `);
         
         res.json(200);
     } catch (error) {
@@ -267,7 +288,18 @@ export const editClass = async (req, res) => {
     let conn;
     try {
         conn = await pool.getConnection();
-        let rows = await conn.query(``);
+        let rows = await conn.query(`
+            UPDATE classes
+                SET 
+                    name = IF('${req.body.name}' != '', '${req.body.name}', name),
+                    teacher_id = IF('${req.body.teacher}' != '', '${req.body.teacher}', teacher_id),
+                    schedule = IF('${req.body.schedule}' != '', '${req.body.schedule}', schedule),
+                    room_number = IF('${req.body.class}' != '', '${req.body.class}', room_number),
+                    level_id = IF('${req.body.level}' != '' AND EXISTS (SELECT 1 FROM levels WHERE id = '${req.body.level}'), '${req.body.level}', level_id),
+                    status = IF('${req.body.status}' != '', '${req.body.status}', status)
+                WHERE 
+                    id = ${req.body.id};
+            `);
         
         res.json(200);
     } catch (error) {
