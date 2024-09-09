@@ -8,8 +8,21 @@ export const getUsers = async (req, res) => {
     try {
         conn = await pool.getConnection();
         let rows = await conn.query(
-            "SELECT id, username, email, role, created_at, name, last_name, phone_number, city, permissions, status from users;"
-        );
+            `SELECT 
+                id, 
+                username, 
+                email, 
+                role, 
+                created_at, 
+                name, 
+                last_name, 
+                phone_number, 
+                city, 
+                permissions, 
+                status 
+            from 
+                users;
+            `);
         console.log(rows)
         rows.forEach((element) => {
             element.id = element.id.toString();
@@ -59,7 +72,34 @@ export const statusUsers = async (req, res) => {
     let conn;
     try {
         conn = await pool.getConnection();
-        let rows = await conn.query(``);
+        if( req.body.status === "active" ) {
+            let rows = await conn.query(`
+                UPDATE 
+                    users
+                SET 
+                    status = 'inactive'
+                WHERE 
+                    id = ${req.body.id};
+            `);
+        } else if( req.body.status === "inactive" ) {
+            let rows = await conn.query(`
+                UPDATE 
+                    users
+                SET 
+                    status = 'active'
+                WHERE 
+                    id = ${req.body.id};
+            `);
+        }else {
+            let rows = await conn.query(`
+                UPDATE 
+                    users
+                SET 
+                    status = 'active'
+                WHERE 
+                    id = ${req.body.id};
+            `);
+        };
         
         res.json(200);
     } catch (error) {
@@ -73,7 +113,11 @@ export const deleteUsers = async (req, res) => {
     let conn;
     try {
         conn = await pool.getConnection();
-        let rows = await conn.query(``);
+        let rows = await conn.query(`DELETE FROM 
+                users
+            WHERE 
+                id = ${req.body.id};
+        `);
         
         res.json(200);
     } catch (error) {
@@ -86,8 +130,33 @@ export const deleteUsers = async (req, res) => {
 export const addUsers = async (req, res) => {
     let conn;
     try {
+        console.log(req.body)
         conn = await pool.getConnection();
-        let rows = await conn.query(``);
+        let rows = await conn.query(`
+            INSERT INTO users (
+                username, 
+                email, 
+                password_hash, 
+                role, 
+                name, 
+                last_name, 
+                phone_number, 
+                city, 
+                permissions, 
+                status
+            ) VALUES (
+                '${req.body.username}',                 
+                '${req.body.email}',
+                'hashed_password',
+                '${req.body.role}',
+                '${req.body.name}',
+                '${req.body.last_name}',
+                '${req.body.phone_number}',             
+                '${req.body.city}',
+                '${req.body.permissions}',
+                '${req.body.status}'
+            );
+            `);
         
         res.json(200);
     } catch (error) {
@@ -101,7 +170,23 @@ export const editUsers = async (req, res) => {
     let conn;
     try {
         conn = await pool.getConnection();
-        let rows = await conn.query(``);
+        let rows = await conn.query(`
+            UPDATE 
+                users
+            SET 
+                username = IF('${req.body.username}' != '', '${req.body.username}', username),
+                email = IF('${req.body.email}' != '', '${req.body.email}', email),
+                password_hash = IF('${req.body.password_hash}' != '', '${req.body.password_hash}', password_hash),
+                role = IF('${req.body.role}' != '', '${req.body.role}', role),
+                name = IF('${req.body.name}' != '', '${req.body.name}', name),
+                last_name = IF('${req.body.last_name}' != '', '${req.body.last_name}', last_name),
+                phone_number = IF('${req.body.phone_number}' != '', '${req.body.phone_number}', phone_number),
+                city = IF('${req.body.city}' != '', '${req.body.city}', city),
+                permissions = IF('${req.body.permissions}' != '', '${req.body.permissions}', permissions),
+                status = IF('${req.body.status}' != '', '${req.body.status}', status)
+            WHERE 
+                id = ${req.body.id};
+            `);
         
         res.json(200);
     } catch (error) {
