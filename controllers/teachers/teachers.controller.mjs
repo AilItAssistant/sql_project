@@ -24,13 +24,11 @@ export const getTeachers = async (req, res) => {
             FROM 
                 teachers t 
             LEFT JOIN 
-                classes c 
-            ON 
-                t.id = c.teacher_id 
+                class_teachers ct ON t.id = ct.teacher_id
             LEFT JOIN 
-                levels l 
-            ON 
-                c.level_id = l.id
+                classes c ON ct.class_id = c.id
+            LEFT JOIN 
+                levels l ON c.level_id = l.id
             ORDER BY 
                 t.id, 
                 c.id;
@@ -263,6 +261,51 @@ export const editTeacher = async (req, res) => {
                     id = ${req.body.id};
             `);
         
+        res.json(200);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        if (conn) return conn.end();
+    }
+};
+
+export const addClass = async (req, res) => {
+    console.log(req.body)
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        let rows = await conn.query(`
+             INSERT INTO 
+                class_teachers (
+                teacher_id, 
+                class_id)
+            VALUES (
+            '${req.body.teacher_id}', 
+            '${req.body.class_id}');
+        `);
+       
+        res.json(200);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        if (conn) return conn.end();
+    }
+};
+
+export const deleteClass = async (req, res) => {
+    console.log(req.body)
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        let rows = await conn.query(`
+            DELETE FROM 
+                class_teachers
+            WHERE 
+                class_id = ${req.body.class_id} 
+            AND 
+                teacher_id = ${req.body.teacher_id};
+        `);
+       
         res.json(200);
     } catch (error) {
         console.log(error);

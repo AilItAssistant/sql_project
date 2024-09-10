@@ -35,4 +35,4 @@ alumnos.post("/add", addAlumno);
 alumnos.put("/addClass", addClass);
 
 //?DELETE CLASS TO ALUMNO
-alumnos.put("/deleteClass", deleteClass)
+alumnos.put("/deleteClass", deleteClass);

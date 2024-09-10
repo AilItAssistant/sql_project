@@ -13,7 +13,6 @@ export const getClasses = async (req, res) => {
                 c.name AS class_name, 
                 COALESCE(l.name, 'N/A') AS class_level, 
                 c.schedule, 
-                c.teacher_id,
                 c.level_id,
                 c.room_number, 
                 c.status AS class_status, 
@@ -31,7 +30,9 @@ export const getClasses = async (req, res) => {
             FROM 
                 classes c 
             LEFT JOIN 
-                teachers t ON c.teacher_id = t.id 
+                class_teachers ct ON c.id = ct.class_id
+            LEFT JOIN 
+                teachers t ON ct.teacher_id = t.id 
             LEFT JOIN 
                 student_classes sc ON c.id = sc.class_id 
             LEFT JOIN 
@@ -332,11 +333,57 @@ export const getClassesByStudentId = async (req, res) => {
             JOIN 
                 classes c ON sc.class_id = c.id
             JOIN 
-                teachers t ON c.teacher_id = t.id
+                class_teachers ct ON c.id = ct.class_id
+            JOIN 
+                teachers t ON ct.teacher_id = t.id
             LEFT JOIN 
                 levels l ON c.level_id = l.id
             WHERE 
                 sc.student_id = ${req.body.id};
+            `);
+
+            rows.forEach(element => {
+                element.class_id = element.class_id.toString();
+                if(element.teacher_id){element.teacher_id = element.teacher_id.toString();}
+                if(element.level_id){element.level_id = element.level_id.toString();}
+            });
+        
+        res.json(rows);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        if (conn) return conn.end();
+    }
+};
+
+export const getClassesByTeacherId = async (req, res) => {
+    console.log(req.body);
+
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        let rows = await conn.query(`
+           SELECT 
+                c.id AS class_id, 
+                c.name AS class_name, 
+                c.schedule, 
+                COALESCE(l.name, 'N/A') AS level_name, 
+                c.level_id,
+                c.room_number, 
+                c.status AS class_status, 
+                t.name AS teacher_name, 
+                t.last_name AS teacher_last_name, 
+                t.status AS teacher_status
+            FROM 
+                classes c
+            JOIN 
+                class_teachers ct ON c.id = ct.class_id
+            JOIN 
+                teachers t ON ct.teacher_id = t.id
+            LEFT JOIN 
+                levels l ON c.level_id = l.id
+            WHERE 
+                t.id = ${req.body.id};
             `);
 
             rows.forEach(element => {
