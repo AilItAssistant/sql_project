@@ -320,6 +320,8 @@ export const getClassesByStudentId = async (req, res) => {
                 c.id AS class_id, 
                 c.name AS class_name, 
                 c.schedule, 
+                COALESCE(l.name, 'N/A') AS level_name,
+                c.level_id,
                 c.room_number, 
                 c.status AS class_status, 
                 t.name AS teacher_name, 
@@ -331,8 +333,10 @@ export const getClassesByStudentId = async (req, res) => {
                 classes c ON sc.class_id = c.id
             JOIN 
                 teachers t ON c.teacher_id = t.id
+            LEFT JOIN 
+                levels l ON c.level_id = l.id
             WHERE 
-                sc.student_id = 1;
+                sc.student_id = ${req.body.id};
             `);
 
             rows.forEach(element => {

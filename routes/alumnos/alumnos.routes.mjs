@@ -6,7 +6,9 @@ import {
     statusAlumno,
     deleteAlumno,
     editAlumno,
-    addAlumno
+    addAlumno,
+    addClass,
+    deleteClass
 } from "../../controllers/alumnos/alumnos.controller.mjs";
 
 export const alumnos = Router();
@@ -28,3 +30,9 @@ alumnos.put("/edit", editAlumno);
 
 //?ADD ALUMNO
 alumnos.post("/add", addAlumno);
+
+//?ADD CLASS TO ALUMNO
+alumnos.put("/addClass", addClass);
+
+//?DELETE CLASS TO ALUMNO
+alumnos.put("/deleteClass", deleteClass)

@@ -331,3 +331,51 @@ export const editAlumno = async (req, res) => {
         if (conn) return conn.end();
     }
 };
+
+export const addClass = async (req, res) => {
+    console.log(req.body)
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        let rows = await conn.query(`
+            INSERT INTO 
+                student_classes (student_id, 
+                class_id, 
+                enrollment_date, 
+                status)
+            VALUES 
+                (${req.body.student_id}, 
+                ${req.body.class_id}, 
+                CURRENT_DATE, 
+                'active');
+        `);
+       
+        res.json(200);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        if (conn) return conn.end();
+    }
+};
+
+export const deleteClass = async (req, res) => {
+    console.log(req.body)
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        let rows = await conn.query(`
+            DELETE FROM 
+                student_classes
+            WHERE 
+                student_id = ${req.body.student_id} 
+            AND 
+                class_id = ${req.body.class_id};
+        `);
+       
+        res.json(200);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        if (conn) return conn.end();
+    }
+};
