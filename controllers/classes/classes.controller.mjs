@@ -260,22 +260,33 @@ export const addClass = async (req, res) => {
     try {
         conn = await pool.getConnection();
         let rows = await conn.query(`
-                INSERT INTO classes (
-                    name, 
-                    teacher_id, 
-                    schedule, 
-                    room_number, 
-                    level_id, 
-                    status
-                ) VALUES (
-                    '${req.body.name}',
-                    ${req.body.teacher_id},
-                    '${req.body.schedule}',  
-                    '${req.body.class}',
-                    ${req.body.level},
-                    '${req.body.status}'
-                );
-            `);
+            INSERT INTO classes (
+                name, 
+                schedule, 
+                room_number, 
+                level_id, 
+                status
+            ) VALUES (
+                '${req.body.name}',
+                '${req.body.schedule}',  
+                '${req.body.class}',
+                ${req.body.level},
+                '${req.body.status}'
+            );
+        `);
+        let class_id = await conn.query(
+            `SELECT LAST_INSERT_ID() AS class_id;
+        `);    
+        class_id = class_id[0].class_id.toString();
+        let row = await conn.query(`
+            INSERT INTO 
+                class_teachers 
+                (class_id, 
+                teacher_id)
+            VALUES 
+                (${class_id}, 
+                ${req.body.teacher_id});
+        `);
         
         res.json(200);
     } catch (error) {
@@ -293,7 +304,6 @@ export const editClass = async (req, res) => {
             UPDATE classes
                 SET 
                     name = IF('${req.body.name}' != '', '${req.body.name}', name),
-                    teacher_id = IF('${req.body.teacher}' != '', '${req.body.teacher}', teacher_id),
                     schedule = IF('${req.body.schedule}' != '', '${req.body.schedule}', schedule),
                     room_number = IF('${req.body.class}' != '', '${req.body.class}', room_number),
                     level_id = IF('${req.body.level}' != '' AND EXISTS (SELECT 1 FROM levels WHERE id = '${req.body.level}'), '${req.body.level}', level_id),
