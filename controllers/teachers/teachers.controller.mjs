@@ -33,7 +33,6 @@ export const getTeachers = async (req, res) => {
                 t.id, 
                 c.id;
             `);
-        console.log(rows)
         rows.forEach(element => {
             element.teacher_id = element.teacher_id.toString();
             if(element.hire_date){element.hire_date = element.hire_date.toLocaleDateString('es-ES', {year: 'numeric', month: 'numeric', day: 'numeric',});}
@@ -78,7 +77,6 @@ export const getTeachers = async (req, res) => {
                 response[response.length -1].classes.push(add);
             };
         };
-        console.log(response)
         res.json(response);
     } catch (error) {
         console.log(error);
@@ -106,7 +104,6 @@ export const filterTeachers = async (req, res) => {
             ORDER BY 
                 t.id, c.id; 
             `);
-        console.log(rows)
         rows.forEach(element => {
             element.teacher_id = element.teacher_id.toString();
         });
@@ -148,7 +145,6 @@ export const filterTeachers = async (req, res) => {
                 response[response.length -1].classes.push(add);
             };
         };
-        console.log(response)
         res.json(response);
     } catch (error) {
         console.log(error);
@@ -160,7 +156,6 @@ export const filterTeachers = async (req, res) => {
 export const deleteTeacher = async (req, res) => {
     let conn;
     try {
-        console.log(req)
         conn = await pool.getConnection();
         let rows = await conn.query(`
             DELETE FROM 
@@ -168,7 +163,6 @@ export const deleteTeacher = async (req, res) => {
             WHERE 
                 id = ${req.body.id};
         `);
-        console.log(rows);
         res.json(200);
     } catch (error) {
         console.log(error);
@@ -180,7 +174,6 @@ export const deleteTeacher = async (req, res) => {
 export const statusTeacher = async (req, res) => {
     let conn;
     try {
-        console.log(req.body)
         conn = await pool.getConnection();
         if( req.body.status === "active" ) {
             let rows = await conn.query(`
@@ -221,7 +214,6 @@ export const statusTeacher = async (req, res) => {
 export const addTeacher = async (req, res) => {
     let conn;
     try {
-        console.log(req.body)
         conn = await pool.getConnection();
             let rows = await conn.query(`
                 INSERT INTO 
@@ -231,7 +223,6 @@ export const addTeacher = async (req, res) => {
                     '${req.body.hire_date}', '${req.body.phone_number}', '${req.body.address}', 
                     '${req.body.department}', '${req.body.status}');
             `);
-        console.log(rows);
         res.json(200);
     } catch (error) {
         console.log(error);
@@ -243,7 +234,6 @@ export const addTeacher = async (req, res) => {
 export const editTeacher = async (req, res) => {
     let conn;
     try {
-        console.log(req.body)
         conn = await pool.getConnection();
             let rows = await conn.query(`
                 UPDATE 
@@ -270,7 +260,6 @@ export const editTeacher = async (req, res) => {
 };
 
 export const addClass = async (req, res) => {
-    console.log(req.body)
     let conn;
     try {
         conn = await pool.getConnection();
@@ -293,7 +282,6 @@ export const addClass = async (req, res) => {
 };
 
 export const deleteClass = async (req, res) => {
-    console.log(req.body)
     let conn;
     try {
         conn = await pool.getConnection();
@@ -306,6 +294,78 @@ export const deleteClass = async (req, res) => {
                 teacher_id = ${req.body.teacher_id};
         `);
        
+        res.json(200);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        if (conn) return conn.end();
+    }
+};
+
+export const teacherByClassId = async (req, res) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        let rows = await conn.query(`
+            SELECT
+                t.id AS teacher_id,
+                t.name AS teacher_name,
+                t.last_name AS teacher_last_name,
+                t.department AS teacher_department
+            FROM 
+                class_teachers ct
+            JOIN 
+                teachers t ON ct.teacher_id = t.id
+            WHERE 
+                ct.class_id = ${req.body.id};
+        `);
+
+        rows.forEach((element) => {
+            element.teacher_id = element.teacher_id.toString();
+        });
+        res.json(rows);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        if (conn) return conn.end();
+    }
+};
+
+export const addTeacherToClass = async (req, res) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        let rows = await conn.query(`
+            INSERT INTO 
+                class_teachers (
+                    class_id, 
+                    teacher_id
+                    )
+            VALUES (
+                ${req.body.class_id}, 
+                ${req.body.teacher_id}
+            );
+        `);
+        res.json(200);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        if (conn) return conn.end();
+    }
+};
+
+export const deleteTeacherToClass = async (req, res) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        let rows = await conn.query(`
+            DELETE FROM 
+                class_teachers
+            WHERE 
+                class_id = ${req.body.class_id} 
+            AND 
+                teacher_id = ${req.body.teacher_id};
+        `);
         res.json(200);
     } catch (error) {
         console.log(error);

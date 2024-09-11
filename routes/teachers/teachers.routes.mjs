@@ -8,7 +8,10 @@ import {
     addTeacher,
     editTeacher,
     addClass,
-    deleteClass
+    deleteClass,
+    teacherByClassId,
+    addTeacherToClass,
+    deleteTeacherToClass
 } from "../../controllers/teachers/teachers.controller.mjs";
 
 export const teachers = Router();
@@ -36,3 +39,12 @@ teachers.put("/addClass", addClass);
 
 //?DELETE CLASS TO TEACHER
 teachers.put("/deleteClass", deleteClass);
+
+//?TEACHERS BY CLASSID       
+teachers.put("/teachersByClassId", teacherByClassId);
+
+//?ADD TEACHER TO CLASS  
+teachers.put("/addTeacherToClass", addTeacherToClass);
+
+//?DELETE TEACHER TO CLASS
+teachers.put("/deleteTeacherToClass", deleteTeacherToClass);

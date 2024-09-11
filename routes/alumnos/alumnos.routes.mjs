@@ -8,7 +8,10 @@ import {
     editAlumno,
     addAlumno,
     addClass,
-    deleteClass
+    deleteClass,
+    alumnoByClassId,
+    addAlumnoToClass,
+    deleteAlumnoToClass
 } from "../../controllers/alumnos/alumnos.controller.mjs";
 
 export const alumnos = Router();
@@ -36,3 +39,12 @@ alumnos.put("/addClass", addClass);
 
 //?DELETE CLASS TO ALUMNO
 alumnos.put("/deleteClass", deleteClass);
+
+//?STUDENTS BY CLASSID       
+alumnos.put("/alumnosByClassId", alumnoByClassId);
+
+//?ADD STUDENT TO CLASS  
+alumnos.put("/addStudentToClass", addAlumnoToClass);
+
+//?DELETE STUDENT TO CLASS
+alumnos.put("/deleteStudentToClass", deleteAlumnoToClass);

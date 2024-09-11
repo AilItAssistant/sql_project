@@ -7,8 +7,8 @@ export const getAlumnos = async (req, res) => {
     let conn;
     try {
         conn = await pool.getConnection();
-        let rows = await conn.query(
-            `SELECT
+        let rows = await conn.query(`
+            SELECT
                 s.id AS student_id, 
                 s.name AS student_name, 
                 s.phone_number AS student_phone_number, 
@@ -28,30 +28,21 @@ export const getAlumnos = async (req, res) => {
             FROM 
                 students s 
             LEFT JOIN 
-                student_classes sc 
-            ON 
-                s.id = sc.student_id 
+                student_classes sc ON s.id = sc.student_id 
             LEFT JOIN 
-                classes c 
-            ON 
-                sc.class_id = c.id 
+                classes c ON sc.class_id = c.id 
             LEFT JOIN 
-                teachers t 
-            ON 
-                c.teacher_id = t.id 
+                class_teachers ct ON c.id = ct.class_id
             LEFT JOIN 
-                levels cl 
-            ON 
-                c.level_id = cl.id
+                teachers t ON ct.teacher_id = t.id 
             LEFT JOIN 
-                levels sl 
-            ON 
-                s.level_id = sl.id
+                levels cl ON c.level_id = cl.id
+            LEFT JOIN 
+                levels sl ON s.level_id = sl.id
             ORDER BY 
                 s.id, 
-                c.id;`
-        );
-        console.log(rows)
+                c.id;
+        `);
         rows.forEach((element) => {
             element.student_id = element.student_id.toString();
             if(element.enrollment_date){element.enrollment_date = element.enrollment_date.toLocaleDateString('es-ES', {year: 'numeric', month: 'numeric', day: 'numeric',});}
@@ -114,7 +105,6 @@ export const getAlumnos = async (req, res) => {
 export const filterAlumnos = async (req, res) => {
     let conn;
     try {
-        console.log(req.body)
         conn = await pool.getConnection();
         let rows = await conn.query(
             `SELECT
@@ -142,7 +132,6 @@ export const filterAlumnos = async (req, res) => {
             ORDER BY 
                 s.id, c.id;`
                     );
-        console.log(rows)
         rows.forEach((element) => {
             element.student_id = element.student_id.toString();
         });
@@ -198,7 +187,6 @@ export const filterAlumnos = async (req, res) => {
 };
 
 export const statusAlumno = async (req, res) => {
-    console.log(req.body)
     let conn;
     try {
         conn = await pool.getConnection();
@@ -241,7 +229,6 @@ export const statusAlumno = async (req, res) => {
 
 export const deleteAlumno = async (req, res) => {
     let conn;
-    console.log(req.body)
     try {
         conn = await pool.getConnection();
         let rows = await conn.query(`
@@ -262,7 +249,6 @@ export const deleteAlumno = async (req, res) => {
 export const addAlumno = async (req, res) => {
     let conn;
     try {
-        console.log(req.body)
         conn = await pool.getConnection();
         let rows = await conn.query(`
                 INSERT INTO 
@@ -303,7 +289,6 @@ export const addAlumno = async (req, res) => {
 
 export const editAlumno = async (req, res) => {
     let conn;
-    console.log(req.body)
     try {
         conn = await pool.getConnection();
         let rows = await conn.query(`
@@ -333,7 +318,6 @@ export const editAlumno = async (req, res) => {
 };
 
 export const addClass = async (req, res) => {
-    console.log(req.body)
     let conn;
     try {
         conn = await pool.getConnection();
@@ -359,7 +343,6 @@ export const addClass = async (req, res) => {
 };
 
 export const deleteClass = async (req, res) => {
-    console.log(req.body)
     let conn;
     try {
         conn = await pool.getConnection();
@@ -372,6 +355,84 @@ export const deleteClass = async (req, res) => {
                 class_id = ${req.body.class_id};
         `);
        
+        res.json(200);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        if (conn) return conn.end();
+    }
+};
+
+export const alumnoByClassId = async (req, res) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        let rows = await conn.query(`
+            SELECT
+                s.id AS student_id,
+                s.name AS student_name,
+                s.last_name AS student_last_name,
+                COALESCE(sl.name, 'N/A') AS student_level,
+                s.city AS student_city
+            FROM 
+                student_classes sc
+            JOIN 
+                students s ON sc.student_id = s.id
+            LEFT JOIN 
+                levels sl ON s.level_id = sl.id
+            WHERE 
+                sc.class_id = ${req.body.id};
+        `);
+
+        rows.forEach((element) => {
+            element.student_id = element.student_id.toString();
+        });
+        res.json(rows);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        if (conn) return conn.end();
+    }
+};
+
+export const addAlumnoToClass = async (req, res) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        let rows = await conn.query(`
+            INSERT INTO 
+                student_classes (
+                    class_id, student_id, 
+                    enrollment_date, 
+                    status
+                )
+            VALUES (
+                ${req.body.class_id}, 
+                ${req.body.student_id}, 
+                CURRENT_DATE, 
+                'active'
+            );
+        `);
+        res.json(200);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        if (conn) return conn.end();
+    }
+};
+
+export const deleteAlumnoToClass = async (req, res) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        let rows = await conn.query(`
+            DELETE FROM 
+                student_classes
+            WHERE 
+                class_id = ${req.body.class_id} 
+            AND 
+                student_id = ${req.body.student_id};
+        `);
         res.json(200);
     } catch (error) {
         console.log(error);

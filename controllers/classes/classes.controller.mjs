@@ -321,8 +321,6 @@ export const editClass = async (req, res) => {
 };
 
 export const getClassesByStudentId = async (req, res) => {
-    console.log(req.body);
-
     let conn;
     try {
         conn = await pool.getConnection();
@@ -367,8 +365,6 @@ export const getClassesByStudentId = async (req, res) => {
 };
 
 export const getClassesByTeacherId = async (req, res) => {
-    console.log(req.body);
-
     let conn;
     try {
         conn = await pool.getConnection();
