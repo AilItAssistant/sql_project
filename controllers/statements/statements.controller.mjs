@@ -40,9 +40,9 @@ export const getStatementsById = async (req, res) => {
         );
         rows.forEach((element) => {
             element.id = element.id.toString();
-            element.exam_id = element.exam_id.toString();
-            element.skill_id = element.skill_id.toString();
-            element.level_id = element.level_id.toString();
+            if(element.exam_id){element.exam_id = element.exam_id.toString();}
+            if(element.skill_id){element.skill_id = element.skill_id.toString();}
+            if(element.level_id){element.level_id = element.level_id.toString();}
         });
         res.json(rows);
     } catch (error) {
