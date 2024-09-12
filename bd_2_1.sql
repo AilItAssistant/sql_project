@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-09-2024 a las 15:39:04
+-- Tiempo de generación: 12-09-2024 a las 15:44:44
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `bd 2.0`
+-- Base de datos: `bd_2.1`
 --
 
 -- --------------------------------------------------------
@@ -89,7 +89,6 @@ INSERT INTO `blocks` (`id`, `name`, `skill_id`, `description`, `status`) VALUES
 CREATE TABLE `classes` (
   `id` bigint(20) NOT NULL,
   `name` text NOT NULL,
-  `teacher_id` bigint(20) DEFAULT NULL,
   `schedule` text DEFAULT NULL,
   `room_number` text DEFAULT NULL,
   `level_id` bigint(20) DEFAULT NULL,
@@ -100,13 +99,31 @@ CREATE TABLE `classes` (
 -- Volcado de datos para la tabla `classes`
 --
 
-INSERT INTO `classes` (`id`, `name`, `teacher_id`, `schedule`, `room_number`, `level_id`, `status`) VALUES
-(1, 'Clase de Vocabulario', 1, 'Lunes y Miércoles 10:00-12:00', '102', 1, 'active'),
-(2, 'Clase de Gramática', 2, 'Lunes y Miércoles 10:00-12:00', '106', 2, 'active'),
-(3, 'Clase de Matemáticas', 3, 'Lunes y Miércoles 10:00-12:00', '104', 3, 'active'),
-(4, 'Matemáticas Avanzadas', 1, 'Lunes y Miércoles 10:00-12:00', 'Aula 101', 13, 'active'),
-(5, 'Matemáticas Avanzadas', 1, 'Lunes y Miércoles 10:00-12:00', 'Aula 101', 16, 'active'),
-(6, 'Matemáticas Avanzadas', 1, 'Lunes y Miércoles 10:00-12:00', 'Aula 101', 17, 'active');
+INSERT INTO `classes` (`id`, `name`, `schedule`, `room_number`, `level_id`, `status`) VALUES
+(1, 'Clase de Vocabulario', 'Lunes y Miércoles 10:00-12:00', '103', 1, 'active'),
+(2, 'Clase de Gramática', 'Lunes y Miércoles 10:00-12:00', '106', 2, 'active'),
+(3, 'Clase de Matemáticas', 'Lunes y Miércoles 10:00-12:00', '104', 3, 'active'),
+(4, 'Matemáticas Avanzadas', 'Lunes y Miércoles 10:00-12:00', 'Aula 101', 13, 'active'),
+(5, 'Matemáticas Avanzadas', 'Lunes y Miércoles 10:00-12:00', 'Aula 101', 16, 'active'),
+(6, 'Matemáticas Avanzadas', 'Lunes y Miércoles 10:00-12:00', 'Aula 105', 17, 'active');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `class_teachers`
+--
+
+CREATE TABLE `class_teachers` (
+  `class_id` bigint(20) NOT NULL,
+  `teacher_id` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `class_teachers`
+--
+
+INSERT INTO `class_teachers` (`class_id`, `teacher_id`) VALUES
+(1, 1);
 
 -- --------------------------------------------------------
 
@@ -300,9 +317,9 @@ CREATE TABLE `statements` (
 --
 
 INSERT INTO `statements` (`id`, `exam_id`, `content`, `skill_id`, `text`, `score`, `level_id`, `status`) VALUES
-(1, NULL, 'Este examen evalúa el vocabulario básico.', 1, NULL, NULL, 1, 'active'),
-(2, NULL, 'Este examen evalúa la gramática avanzada.', 2, NULL, NULL, 2, 'active'),
-(3, NULL, 'Este examen evalúa las matemáticas intermedias.', 3, NULL, NULL, 3, 'active');
+(1, NULL, 'Este examen evalúa el vocabulario básico.', 1, 'text1', 10, 1, 'active'),
+(2, NULL, 'Este examen evalúa la gramática avanzada.', 2, 'text2', 20, 2, 'active'),
+(3, NULL, 'Este examen evalúa las matemáticas intermedias.', 3, 'text3', 30, 3, 'active');
 
 -- --------------------------------------------------------
 
@@ -331,7 +348,7 @@ CREATE TABLE `students` (
 
 INSERT INTO `students` (`id`, `name`, `email`, `date_of_birth`, `enrollment_date`, `phone_number`, `address`, `last_name`, `identification_document`, `city`, `level_id`, `status`) VALUES
 (1, 'Juán Manuel', 'juan.perez@example.com', '2024-09-04', '2024-08-22', '963852741123', 'Juan de esplandiú', 'Pérez Rodriguez', '96332154K', 'Madrid', 1, 'active'),
-(2, 'María', 'maria.lopez@example.com', '2024-09-06', '2024-08-22', '96321458741', 'odonell', 'Giménez Álvarez', '85463129P', 'Barcelona', 2, 'active'),
+(2, 'María', 'maria.lopez@exple.com', '2024-09-06', '2024-08-22', '96321458741', 'odonell', 'Giménez Álvarez', '85463129P', 'Barcelona', 2, 'active'),
 (3, 'Carlos', 'carlos.garcia@example.com', '2024-09-03', '2024-08-22', '213654789512', 'Barbara de braganza', 'Fernandez Alonso', '74569832N', 'Málaga', 3, 'active');
 
 -- --------------------------------------------------------
@@ -352,9 +369,11 @@ CREATE TABLE `student_classes` (
 --
 
 INSERT INTO `student_classes` (`student_id`, `class_id`, `enrollment_date`, `status`) VALUES
-(1, 1, '2024-08-22', 'active'),
+(1, 1, '2024-09-11', 'active'),
 (1, 6, '2024-08-28', 'active'),
+(2, 1, '2024-09-11', 'active'),
 (2, 2, '2024-08-22', 'active'),
+(3, 1, '2024-09-11', 'active'),
 (3, 3, '2024-08-22', 'active');
 
 -- --------------------------------------------------------
@@ -380,9 +399,9 @@ CREATE TABLE `teachers` (
 --
 
 INSERT INTO `teachers` (`id`, `name`, `email`, `hire_date`, `phone_number`, `address`, `department`, `last_name`, `status`) VALUES
-(1, 'José', 'qwrty@qwerty.com', '2024-09-27', '693582471', 'calle barbara de braganza', 'matematicas', 'Fernández', 'active'),
+(1, 'José', 'qwrty@qwerty.com', '2024-09-27', '693582471', 'calle barbara de braganza', 'Matematicas', 'Fernández', 'active'),
 (2, 'Luis', 'luis.fernandez@example.com', '2024-09-18', '753914826', 'calle odonell', 'Matemáticas', 'Fernández Torres', 'active'),
-(3, 'juan', 'qwerty@qwwrty.com', '2024-09-26', '987456321', 'juande esplandiu', '6546554789321', 'gonzalez', 'active');
+(3, 'juan', 'qwerty@qwwrty.com', '2024-09-26', '987456321', 'juan de esplandiu', '6546554789321', 'gonzalez', 'active');
 
 -- --------------------------------------------------------
 
@@ -469,8 +488,14 @@ ALTER TABLE `blocks`
 --
 ALTER TABLE `classes`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `teacher_id` (`teacher_id`),
   ADD KEY `level_id` (`level_id`);
+
+--
+-- Indices de la tabla `class_teachers`
+--
+ALTER TABLE `class_teachers`
+  ADD PRIMARY KEY (`class_id`,`teacher_id`),
+  ADD KEY `teacher_id` (`teacher_id`);
 
 --
 -- Indices de la tabla `exams`
@@ -600,7 +625,7 @@ ALTER TABLE `blocks`
 -- AUTO_INCREMENT de la tabla `classes`
 --
 ALTER TABLE `classes`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT de la tabla `exams`
@@ -642,13 +667,13 @@ ALTER TABLE `statements`
 -- AUTO_INCREMENT de la tabla `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `teachers`
 --
 ALTER TABLE `teachers`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `triggers`
@@ -688,8 +713,14 @@ ALTER TABLE `blocks`
 -- Filtros para la tabla `classes`
 --
 ALTER TABLE `classes`
-  ADD CONSTRAINT `classes_ibfk_1` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`id`),
   ADD CONSTRAINT `classes_ibfk_2` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`);
+
+--
+-- Filtros para la tabla `class_teachers`
+--
+ALTER TABLE `class_teachers`
+  ADD CONSTRAINT `class_teachers_ibfk_1` FOREIGN KEY (`class_id`) REFERENCES `classes` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `class_teachers_ibfk_2` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `exams`
