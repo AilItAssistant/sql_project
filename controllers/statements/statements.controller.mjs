@@ -35,9 +35,24 @@ export const getStatementsById = async (req, res) => {
     let conn;
     try {
         conn = await pool.getConnection();
-        let rows = await conn.query(
-            `SELECT * FROM statements WHERE id = ${req.params.statementId};`
-        );
+        let rows = await conn.query(`
+            SELECT
+                s.*,
+                GROUP_CONCAT(
+                    q.id 
+                ORDER BY 
+                    q.id) 
+                AS 
+                    question_ids
+            FROM
+                statements s
+            LEFT JOIN
+                questions q ON s.id = q.statement_id
+            WHERE
+                s.id = ${req.params.statementId}
+            GROUP BY
+                s.id;
+        `);
         rows.forEach((element) => {
             element.id = element.id.toString();
             if(element.exam_id){element.exam_id = element.exam_id.toString();}
