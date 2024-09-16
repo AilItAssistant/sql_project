@@ -75,7 +75,19 @@ export const postStatements = async (req, res) => {
         console.log(req.body);
         conn = await pool.getConnection();
         let rows = await conn.query(
-            `INSERT INTO statements (content, skill_id, text, score, level_id) VALUES ('${req.body.statement}', ${req.body.skills}, '${req.body.text}', ${req.body.puntuation}, ${req.body.level});`
+            `INSERT INTO 
+                statements (
+                    content, 
+                    skill_id, 
+                    text, 
+                    score, 
+                    level_id) 
+            VALUES (
+            '${req.body.statement}', 
+            ${req.body.skills}, 
+            '${req.body.text}', 
+            ${req.body.puntuation}, 
+            ${req.body.level});`
         );
         console.log(rows);
 

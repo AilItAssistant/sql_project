@@ -13,13 +13,11 @@ export const addQuestion = async (req, res) => {
                     content, 
                     skill_id, 
                     level_id, 
-                    difficulty, 
                     statement_id) 
             VALUES (
                 '${req.body.question}', 
                 ${req.body.skill_id}, 
                 ${req.body.level_id}, 
-                'Fácil', 
                 ${req.body.statement_id});
         `);
         new_statement_id = questions.insertId.toString();
