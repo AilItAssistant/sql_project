@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-09-2024 a las 15:44:44
+-- Tiempo de generación: 19-09-2024 a las 12:56:08
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -55,7 +55,16 @@ INSERT INTO `answers` (`id`, `question_id`, `content`, `is_correct`, `explanatio
 (11, 4, 'París', 1, NULL, 'active', 'A'),
 (12, 4, 'Londres', 0, NULL, 'active', 'B'),
 (13, 4, 'Berlín', 0, NULL, 'active', 'C'),
-(14, 4, 'Madrid', 0, NULL, 'active', 'D');
+(14, 4, 'Madrid', 0, NULL, 'active', 'D'),
+(15, 5, 'qwewqeewq', 0, NULL, 'active', NULL),
+(16, 5, 'wqeqwee', 0, NULL, 'active', NULL),
+(17, 5, 'wqeqew', 1, NULL, 'active', NULL),
+(18, 6, 'ewqeq', 0, NULL, 'active', NULL),
+(19, 6, 'qweqwe', 0, NULL, 'active', NULL),
+(20, 6, 'qwewqe', 0, NULL, 'active', NULL),
+(21, 7, 'qwe', 1, NULL, 'active', NULL),
+(22, 7, 'ert', 0, NULL, 'active', NULL),
+(23, 7, 'yui', 0, NULL, 'active', NULL);
 
 -- --------------------------------------------------------
 
@@ -249,6 +258,17 @@ INSERT INTO `levels` (`id`, `name`, `status`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `photos`
+--
+
+CREATE TABLE `photos` (
+  `id` bigint(20) NOT NULL,
+  `base64_data` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `questions`
 --
 
@@ -259,18 +279,22 @@ CREATE TABLE `questions` (
   `skill_id` bigint(20) DEFAULT NULL,
   `level_id` bigint(20) DEFAULT NULL,
   `statement_id` bigint(20) DEFAULT NULL,
-  `status` varchar(255) DEFAULT 'active'
+  `status` varchar(255) DEFAULT 'active',
+  `photo_id` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `questions`
 --
 
-INSERT INTO `questions` (`id`, `content`, `block_id`, `skill_id`, `level_id`, `statement_id`, `status`) VALUES
-(1, '¿Cuál es el sinónimo de \'rápido\'?', 1, 1, 1, 1, 'active'),
-(2, '¿Cómo se conjuga el verbo \'ir\' en pasado?', 2, 2, 2, 2, 'active'),
-(3, '¿Cuánto es 2 + 2?', 3, 3, 3, 3, 'active'),
-(4, '¿Cuál es la capital de Francia?', NULL, NULL, NULL, 1, 'active');
+INSERT INTO `questions` (`id`, `content`, `block_id`, `skill_id`, `level_id`, `statement_id`, `status`, `photo_id`) VALUES
+(1, '¿Cuál es el sinónimo de \'rápido\'?', 1, 1, 1, 1, 'active', NULL),
+(2, '¿Cómo se conjuga el verbo \'ir\' en pasado?', 2, 2, 2, 2, 'active', NULL),
+(3, '¿Cuánto es 2 + 2?', 3, 3, 3, 3, 'active', NULL),
+(4, '¿Cuál es la capital de Francia?', NULL, NULL, NULL, 1, 'active', NULL),
+(5, 'qwewqeq', NULL, 1, 1, 1, 'active', NULL),
+(6, 'qwewe', NULL, 1, 1, 1, 'active', NULL),
+(7, 'qwerty', NULL, 1, 1, 1, 'active', NULL);
 
 -- --------------------------------------------------------
 
@@ -309,17 +333,20 @@ CREATE TABLE `statements` (
   `text` text DEFAULT NULL,
   `score` int(11) DEFAULT NULL,
   `level_id` bigint(20) DEFAULT NULL,
-  `status` varchar(255) DEFAULT 'active'
+  `status` varchar(255) DEFAULT 'active',
+  `photo_id` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `statements`
 --
 
-INSERT INTO `statements` (`id`, `exam_id`, `content`, `skill_id`, `text`, `score`, `level_id`, `status`) VALUES
-(1, NULL, 'Este examen evalúa el vocabulario básico.', 1, 'text1', 10, 1, 'active'),
-(2, NULL, 'Este examen evalúa la gramática avanzada.', 2, 'text2', 20, 2, 'active'),
-(3, NULL, 'Este examen evalúa las matemáticas intermedias.', 3, 'text3', 30, 3, 'active');
+INSERT INTO `statements` (`id`, `exam_id`, `content`, `skill_id`, `text`, `score`, `level_id`, `status`, `photo_id`) VALUES
+(1, NULL, 'Este examen evalúa el vocabulario básico.', 1, 'text1', 10, 1, 'active', NULL),
+(2, NULL, 'Este examen evalúa la gramática avanzada.', 2, 'text2', 20, 2, 'active', NULL),
+(3, NULL, 'Este examen evalúa las matemáticas intermedias.', 3, 'text3', 30, 3, 'active', NULL),
+(4, NULL, 'texto prueba ', 1, 'texto prueba  2', 10, 1, 'active', NULL),
+(5, NULL, 'qwerty', 2, 'tyutuytutuytuytuyuuytuyutyuyuuuuuytutyuututyutyutyutytyu', 20, 1, 'active', NULL);
 
 -- --------------------------------------------------------
 
@@ -370,6 +397,8 @@ CREATE TABLE `student_classes` (
 
 INSERT INTO `student_classes` (`student_id`, `class_id`, `enrollment_date`, `status`) VALUES
 (1, 1, '2024-09-11', 'active'),
+(1, 2, '2024-09-16', 'active'),
+(1, 3, '2024-09-16', 'active'),
 (1, 6, '2024-08-28', 'active'),
 (2, 1, '2024-09-11', 'active'),
 (2, 2, '2024-08-22', 'active'),
@@ -538,13 +567,20 @@ ALTER TABLE `levels`
   ADD UNIQUE KEY `name` (`name`) USING HASH;
 
 --
+-- Indices de la tabla `photos`
+--
+ALTER TABLE `photos`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `questions`
 --
 ALTER TABLE `questions`
   ADD PRIMARY KEY (`id`),
   ADD KEY `block_id` (`block_id`),
   ADD KEY `skill_id` (`skill_id`),
-  ADD KEY `level_id` (`level_id`);
+  ADD KEY `level_id` (`level_id`),
+  ADD KEY `fk_questions_photos` (`photo_id`);
 
 --
 -- Indices de la tabla `skills`
@@ -560,7 +596,8 @@ ALTER TABLE `statements`
   ADD PRIMARY KEY (`id`),
   ADD KEY `exam_id` (`exam_id`),
   ADD KEY `skill_id` (`skill_id`),
-  ADD KEY `level_id` (`level_id`);
+  ADD KEY `level_id` (`level_id`),
+  ADD KEY `fk_statements_photos` (`photo_id`);
 
 --
 -- Indices de la tabla `students`
@@ -613,7 +650,7 @@ ALTER TABLE `user_actions`
 -- AUTO_INCREMENT de la tabla `answers`
 --
 ALTER TABLE `answers`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT de la tabla `blocks`
@@ -646,10 +683,16 @@ ALTER TABLE `levels`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
+-- AUTO_INCREMENT de la tabla `photos`
+--
+ALTER TABLE `photos`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `skills`
@@ -661,7 +704,7 @@ ALTER TABLE `skills`
 -- AUTO_INCREMENT de la tabla `statements`
 --
 ALTER TABLE `statements`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `students`
@@ -757,6 +800,7 @@ ALTER TABLE `exam_statements`
 -- Filtros para la tabla `questions`
 --
 ALTER TABLE `questions`
+  ADD CONSTRAINT `fk_questions_photos` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `questions_ibfk_1` FOREIGN KEY (`block_id`) REFERENCES `blocks` (`id`),
   ADD CONSTRAINT `questions_ibfk_2` FOREIGN KEY (`skill_id`) REFERENCES `skills` (`id`),
   ADD CONSTRAINT `questions_ibfk_3` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`);
@@ -771,6 +815,7 @@ ALTER TABLE `skills`
 -- Filtros para la tabla `statements`
 --
 ALTER TABLE `statements`
+  ADD CONSTRAINT `fk_statements_photos` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `statements_ibfk_1` FOREIGN KEY (`exam_id`) REFERENCES `exams` (`id`),
   ADD CONSTRAINT `statements_ibfk_2` FOREIGN KEY (`skill_id`) REFERENCES `skills` (`id`),
   ADD CONSTRAINT `statements_ibfk_3` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`);

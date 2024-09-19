@@ -72,8 +72,25 @@ export const getStatementsById = async (req, res) => {
 export const postStatements = async (req, res) => {
     let conn;
     try {
-        console.log(req.body);
+        //console.log(req.body);
         conn = await pool.getConnection();
+
+        let photo = await conn.query(`
+            INSERT INTO 
+                photos (
+                    base64_data
+                ) 
+            VALUES (
+                '${req.body.photo}'
+            );`);
+            let id = await conn.query(`
+            SELECT 
+                LAST_INSERT_ID() 
+            AS 
+                last_id;
+            `);
+            id = id[0].last_id.toString();
+                console.log(id)
         let rows = await conn.query(
             `INSERT INTO 
                 statements (
@@ -81,15 +98,17 @@ export const postStatements = async (req, res) => {
                     skill_id, 
                     text, 
                     score, 
-                    level_id) 
+                    level_id,
+                    photo_id
+                ) 
             VALUES (
             '${req.body.statement}', 
             ${req.body.skills}, 
             '${req.body.text}', 
             ${req.body.puntuation}, 
-            ${req.body.level});`
+            ${req.body.level},
+            ${id});`
         );
-        console.log(rows);
 
         res.json(200);
     } catch (error) {

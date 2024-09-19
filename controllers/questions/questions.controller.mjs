@@ -7,18 +7,35 @@ export const addQuestion = async (req, res) => {
     let new_statement_id;
     try {
         conn = await pool.getConnection();
+        let photo = await conn.query(`
+            INSERT INTO 
+                photos (
+                    base64_data
+                ) 
+            VALUES (
+                '${req.body.photo}'
+            );`);
+            let id = await conn.query(`
+            SELECT 
+                LAST_INSERT_ID() 
+            AS 
+                last_id;
+            `);
+            id = id[0].last_id.toString();
         let questions = await conn.query(`
             INSERT INTO 
                 questions (
                     content, 
                     skill_id, 
                     level_id, 
-                    statement_id) 
+                    statement_id,
+                    photo_id) 
             VALUES (
                 '${req.body.question}', 
                 ${req.body.skill_id}, 
                 ${req.body.level_id}, 
-                ${req.body.statement_id});
+                ${req.body.statement_id},
+                ${id});
         `);
         new_statement_id = questions.insertId.toString();
         for(let i = 0; req.body.responses.length > i; i++){
