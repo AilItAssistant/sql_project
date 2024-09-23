@@ -7,7 +7,7 @@ export const getStatements = async (req, res) => {
     let conn;
     try {
         conn = await pool.getConnection();
-        let rows = await conn.query("select * from statements ;");
+        let rows = await conn.query("select * from statements;");
         rows.forEach((element) => {
             element.id = element.id.toString();
             if (element.exam_id) {
@@ -18,6 +18,9 @@ export const getStatements = async (req, res) => {
             }
             if (element.level_id) {
                 element.level_id = element.level_id.toString();
+            }
+            if (element.photo_id) {
+                element.photo_id = element.photo_id.toString();
             }
         });
 
