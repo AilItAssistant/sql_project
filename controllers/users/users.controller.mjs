@@ -1,5 +1,7 @@
 import "dotenv/config";
 import { pool } from "../../index.mjs";
+import jwt from 'jsonwebtoken';
+const { sign, verify } = jwt;
 
 //?GET ALL USERS users.get("/", getUsers);
 
@@ -194,4 +196,38 @@ export const editUsers = async (req, res) => {
     } finally {
         if (conn) return conn.end();
     }
+};
+
+export const login = async ( req, res ) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        let rows = await conn.query(`select username, role, permissions, name, last_name from users where username = '${req.body.user}' and password_hash = '${req.body.pass}';`);
+        
+        if( rows.length > 0){
+            let data = JSON.stringify(rows[0]);
+            const token = jwt.sign(data, 'stil');
+            res.json({token})
+        } else {
+            res.json('Usuario o clave incorrecto');
+        }
+    } catch (error) {
+        console.log(error);
+    } finally {
+        if (conn) return conn.end();
+    }
+};
+
+export function verifyToken(req,res, next){
+    if(!req.headers.authorization) return res.status(401).json('No autorizado');
+  
+    const token = req.headers.authorization.substr(7);
+    if(token!==''){
+        const content = jwt.verify(token,'stil');
+        req.data = content;
+        next();
+    }else{
+        res.status(401).json('Token vacio');
+    }
+  
 };

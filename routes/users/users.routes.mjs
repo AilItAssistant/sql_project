@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { verifyToken } from "../../controllers/users/users.controller.mjs";
 
 import {
     getUsers,
@@ -6,13 +7,14 @@ import {
     statusUsers,
     deleteUsers,
     editUsers,
-    addUsers
+    addUsers,
+    login
 } from "../../controllers/users/users.controller.mjs";
 
 export const users = Router();
 
 //?GET ALL USERS
-users.get("/", getUsers);
+users.get("/", /*verifyToken,*/getUsers);
 
 //?GET ALL USERS WITH FILTERS
 users.put("/filter", filterUsers);
@@ -28,3 +30,6 @@ users.put("/edit", editUsers);
 
 //?ADD USERS
 users.post("/add", addUsers);
+
+//?LOG IN
+users.post("/login", login);
