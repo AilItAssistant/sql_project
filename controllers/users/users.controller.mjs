@@ -210,24 +210,24 @@ export const login = async ( req, res ) => {
             res.json({token})
         } else {
             res.json('Usuario o clave incorrecto');
-        }
+        };
     } catch (error) {
         console.log(error);
     } finally {
         if (conn) return conn.end();
-    }
+    };
 };
 
 export function verifyToken(req,res, next){
-    if(!req.headers.authorization) return res.status(401).json('No autorizado');
+    if( !req.body.token ) return res.status(401).json('No autorizado');
   
-    const token = req.headers.authorization.substr(7);
-    if(token!==''){
+    const token = req.body.token;
+    if( token !== '' ){
         const content = jwt.verify(token,'stil');
         req.data = content;
+        res.status(200).json(req.data);
         next();
     }else{
         res.status(401).json('Token vacio');
-    }
-  
+    };
 };

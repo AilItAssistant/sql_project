@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { verifyToken } from "../../controllers/users/users.controller.mjs";
 
 import {
     getUsers,
@@ -8,7 +7,8 @@ import {
     deleteUsers,
     editUsers,
     addUsers,
-    login
+    login,
+    verifyToken
 } from "../../controllers/users/users.controller.mjs";
 
 export const users = Router();
@@ -33,3 +33,6 @@ users.post("/add", addUsers);
 
 //?LOG IN
 users.post("/login", login);
+
+//?VERIFY TOKEN
+users.post("/verify", verifyToken);
