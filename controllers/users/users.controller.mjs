@@ -1,41 +1,47 @@
 import "dotenv/config";
 import { pool } from "../../index.mjs";
 import jwt from 'jsonwebtoken';
-const { sign, verify } = jwt;
 
 //?GET ALL USERS users.get("/", getUsers);
 
 export const getUsers = async (req, res) => {
-    let conn;
-    try {
-        conn = await pool.getConnection();
-        let rows = await conn.query(
-            `SELECT 
-                id, 
-                username, 
-                email, 
-                role, 
-                created_at, 
-                name, 
-                last_name, 
-                phone_number, 
-                city, 
-                permissions, 
-                status 
-            from 
-                users;
-            `);
-        console.log(rows)
-        rows.forEach((element) => {
-            element.id = element.id.toString();
-            element.created_at = element.created_at.toLocaleDateString('es-ES', {year: 'numeric', month: 'numeric', day: 'numeric',});
-        });
-        res.json(rows);
-    } catch (error) {
-        console.log(error);
-    } finally {
-        if (conn) return conn.end();
-    }
+    console.log(req.data);
+    if ( req.data ) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            let rows = await conn.query(
+                `SELECT 
+                    id, 
+                    username, 
+                    email, 
+                    role, 
+                    created_at, 
+                    name, 
+                    last_name, 
+                    phone_number, 
+                    city, 
+                    permissions, 
+                    status 
+                from 
+                    users;
+                `);
+            console.log(rows)
+            rows.forEach((element) => {
+                element.id = element.id.toString();
+                element.created_at = element.created_at.toLocaleDateString('es-ES', {year: 'numeric', month: 'numeric', day: 'numeric',});
+            });
+            let response = {
+                users: rows,
+                dataLogin: req.data
+            }
+            res.json(response);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        }
+    };
 };
 
 export const filterUsers = async (req, res) => {
@@ -218,15 +224,24 @@ export const login = async ( req, res ) => {
     };
 };
 
-export function verifyToken(req,res, next){
-    if( !req.body.token ) return res.status(401).json('No autorizado');
-  
-    const token = req.body.token;
+export function verifyToken( req, res, next ){
+    console.log(req.headers.authorization)
+    if( !req.headers.authorization ) { 
+        return res.status(401).json('No autorizado');
+    };
+    const token = req.headers.authorization;
     if( token !== '' ){
-        const content = jwt.verify(token,'stil');
-        req.data = content;
-        res.status(200).json(req.data);
-        next();
+        let content;
+        try {
+            content = jwt.verify(token,'stil');
+            req.data = content;
+            res.status(200);
+            next();
+        } catch ( err ) {
+            console.log(err);
+            res.status(401).json("Token incorrecto");
+            next();
+        }
     }else{
         res.status(401).json('Token vacio');
     };

@@ -14,7 +14,7 @@ import {
 export const users = Router();
 
 //?GET ALL USERS
-users.get("/", /*verifyToken,*/getUsers);
+users.get("/", verifyToken, getUsers);
 
 //?GET ALL USERS WITH FILTERS
 users.put("/filter", filterUsers);
