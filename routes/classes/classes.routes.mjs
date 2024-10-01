@@ -1,5 +1,7 @@
 import { Router } from "express";
 
+import { verifyToken } from "../../controllers/users/users.controller.mjs";
+
 import {
     getClasses,
     filterClasses,
@@ -14,25 +16,25 @@ import {
 export const classes = Router();
 
 //?GET ALL CLASSES
-classes.get("/", getClasses);
+classes.get("/", verifyToken, getClasses);
 
 //?GET CLASSES WITH FILTER
-classes.put("/filter", filterClasses);
+classes.put("/filter", verifyToken, filterClasses);
 
 //?MODIFY STATUS TO CLASSES
-classes.put("/status", statusClass);
+classes.put("/status", verifyToken, statusClass);
 
 //?DELETE CLASSES
-classes.put("/delete", deleteClass);
+classes.put("/delete", verifyToken, deleteClass);
 
 //?EDIT CLASSES
-classes.put("/edit", editClass);
+classes.put("/edit", verifyToken, editClass);
 
 //?ADD CLASSES
-classes.post("/add", addClass);
+classes.post("/add", verifyToken, addClass);
 
 //?SEARCH CLASSES BY ALUMNO ID
-classes.put("/studentId", getClassesByStudentId);
+classes.put("/studentId", verifyToken, getClassesByStudentId);
 
 //?SEARCH CLASSES BY TEACHER ID
-classes.put("/teacherId", getClassesByTeacherId);
+classes.put("/teacherId", verifyToken, getClassesByTeacherId);

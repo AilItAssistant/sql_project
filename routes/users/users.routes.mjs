@@ -8,7 +8,8 @@ import {
     editUsers,
     addUsers,
     login,
-    verifyToken
+    verifyToken,
+    verifyTokenHeader
 } from "../../controllers/users/users.controller.mjs";
 
 export const users = Router();
@@ -32,7 +33,10 @@ users.put("/edit", verifyToken, editUsers);
 users.post("/add", verifyToken, addUsers);
 
 //?LOG IN
-users.post("/login", verifyToken, login);
+users.post("/login", login);
 
 //?VERIFY TOKEN
-users.post("/verify", verifyToken, verifyToken);
+users.get("/verify", verifyToken);
+
+//?VERIFY TOKEN TO HEADER
+users.get("/verifyHeader", verifyTokenHeader);

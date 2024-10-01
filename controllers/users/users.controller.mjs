@@ -14,7 +14,6 @@ export const getUsers = async (req, res) => {
                     id, 
                     username, 
                     email, 
-                    role, 
                     created_at, 
                     name, 
                     last_name, 
@@ -147,8 +146,7 @@ export const addUsers = async (req, res) => {
                 INSERT INTO users (
                     username, 
                     email, 
-                    password_hash, 
-                    role, 
+                    password_hash,  
                     name, 
                     last_name, 
                     phone_number, 
@@ -159,7 +157,6 @@ export const addUsers = async (req, res) => {
                     '${req.body.username}',                 
                     '${req.body.email}',
                     'hashed_password',
-                    '${req.body.role}',
                     '${req.body.name}',
                     '${req.body.last_name}',
                     '${req.body.phone_number}',             
@@ -190,7 +187,6 @@ export const editUsers = async (req, res) => {
                     username = IF('${req.body.username}' != '', '${req.body.username}', username),
                     email = IF('${req.body.email}' != '', '${req.body.email}', email),
                     password_hash = IF('${req.body.password_hash}' != '', '${req.body.password_hash}', password_hash),
-                    role = IF('${req.body.role}' != '', '${req.body.role}', role),
                     name = IF('${req.body.name}' != '', '${req.body.name}', name),
                     last_name = IF('${req.body.last_name}' != '', '${req.body.last_name}', last_name),
                     phone_number = IF('${req.body.phone_number}' != '', '${req.body.phone_number}', phone_number),
@@ -214,7 +210,7 @@ export const login = async ( req, res ) => {
     let conn;
     try {
         conn = await pool.getConnection();
-        let rows = await conn.query(`select username, role, permissions, name, last_name from users where username = '${req.body.user}' and password_hash = '${req.body.pass}';`);
+        let rows = await conn.query(`select username, permissions, name, last_name from users where username = '${req.body.user}' and password_hash = '${req.body.pass}';`);
         
         if( rows.length > 0){
             let data = JSON.stringify(rows[0]);
@@ -233,22 +229,55 @@ export const login = async ( req, res ) => {
 export function verifyToken( req, res, next ){
     console.log(req.headers.authorization)
     if( !req.headers.authorization ) { 
+        console.log('no llega token')
         return res.status(401).json('No autorizado');
     };
     const token = req.headers.authorization;
     if( token !== '' ){
         let content;
         try {
+            console.log('llega al try')
             content = jwt.verify(token,'stil');
             req.data = content;
+            console.log('sale del try')
             res.status(200);
             next();
         } catch ( err ) {
+            console.log('llega al error')
             console.log(err);
             res.status(401).json("Token incorrecto");
             next();
         }
     }else{
+        console.log('token vacio')
+        res.status(401).json('Token vacio');
+    };
+};
+
+export function verifyTokenHeader( req, res, next ){
+    console.log(req.headers.authorization)
+    if( !req.headers.authorization ) { 
+        console.log('no llega token')
+        return res.status(401).json('No autorizado');
+    };
+    const token = req.headers.authorization;
+    if( token !== '' ){
+        let content;
+        try {
+            console.log('llega al try')
+            content = jwt.verify(token,'stil');
+            req.data = content;
+            res.status(200).json(content);
+            console.log('sale del try')
+            next();
+        } catch ( err ) {
+            console.log('llega al error')
+            console.log(err);
+            res.status(401).json("Token incorrecto");
+            next();
+        }
+    }else{
+        console.log('token vacio')
         res.status(401).json('Token vacio');
     };
 };
