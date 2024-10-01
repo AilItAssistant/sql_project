@@ -17,22 +17,22 @@ export const users = Router();
 users.get("/", verifyToken, getUsers);
 
 //?GET ALL USERS WITH FILTERS
-users.put("/filter", filterUsers);
+users.put("/filter", verifyToken, filterUsers);
 
 //?MODIFY STATUS TO USERS
-users.put("/status", statusUsers);
+users.put("/status", verifyToken, statusUsers);
 
 //?DELETE USERS
-users.put("/delete", deleteUsers);
+users.put("/delete", verifyToken, deleteUsers);
 
 //?EDIT USERS
-users.put("/edit", editUsers);
+users.put("/edit", verifyToken, editUsers);
 
 //?ADD USERS
-users.post("/add", addUsers);
+users.post("/add", verifyToken, addUsers);
 
 //?LOG IN
-users.post("/login", login);
+users.post("/login", verifyToken, login);
 
 //?VERIFY TOKEN
-users.post("/verify", verifyToken);
+users.post("/verify", verifyToken, verifyToken);
