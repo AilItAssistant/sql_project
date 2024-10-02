@@ -1,5 +1,6 @@
 import { Router } from "express";
 
+import  { verifyToken } from "../../controllers/users/users.controller.mjs";
 import {
     getStatements,
     getStatementsById,
@@ -10,13 +11,13 @@ import {
 export const statements = Router();
 
 //?GET ALL STATEMENTS
-statements.get("/", getStatements);
+statements.get("/", verifyToken, getStatements);
 
 //?GET STATEMENTS AND DETAILS
-statements.get("/details", getStatementsAndDetails);
+statements.get("/details", verifyToken, getStatementsAndDetails);
 
 //?GET STATEMENTS BY ID
-statements.get("/:statementId", getStatementsById);
+statements.get("/:statementId", verifyToken, getStatementsById);
 
 //?POST STATEMENTS
-statements.post("/", postStatements);
+statements.post("/", verifyToken, postStatements);

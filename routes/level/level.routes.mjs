@@ -1,5 +1,6 @@
 import { Router } from "express";
 
+import { verifyToken } from "../../controllers/users/users.controller.mjs";
 import {
     getLevels,
     editLevel,
@@ -13,19 +14,19 @@ export const levels = Router();
 
 //?GET ALL LEVELS
 
-levels.get("/", getLevels);
+levels.get("/", verifyToken, getLevels);
 
 //?EDIT LEVEL
-levels.put("/edit", editLevel);
+levels.put("/edit", verifyToken, editLevel);
 
 //?LEVEL CHANGE STATUS
-levels.put("/status", statusLevel);
+levels.put("/status", verifyToken, statusLevel);
 
 //?LEVEL ADD
-levels.post("/add", addLevel);
+levels.post("/add", verifyToken, addLevel);
 
 //?DELETE LEVEL
-levels.put("/delete", deleteLevel);
+levels.put("/delete", verifyToken, deleteLevel);
 
 //?SEARCH LEVELS
-levels.put("/search", searchLevel)
+levels.put("/search", verifyToken, searchLevel)

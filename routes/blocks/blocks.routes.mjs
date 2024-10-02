@@ -1,5 +1,6 @@
 import { Router } from "express";
 
+import { verifyToken } from "../../controllers/users/users.controller.mjs";
 import {
     getBlocks,
     editBlock,
@@ -12,19 +13,19 @@ import {
 export const blocks = Router();
 
 //?GET ALL BLOCKS
-blocks.get("/", getBlocks);
+blocks.get("/", verifyToken, getBlocks);
 
 //?EDIT BLOCKS
-blocks.put("/edit", editBlock);
+blocks.put("/edit", verifyToken, editBlock);
 
 //?BLOCKS CHANGE STATUS
-blocks.put("/status", statusBlock);
+blocks.put("/status", verifyToken, statusBlock);
 
 //?ADD BLOCKS 
-blocks.post("/add", addBlock);
+blocks.post("/add", verifyToken, addBlock);
 
 //?DELETE BLOCKS
-blocks.put("/delete", deleteBlock);
+blocks.put("/delete", verifyToken, deleteBlock);
 
 //?SEARCH BLOCKS
-blocks.put("/search", searchBlock)
+blocks.put("/search", verifyToken, searchBlock)

@@ -31,7 +31,7 @@ export const getUsers = async (req, res) => {
             let response = {
                 users: rows,
                 dataLogin: req.data
-            }
+            };
             res.json(response);
         } catch (error) {
             console.log(error);

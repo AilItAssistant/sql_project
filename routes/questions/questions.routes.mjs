@@ -1,5 +1,6 @@
 import { Router } from "express";
 
+import { verifyToken } from "../../controllers/users/users.controller.mjs";
 import {
     addQuestion,
     getQuestionById
@@ -8,7 +9,7 @@ import {
 export const questions = Router();
 
 //?PUSH QUESTION
-questions.post("/add", addQuestion);
+questions.post("/add", verifyToken, addQuestion);
 
 //?GET QUESTION BY ID
-questions.put("/getById", getQuestionById);
+questions.put("/getById", verifyToken, getQuestionById);

@@ -1,5 +1,6 @@
 import { Router } from "express";
 
+import { verifyToken } from "../../controllers/users/users.controller.mjs"
 import {
     getTeachers,
     filterTeachers,
@@ -17,34 +18,34 @@ import {
 export const teachers = Router();
 
 //?GET ALL TEACHERS
-teachers.get("/", getTeachers);
+teachers.get("/", verifyToken, getTeachers);
 
 //?GET ALL TEACHERS WITH FILTERS
-teachers.put("/filter", filterTeachers);
+teachers.put("/filter", verifyToken, filterTeachers);
 
 //?DELETE TEACHER BY ID
-teachers.put("/delete", deleteTeacher);
+teachers.put("/delete", verifyToken, deleteTeacher);
 
 //?CHANGE STATUS
-teachers.put("/status", statusTeacher);
+teachers.put("/status", verifyToken, statusTeacher);
 
 //?ADD TEACHER
-teachers.post("/add", addTeacher);
+teachers.post("/add", verifyToken, addTeacher);
 
 //?EDIT TEACHER
-teachers.put("/edit", editTeacher);
+teachers.put("/edit", verifyToken, editTeacher);
 
 //?ADD CLASS TO TEACHER
-teachers.put("/addClass", addClass);
+teachers.put("/addClass", verifyToken, addClass);
 
 //?DELETE CLASS TO TEACHER
-teachers.put("/deleteClass", deleteClass);
+teachers.put("/deleteClass", verifyToken, deleteClass);
 
 //?TEACHERS BY CLASSID       
-teachers.put("/teachersByClassId", teacherByClassId);
+teachers.put("/teachersByClassId", verifyToken, teacherByClassId);
 
 //?ADD TEACHER TO CLASS  
-teachers.put("/addTeacherToClass", addTeacherToClass);
+teachers.put("/addTeacherToClass", verifyToken, addTeacherToClass);
 
 //?DELETE TEACHER TO CLASS
-teachers.put("/deleteTeacherToClass", deleteTeacherToClass);
+teachers.put("/deleteTeacherToClass", verifyToken, deleteTeacherToClass);

@@ -110,6 +110,7 @@ export const getClasses = async (req, res) => {
 };
 
 export const filterClasses = async (req, res) => {
+    console.log(req.body)
     if ( req.data ) {
         let conn;
         try {
@@ -118,36 +119,42 @@ export const filterClasses = async (req, res) => {
                 SELECT 
                     c.id AS class_id, 
                     c.name AS class_name, 
-                    c.level AS class_level, 
+                    COALESCE(l.name, 'N/A') AS class_level, 
                     c.schedule, 
+                    c.level_id,
                     c.room_number, 
                     c.status AS class_status, 
                     t.name AS teacher_name, 
                     t.last_name AS teacher_last_name, 
                     t.status AS teacher_status, 
-                    COALESCE(s.name, 'No tiene alumnos') AS student_name, 
+                    COALESCE(s.name, 'No tiene alumnos') AS student_name,
                     COALESCE(s.last_name, '') AS student_last_name, 
                     COALESCE(s.phone_number, '') AS student_phone, 
-                    COALESCE(s.enrollment_date, '') AS enrollment_date, 
+                    COALESCE(s.enrollment_date, '') AS enrollment_date,
                     COALESCE(s.city, '') AS student_city, 
                     COALESCE(s.id, '') AS student_id, 
                     COALESCE(s.email, '') AS student_email, 
                     COALESCE(s.status, 'N/A') AS student_status 
                 FROM 
                     classes c 
-                LEFT JOIN
-                    teachers t ON c.teacher_id = t.id 
+                LEFT JOIN 
+                    class_teachers ct ON c.id = ct.class_id
+                LEFT JOIN 
+                    teachers t ON ct.teacher_id = t.id 
                 LEFT JOIN 
                     student_classes sc ON c.id = sc.class_id 
                 LEFT JOIN 
-                    students s ON sc.student_id = s.id 
+                    students s ON sc.student_id = s.id
+                LEFT JOIN 
+                    levels l ON c.level_id = l.id
                 WHERE 
                     (t.last_name LIKE CONCAT(IFNULL('${req.body.last_name}', ''), '%')) OR 
-                    (c.room_number LIKE CONCAT(IFNULL('${req.body.room_number}', ''), '%')) OR 
-                    (c.level LIKE CONCAT(IFNULL('${req.body.level}', ''), '%')) OR 
+                    (c.room_number LIKE CONCAT(IFNULL('${req.body.class}', ''), '%')) OR 
+                    (l.name LIKE CONCAT(IFNULL('${req.body.level}', ''), '%')) OR 
                     (c.name LIKE CONCAT(IFNULL('${req.body.class_name}', ''), '%')) 
-                ORDER BY
-                    c.id, s.id;
+                ORDER BY 
+                    c.id, 
+                    s.id;
             `);
             rows.forEach(element => {
                 element.class_id = element.class_id.toString();
@@ -343,31 +350,29 @@ export const getClassesByStudentId = async (req, res) => {
         try {
             conn = await pool.getConnection();
             let rows = await conn.query(`
-                SELECT 
+                SELECT  
+                    s.last_name AS student_last_name, 
                     c.id AS class_id, 
                     c.name AS class_name, 
-                    c.schedule, 
-                    COALESCE(l.name, 'N/A') AS level_name,
-                    c.level_id,
-                    c.room_number, 
-                    c.status AS class_status, 
+                    COALESCE(l.name, 'N/A') AS class_level,
                     t.name AS teacher_name, 
-                    t.last_name AS teacher_last_name, 
-                    t.status AS teacher_status
+                    t.last_name AS teacher_last_name
                 FROM 
-                    student_classes sc
+                    students s
+                JOIN 
+                    student_classes sc ON s.id = sc.student_id
                 JOIN 
                     classes c ON sc.class_id = c.id
-                JOIN 
-                    class_teachers ct ON c.id = ct.class_id
-                JOIN 
-                    teachers t ON ct.teacher_id = t.id
                 LEFT JOIN 
                     levels l ON c.level_id = l.id
+                LEFT JOIN 
+                    class_teachers ct ON c.id = ct.class_id
+                LEFT JOIN 
+                    teachers t ON ct.teacher_id = t.id
                 WHERE 
-                    sc.student_id = ${req.body.id};
+                    s.id = ${req.body.id};
                 `);
-
+                console.log(rows)
                 rows.forEach(element => {
                     element.class_id = element.class_id.toString();
                     if(element.teacher_id){element.teacher_id = element.teacher_id.toString();}
