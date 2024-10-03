@@ -1,6 +1,8 @@
 import "dotenv/config";
 import { pool } from "../../index.mjs";
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+
 
 //?GET ALL USERS users.get("/", getUsers);
 
@@ -140,6 +142,21 @@ export const deleteUsers = async (req, res) => {
 export const addUsers = async (req, res) => {
     if ( req.data ) {
         let conn;
+        let hashed_password;
+        let saltRounds = 11;
+        /*async function hash(){
+            await bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
+                hashed_password = hash;
+            });
+            return hash
+        }
+        hashed_password = hash();
+        await hash()*/
+
+        bcrypt.hash(req.body.password, saltRounds).then(hash => {
+            console.log('Hash ', hash)
+        }).catch(err => console.error(err.message))
+
         try {
             conn = await pool.getConnection();
             let rows = await conn.query(`
@@ -156,7 +173,7 @@ export const addUsers = async (req, res) => {
                 ) VALUES (
                     '${req.body.username}',                 
                     '${req.body.email}',
-                    'hashed_password',
+                    '${hashed_password}',
                     '${req.body.name}',
                     '${req.body.last_name}',
                     '${req.body.phone_number}',             
@@ -208,18 +225,21 @@ export const editUsers = async (req, res) => {
 
 export const login = async ( req, res ) => {
     let conn;
+    let correct;
     try {
         conn = await pool.getConnection();
-        let rows = await conn.query(`select username, permissions, name, last_name from users where username = '${req.body.user}' and password_hash = '${req.body.pass}';`);
-        
-        if( rows.length > 0){
-            let data = JSON.stringify(rows[0]);
-            const token = jwt.sign(data, 'stil');
-            res.json({token})
-        } else {
-            res.json('Usuario o clave incorrecto');
-        };
-    } catch (error) {
+        let hash = await conn.query(`select username, permissions, name, last_name, password_hash from users where username = '${req.body.user}';`);
+        bcrypt.compare(req.body.pass, hash[0].password_hash, function(err, result) {
+            correct = result;
+            if( correct ){
+                let data = JSON.stringify(hash[0]);
+                const token = jwt.sign(data, 'stil');
+                res.json({token})
+            } else {
+                res.json('Usuario o clave incorrecto');
+            };
+        });
+    } catch ( error ) {
         console.log(error);
     } finally {
         if (conn) return conn.end();
