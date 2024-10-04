@@ -142,34 +142,16 @@ export const deleteUsers = async (req, res) => {
 export const addUsers = async (req, res) => {
     if ( req.data ) {
         let conn;
-        let hashed_password;
         let saltRounds = 11;
-        /*async function hash(){
-            await bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
-                hashed_password = hash;
-            });
-            return hash
-        }
-        hashed_password = hash();
-        await hash()*/
-
-        bcrypt.hash(req.body.password, saltRounds).then(hash => {
-            console.log('Hash ', hash)
-        }).catch(err => console.error(err.message))
-
+        let hashed_password = await bcrypt.hash(req.body.pass, saltRounds);
         try {
             conn = await pool.getConnection();
             let rows = await conn.query(`
                 INSERT INTO users (
-                    username, 
-                    email, 
-                    password_hash,  
-                    name, 
-                    last_name, 
-                    phone_number, 
-                    city, 
-                    permissions, 
-                    status
+                    username, email, 
+                    password_hash, name, 
+                    last_name,  phone_number, 
+                    city, permissions, status
                 ) VALUES (
                     '${req.body.username}',                 
                     '${req.body.email}',
@@ -180,15 +162,13 @@ export const addUsers = async (req, res) => {
                     '${req.body.city}',
                     '${req.body.permissions}',
                     '${req.body.status}'
-                );
-                `);
-            
+                );`);
             res.json(200);
         } catch (error) {
             console.log(error);
         } finally {
             if (conn) return conn.end();
-        }
+        };
     };
 };
 
