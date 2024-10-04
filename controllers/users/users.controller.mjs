@@ -3,7 +3,6 @@ import { pool } from "../../index.mjs";
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
-
 //?GET ALL USERS users.get("/", getUsers);
 
 export const getUsers = async (req, res) => {
@@ -173,8 +172,12 @@ export const addUsers = async (req, res) => {
 };
 
 export const editUsers = async (req, res) => {
+    console.log(req.body)
     if ( req.data ) {
         let conn;
+        let saltRounds = 11;
+        let hashed_password;
+        if ( req.body.pass ) { hashed_password = await bcrypt.hash(req.body.pass, saltRounds); }
         try {
             conn = await pool.getConnection();
             let rows = await conn.query(`
@@ -189,11 +192,11 @@ export const editUsers = async (req, res) => {
                     phone_number = IF('${req.body.phone_number}' != '', '${req.body.phone_number}', phone_number),
                     city = IF('${req.body.city}' != '', '${req.body.city}', city),
                     permissions = IF('${req.body.permissions}' != '', '${req.body.permissions}', permissions),
+                    password_hash = IF('${hashed_password}' != '', '${hashed_password}', password_hash),
                     status = IF('${req.body.status}' != '', '${req.body.status}', status)
                 WHERE 
                     id = ${req.body.id};
                 `);
-            
             res.json(200);
         } catch (error) {
             console.log(error);
