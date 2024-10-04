@@ -36,11 +36,6 @@ export const editLevel = async (req, res) => {
                 WHERE 
                     id = ${req.body.id};
                 `);
-            let response = {
-                levels: rows,
-                dataLogin: req.data
-            };
-                res.json(response);
             res.json(200);
         } catch (error) {
             console.log(error);

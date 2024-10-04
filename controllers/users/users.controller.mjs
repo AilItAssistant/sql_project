@@ -230,57 +230,52 @@ export const login = async ( req, res ) => {
 };
 
 export function verifyToken( req, res, next ){
-    console.log(req.headers.authorization)
     if( !req.headers.authorization ) { 
-        console.log('no llega token')
         return res.status(401).json('No autorizado');
     };
     const token = req.headers.authorization;
     if( token !== '' ){
         let content;
         try {
-            console.log('llega al try')
             content = jwt.verify(token,'stil');
             req.data = content;
-            console.log('sale del try')
             res.status(200);
             next();
         } catch ( err ) {
-            console.log('llega al error')
             console.log(err);
             res.status(401).json("Token incorrecto");
             next();
         }
     }else{
-        console.log('token vacio')
         res.status(401).json('Token vacio');
     };
 };
 
 export function verifyTokenHeader( req, res, next ){
-    console.log(req.headers.authorization)
     if( !req.headers.authorization ) { 
-        console.log('no llega token')
         return res.status(401).json('No autorizado');
     };
     const token = req.headers.authorization;
     if( token !== '' ){
         let content;
+        let result;
         try {
-            console.log('llega al try')
             content = jwt.verify(token,'stil');
             req.data = content;
-            res.status(200).json(content);
-            console.log('sale del try')
+            result = {
+                username: content.username,
+                permissions: content.permissions,
+                name: content.name,
+                last_name: content.last_name
+            };
+            res.status(200).json(result);
             next();
         } catch ( err ) {
-            console.log('llega al error')
             console.log(err);
             res.status(401).json("Token incorrecto");
             next();
         }
     }else{
-        console.log('token vacio')
         res.status(401).json('Token vacio');
     };
 };

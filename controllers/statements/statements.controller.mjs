@@ -4,31 +4,33 @@ import { pool } from "../../index.mjs";
 //?GET ALL STATEMENTS
 
 export const getStatements = async (req, res) => {
-    let conn;
-    try {
-        conn = await pool.getConnection();
-        let rows = await conn.query("select * from statements;");
-        rows.forEach((element) => {
-            element.id = element.id.toString();
-            if (element.exam_id) {
-                element.exam_id = element.exam_id.toString();
-            }
-            if (element.skill_id) {
-                element.skill_id = element.skill_id.toString();
-            }
-            if (element.level_id) {
-                element.level_id = element.level_id.toString();
-            }
-            if (element.photo_id) {
-                element.photo_id = element.photo_id.toString();
-            }
-        });
-
-        res.json(rows);
-    } catch (error) {
-        console.log(error);
-    } finally {
-        if (conn) return conn.end();
+    if ( req.data ) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            let rows = await conn.query("select * from statements;");
+            rows.forEach((element) => {
+                element.id = element.id.toString();
+                if (element.exam_id) {
+                    element.exam_id = element.exam_id.toString();
+                }
+                if (element.skill_id) {
+                    element.skill_id = element.skill_id.toString();
+                }
+                if (element.level_id) {
+                    element.level_id = element.level_id.toString();
+                }
+                if (element.photo_id) {
+                    element.photo_id = element.photo_id.toString();
+                }
+            });
+    
+            res.json(rows);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        }
     }
 };
 
