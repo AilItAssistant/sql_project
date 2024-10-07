@@ -7,13 +7,17 @@ import {
     statusSkill,
     addSkill,
     deleteSkill,
-    searchSkill
+    searchSkill,
+    getActiveSkills
 } from "../../controllers/skill/skill.controller.mjs";
 
 export const skills = Router();
 
 //?GET ALL SKILLS
 skills.get("/", verifyToken, getSkills);
+
+//?GET ACIVE SKILLS
+skills.get("/active", verifyToken, getActiveSkills);
 
 //?EDIT SKILL
 skills.put("/edit", verifyToken, editSkill);

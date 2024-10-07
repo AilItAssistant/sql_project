@@ -2,7 +2,6 @@ import "dotenv/config";
 import { pool } from "../../index.mjs";
 
 //?GET ALL STATEMENTS
-
 export const getStatements = async (req, res) => {
     if ( req.data ) {
         let conn;
@@ -79,25 +78,29 @@ export const getStatementsById = async (req, res) => {
 export const postStatements = async (req, res) => {
     if ( req.data ) {
         let conn;
+        let id;
         try {
             conn = await pool.getConnection();
-    
-            let photo = await conn.query(`
-                INSERT INTO 
-                    photos (
-                        base64_data
-                    ) 
-                VALUES (
-                    '${req.body.photo}'
-                );`);
-                let id = await conn.query(`
-                SELECT 
-                    LAST_INSERT_ID() 
-                AS 
-                    last_id;
-                `);
-                id = id[0].last_id.toString();
+            if(req.body.photo !== undefined){
+                let photo = await conn.query(`
+                    INSERT INTO 
+                        photos (
+                            base64_data
+                        ) 
+                    VALUES (
+                        '${req.body.photo}'
+                    );`);
+                    id = await conn.query(`
+                    SELECT 
+                        LAST_INSERT_ID() 
+                    AS 
+                        last_id;
+                    `);
+                    id = id[0].last_id.toString();
                     console.log(id)
+            } else {
+                id = null;
+            }
             let rows = await conn.query(
                 `INSERT INTO 
                     statements (

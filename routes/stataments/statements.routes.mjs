@@ -20,4 +20,4 @@ statements.get("/details", verifyToken, getStatementsAndDetails);
 statements.get("/:statementId", verifyToken, getStatementsById);
 
 //?POST STATEMENTS
-statements.post("/", verifyToken, postStatements);
+statements.post("/add", verifyToken, postStatements);

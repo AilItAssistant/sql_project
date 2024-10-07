@@ -24,6 +24,25 @@ export const getLevels = async (req, res) => {
     };
 };
 
+//?GET ACTIVE LEVELS
+export const getActiveLevels = async (req, res) => {
+    if ( req.data ) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            let rows = await conn.query("select * from levels where status = 'active';");
+            rows.forEach(element => {
+                element.id = element.id.toString();
+            });
+            res.json(rows);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        };
+    };
+};
+
 export const editLevel = async (req, res) => {
     if ( req.data ) {
         let conn;

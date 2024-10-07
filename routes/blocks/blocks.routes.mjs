@@ -7,13 +7,17 @@ import {
     statusBlock,
     addBlock,
     deleteBlock,
-    searchBlock
+    searchBlock,
+    getActiveBlocks
 } from "../../controllers/blocks/blocks.controller.mjs";
 
 export const blocks = Router();
 
 //?GET ALL BLOCKS
 blocks.get("/", verifyToken, getBlocks);
+
+//?GET ACTIVE BLOCKS
+blocks.get("/active", verifyToken, getActiveBlocks);
 
 //?EDIT BLOCKS
 blocks.put("/edit", verifyToken, editBlock);

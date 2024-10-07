@@ -2,7 +2,6 @@ import "dotenv/config";
 import { pool } from "../../index.mjs"
 
 //?GET ALL BLOCKS
-
 export const getBlocks = async (req, res) => {
     if ( req.data ) {
         let conn;
@@ -18,6 +17,26 @@ export const getBlocks = async (req, res) => {
                 dataLogin: req.data
             };
             res.json(response);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        };
+    };
+};
+
+//?GET ACTIVE BLOCKS
+export const getActiveBlocks = async (req, res) => {
+    if ( req.data ) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            let rows = await conn.query("select b.id as id, b.name as name, b.status as status, b.skill_id as skill_id, s.name as skill_name from blocks b left join skills s on b.skill_id = s.id where b.status = 'active' order by b.id; ");
+            rows.forEach(element => {
+                element.id = element.id.toString();
+                if(element.skill_id){element.skill_id = element.skill_id.toString();}
+            });
+            res.json(rows);
         } catch (error) {
             console.log(error);
         } finally {
