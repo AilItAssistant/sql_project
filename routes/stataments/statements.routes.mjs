@@ -5,13 +5,17 @@ import {
     getStatements,
     getStatementsById,
     postStatements,
-    getStatementsAndDetails
+    getStatementsAndDetails,
+    levelSkillStatements
 } from "../../controllers/statements/statements.controller.mjs";
 
 export const statements = Router();
 
 //?GET ALL STATEMENTS
 statements.get("/", verifyToken, getStatements);
+
+//?GET STATEMENTS BY LEVEL_ID AND SKILL_ID
+statements.post("/levelSkill", verifyToken, levelSkillStatements);
 
 //?GET STATEMENTS AND DETAILS
 statements.get("/details", verifyToken, getStatementsAndDetails);

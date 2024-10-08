@@ -33,6 +33,37 @@ export const getStatements = async (req, res) => {
     }
 };
 
+//?GET STATEMENTS BY LEVEL_ID AND SKILL_ID
+export const levelSkillStatements = async (req, res) => {
+    if ( req.data ) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            let rows = await conn.query(`
+                SELECT 
+                    s.id AS id,
+                    s.content AS content
+                FROM 
+                    statements s
+                WHERE 
+                    s.skill_id = ${req.body.skill_id} 
+                    AND 
+                    s.level_id = ${req.body.level_id};
+            `);
+            rows.forEach((element) => {
+                if (element.id) {
+                    element.id = element.id.toString();
+                }
+            });
+            res.json(rows);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        }
+    }
+};
+
 //?GET STATEMENTS BY ID
 export const getStatementsById = async (req, res) => {
     if ( req.data ) {
@@ -40,22 +71,28 @@ export const getStatementsById = async (req, res) => {
         try {
             conn = await pool.getConnection();
             let rows = await conn.query(`
-                SELECT
-                    s.*,
-                    GROUP_CONCAT(
-                        q.id 
-                    ORDER BY 
-                        q.id) 
-                    AS 
-                        question_ids
-                FROM
+                SELECT 
+                    s.id,
+                    s.content AS statement_content,
+                    s.skill_id,
+                    sk.name AS skill_name,
+                    s.text,
+                    s.score,
+                    s.level_id,
+                    l.name AS level_name,
+                    GROUP_CONCAT(q.content ORDER BY q.id ASC SEPARATOR ', ') AS questions
+                FROM 
                     statements s
-                LEFT JOIN
-                    questions q ON s.id = q.statement_id
-                WHERE
+                LEFT JOIN 
+                    levels l ON s.level_id = l.id
+                LEFT JOIN 
+                    skills sk ON s.skill_id = sk.id
+                LEFT JOIN 
+                    questions q ON q.statement_id = s.id
+                WHERE 
                     s.id = ${req.params.statementId}
-                GROUP BY
-                    s.id;
+                GROUP BY 
+                    s.id, l.name;
             `);
             rows.forEach((element) => {
                 element.id = element.id.toString();
@@ -63,6 +100,7 @@ export const getStatementsById = async (req, res) => {
                 if(element.skill_id){element.skill_id = element.skill_id.toString();}
                 if(element.level_id){element.level_id = element.level_id.toString();}
                 if(element.photo_id){element.photo_id = element.photo_id.toString();}
+                if(element.score){element.score = element.score.toString();}
             });
             console.log(rows)
             res.json(rows);
