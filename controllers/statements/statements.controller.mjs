@@ -135,7 +135,6 @@ export const postStatements = async (req, res) => {
                         last_id;
                     `);
                     id = id[0].last_id.toString();
-                    console.log(id)
             } else {
                 id = null;
             }
@@ -157,8 +156,7 @@ export const postStatements = async (req, res) => {
                 ${req.body.level},
                 ${id});`
             );
-    
-            res.json(200);
+            res.status(200).json(rows.insertId.toString());
         } catch (error) {
             console.log(error);
         } finally {

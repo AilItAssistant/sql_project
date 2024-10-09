@@ -32,4 +32,4 @@ levels.post("/add", verifyToken, addLevel);
 levels.put("/delete", verifyToken, deleteLevel);
 
 //?SEARCH LEVELS
-levels.put("/search", verifyToken, searchLevel)
+levels.put("/search", verifyToken, searchLevel);

@@ -8,7 +8,8 @@ import {
     addBlock,
     deleteBlock,
     searchBlock,
-    getActiveBlocks
+    getActiveBlocks,
+    blocksById
 } from "../../controllers/blocks/blocks.controller.mjs";
 
 export const blocks = Router();
@@ -32,4 +33,7 @@ blocks.post("/add", verifyToken, addBlock);
 blocks.put("/delete", verifyToken, deleteBlock);
 
 //?SEARCH BLOCKS
-blocks.put("/search", verifyToken, searchBlock)
+blocks.put("/search", verifyToken, searchBlock);
+
+//?GET BLOCK BY ID
+blocks.post("/blocksId", verifyToken, blocksById);

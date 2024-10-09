@@ -45,6 +45,36 @@ export const getActiveBlocks = async (req, res) => {
     };
 };
 
+//?GET BLOCKS BY ID
+export const blocksById = async (req, res) => {
+    if ( req.data ) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            let rows = await conn.query(`
+                select 
+                    b.id as id, b.name as name, b.status as status,
+                     b.skill_id as skill_id, s.name as skill_name from blocks b 
+                left join 
+                    skills s on b.skill_id = s.id 
+                where 
+                    b.skill_id = ${req.body.skill_id} and b.status = 'active'
+                order 
+                    by b.id; 
+            `);
+            rows.forEach(element => {
+                element.id = element.id.toString();
+                if(element.skill_id){element.skill_id = element.skill_id.toString();}
+            });
+            res.json(rows);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        };
+    };
+};
+
 export const editBlock = async (req, res) => {
     if ( req.data ) {
         let conn;

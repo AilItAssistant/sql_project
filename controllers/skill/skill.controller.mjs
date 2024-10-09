@@ -45,6 +45,26 @@ export const getActiveSkills = async (req, res) => {
     };
 };
 
+//?GET SKILLS BY ID
+export const skillsId = async (req, res) => {
+    if ( req.data ) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            let rows = await conn.query(`select * from skills where level_id = ${req.body.level_id} and status = 'active';`);
+            rows.forEach(element => {
+                element.id = element.id.toString();
+                if(element.level_id){element.level_id = element.level_id.toString();}
+            });
+            res.json(rows);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        };
+    };
+};
+
 export const editSkill = async (req, res) => {
     if ( req.data ) {
         let conn;
