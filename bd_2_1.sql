@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-09-2024 a las 12:56:08
+-- Tiempo de generación: 09-10-2024 a las 15:53:23
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -30,41 +30,42 @@ SET time_zone = "+00:00";
 CREATE TABLE `answers` (
   `id` bigint(20) NOT NULL,
   `question_id` bigint(20) DEFAULT NULL,
-  `content` text NOT NULL,
+  `content` text DEFAULT NULL,
   `is_correct` tinyint(1) NOT NULL,
   `explanation` text DEFAULT NULL,
   `status` varchar(255) DEFAULT 'active',
-  `letter` varchar(1) DEFAULT NULL
+  `letter` varchar(1) DEFAULT NULL,
+  `photo_id` bigint(20) DEFAULT NULL,
+  `puntuation` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `answers`
 --
 
-INSERT INTO `answers` (`id`, `question_id`, `content`, `is_correct`, `explanation`, `status`, `letter`) VALUES
-(1, 1, 'Veloz', 0, NULL, 'active', 'A'),
-(2, 1, 'Lento', 0, NULL, 'active', 'B'),
-(3, 2, 'Fui', 0, NULL, 'active', 'A'),
-(4, 2, 'Voy', 0, NULL, 'active', 'B'),
-(5, 3, '4', 1, NULL, 'active', 'A'),
-(6, 3, '5', 0, NULL, 'active', 'B'),
-(7, 1, 'Rápido', 0, 'Rápido es un sinónimo, no un antónimo.', 'active', 'C'),
-(8, 1, 'Lento', 1, 'Lento es el antónimo de rápido.', 'active', 'D'),
-(9, 2, 'Temporal', 1, 'Efímero significa que dura poco tiempo.', 'active', 'C'),
-(10, 2, 'Permanente', 0, 'Permanente es lo opuesto a efímero.', 'active', 'D'),
-(11, 4, 'París', 1, NULL, 'active', 'A'),
-(12, 4, 'Londres', 0, NULL, 'active', 'B'),
-(13, 4, 'Berlín', 0, NULL, 'active', 'C'),
-(14, 4, 'Madrid', 0, NULL, 'active', 'D'),
-(15, 5, 'qwewqeewq', 0, NULL, 'active', NULL),
-(16, 5, 'wqeqwee', 0, NULL, 'active', NULL),
-(17, 5, 'wqeqew', 1, NULL, 'active', NULL),
-(18, 6, 'ewqeq', 0, NULL, 'active', NULL),
-(19, 6, 'qweqwe', 0, NULL, 'active', NULL),
-(20, 6, 'qwewqe', 0, NULL, 'active', NULL),
-(21, 7, 'qwe', 1, NULL, 'active', NULL),
-(22, 7, 'ert', 0, NULL, 'active', NULL),
-(23, 7, 'yui', 0, NULL, 'active', NULL);
+INSERT INTO `answers` (`id`, `question_id`, `content`, `is_correct`, `explanation`, `status`, `letter`, `photo_id`, `puntuation`) VALUES
+(48, 16, 'Sus compañeros de clase', 0, NULL, 'active', NULL, NULL, 0),
+(49, 16, 'Sus sentimientos', 0, NULL, 'active', NULL, NULL, 0),
+(50, 16, 'Su nuevo trabajo y sus estudios', 1, NULL, 'active', NULL, NULL, 0),
+(51, 17, 'En las vacaciones', 0, NULL, 'active', NULL, NULL, 0),
+(52, 17, 'En mayo', 0, NULL, 'active', NULL, NULL, 0),
+(53, 17, 'El próximo mes', 0, NULL, 'active', NULL, NULL, 0),
+(54, 17, 'El próximo martes', 1, NULL, 'active', NULL, NULL, 0),
+(55, 18, 'Una oficina', 0, NULL, 'active', NULL, NULL, 0),
+(56, 18, 'Una biblioteca', 1, NULL, 'active', NULL, NULL, 0),
+(57, 18, 'Un archivo', 0, NULL, 'active', NULL, NULL, 0),
+(58, 18, 'Una clase', 0, NULL, 'active', NULL, NULL, 0),
+(59, 19, 'Comprar libros', 0, NULL, 'active', NULL, NULL, 0),
+(60, 19, 'Hacer fotocopias', 0, NULL, 'active', NULL, NULL, 0),
+(61, 19, 'Ordenar la sala de lectura', 1, NULL, 'active', NULL, NULL, 0),
+(62, 19, 'Dar formularios a los estudiantes', 0, NULL, 'active', NULL, NULL, 0),
+(63, 20, 'Todos los días', 0, NULL, 'active', NULL, NULL, 0),
+(64, 20, 'Una vez al mes', 0, NULL, 'active', NULL, NULL, 0),
+(65, 20, 'Los miércoles por la tarde', 0, NULL, 'active', NULL, NULL, 0),
+(66, 20, 'Un día a la semana por la mañana', 1, NULL, 'active', NULL, NULL, 0),
+(67, 30, 'fhghf', 0, NULL, 'active', 'A', NULL, 0),
+(68, 30, 'hghgfhghgf', 0, NULL, 'active', 'B', NULL, 0),
+(69, 30, 'hghghgfhg', 1, NULL, 'active', 'C', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -85,9 +86,24 @@ CREATE TABLE `blocks` (
 --
 
 INSERT INTO `blocks` (`id`, `name`, `skill_id`, `description`, `status`) VALUES
-(1, 'Vocabulario Básico', 1, 'Bloque de vocabulario básico', 'active'),
-(2, 'Gramática Avanzada', 2, 'Bloque de gramática avanzada', 'active'),
-(3, 'Matemáticas Intermedias', 3, 'Bloque de matemáticas intermedias', 'active');
+(48, 'Estar o hay', 2, NULL, 'active'),
+(49, 'Tener y haber', 2, NULL, 'active'),
+(50, 'Gustar y similares', 2, NULL, 'active'),
+(51, 'Presente irregular', 2, NULL, 'active'),
+(52, 'Descripción física', 1, NULL, 'active'),
+(53, 'Género y número', 2, NULL, 'active'),
+(54, 'Cantidad', 1, NULL, 'active'),
+(55, 'Reflexivos', 2, NULL, 'active'),
+(56, 'Ropa', 1, NULL, 'active'),
+(57, 'Tiempo atmosférico', 1, NULL, 'active'),
+(58, 'Pretérito perfecto', 2, NULL, 'active'),
+(59, 'Pronombres OD y OI gustar', 2, NULL, 'active'),
+(60, 'Preposiciones', 2, NULL, 'active'),
+(61, 'Vocabulario', 1, NULL, 'active'),
+(62, 'Variadas gramatica', 2, NULL, 'active'),
+(63, 'Preguntas con frases', 26, NULL, 'active'),
+(64, 'Preguntas con imágenes', 26, NULL, 'active'),
+(65, 'prueba Bloque', 345, NULL, 'active');
 
 -- --------------------------------------------------------
 
@@ -109,12 +125,13 @@ CREATE TABLE `classes` (
 --
 
 INSERT INTO `classes` (`id`, `name`, `schedule`, `room_number`, `level_id`, `status`) VALUES
-(1, 'Clase de Vocabulario', 'Lunes y Miércoles 10:00-12:00', '103', 1, 'active'),
-(2, 'Clase de Gramática', 'Lunes y Miércoles 10:00-12:00', '106', 2, 'active'),
-(3, 'Clase de Matemáticas', 'Lunes y Miércoles 10:00-12:00', '104', 3, 'active'),
+(1, 'Clase de Vocabulario', 'Lunes y Miércoles 10:00-12:00', '102', 31, 'active'),
+(2, 'Clase de Gramática', 'Lunes y Miércoles 10:00-12:00', '106', 31, 'active'),
+(3, 'Clase de Matemáticas', 'Lunes y Miércoles 10:00-12:00', '104', 16, 'active'),
 (4, 'Matemáticas Avanzadas', 'Lunes y Miércoles 10:00-12:00', 'Aula 101', 13, 'active'),
 (5, 'Matemáticas Avanzadas', 'Lunes y Miércoles 10:00-12:00', 'Aula 101', 16, 'active'),
-(6, 'Matemáticas Avanzadas', 'Lunes y Miércoles 10:00-12:00', 'Aula 105', 17, 'active');
+(6, 'Matemáticas Avanzadas', 'Lunes y Miércoles 10:00-12:00', 'Aula 105', 17, 'active'),
+(28, 'Lengua', '12:30', 'dfg', 20, 'active');
 
 -- --------------------------------------------------------
 
@@ -132,7 +149,14 @@ CREATE TABLE `class_teachers` (
 --
 
 INSERT INTO `class_teachers` (`class_id`, `teacher_id`) VALUES
-(1, 1);
+(1, 1),
+(2, 2),
+(3, 1),
+(4, 2),
+(4, 3),
+(5, 2),
+(6, 2),
+(28, 1);
 
 -- --------------------------------------------------------
 
@@ -158,9 +182,9 @@ CREATE TABLE `exams` (
 --
 
 INSERT INTO `exams` (`id`, `student_id`, `teacher_id`, `skill_id`, `created_at`, `completed`, `score`, `feedback`, `level_id`, `status`) VALUES
-(1, 1, 1, 1, '2024-08-22 07:18:47', 0, NULL, NULL, 1, 'active'),
-(2, 2, 2, 2, '2024-08-22 07:18:47', 0, NULL, NULL, 2, 'active'),
-(3, 3, 3, 3, '2024-08-22 07:18:47', 0, NULL, NULL, 3, 'active');
+(1, 1, 1, 1, '2024-08-22 07:18:47', 0, NULL, NULL, 17, 'active'),
+(2, 2, 2, 2, '2024-08-22 07:18:47', 0, NULL, NULL, 20, 'active'),
+(3, 3, 3, 25, '2024-08-22 07:18:47', 0, NULL, NULL, 13, 'active');
 
 -- --------------------------------------------------------
 
@@ -207,7 +231,7 @@ CREATE TABLE `exam_requests` (
 INSERT INTO `exam_requests` (`id`, `teacher_id`, `skill_id`, `created_at`, `resultado`, `status`) VALUES
 (1, 1, 1, '2024-08-22 07:19:03', 'Aprobado', 'activo'),
 (2, 2, 2, '2024-08-22 07:19:03', 'Pendiente', 'activo'),
-(3, 3, 3, '2024-08-22 07:19:03', 'Reprobado', 'activo');
+(3, 3, 1, '2024-08-22 07:19:03', 'Reprobado', 'activo');
 
 -- --------------------------------------------------------
 
@@ -247,13 +271,13 @@ CREATE TABLE `levels` (
 --
 
 INSERT INTO `levels` (`id`, `name`, `status`) VALUES
-(1, 'Principiante', 'active'),
-(2, 'Intermedio', 'active'),
-(3, 'Avanzado', 'active'),
-(13, 'B1', 'active'),
-(16, 'B2', 'active'),
-(17, 'C1', 'active'),
-(20, 'C2', 'active');
+(13, 'B1', 'inactive'),
+(16, 'B2', 'inactive'),
+(17, 'C1', 'inactive'),
+(20, 'C2', 'inactive'),
+(27, 'A1', 'active'),
+(31, 'A2', 'inactive'),
+(34, 'Prueba nivel', 'active');
 
 -- --------------------------------------------------------
 
@@ -265,6 +289,16 @@ CREATE TABLE `photos` (
   `id` bigint(20) NOT NULL,
   `base64_data` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `photos`
+--
+
+INSERT INTO `photos` (`id`, `base64_data`) VALUES
+(45, 'data:image/png;base64,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'),
+(50, 'undefined'),
+(51, 'undefined'),
+(52, 'undefined');
 
 -- --------------------------------------------------------
 
@@ -280,21 +314,30 @@ CREATE TABLE `questions` (
   `level_id` bigint(20) DEFAULT NULL,
   `statement_id` bigint(20) DEFAULT NULL,
   `status` varchar(255) DEFAULT 'active',
-  `photo_id` bigint(20) DEFAULT NULL
+  `photo_id` bigint(20) DEFAULT NULL,
+  `puntuation` char(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `questions`
 --
 
-INSERT INTO `questions` (`id`, `content`, `block_id`, `skill_id`, `level_id`, `statement_id`, `status`, `photo_id`) VALUES
-(1, '¿Cuál es el sinónimo de \'rápido\'?', 1, 1, 1, 1, 'active', NULL),
-(2, '¿Cómo se conjuga el verbo \'ir\' en pasado?', 2, 2, 2, 2, 'active', NULL),
-(3, '¿Cuánto es 2 + 2?', 3, 3, 3, 3, 'active', NULL),
-(4, '¿Cuál es la capital de Francia?', NULL, NULL, NULL, 1, 'active', NULL),
-(5, 'qwewqeq', NULL, 1, 1, 1, 'active', NULL),
-(6, 'qwewe', NULL, 1, 1, 1, 'active', NULL),
-(7, 'qwerty', NULL, 1, 1, 1, 'active', NULL);
+INSERT INTO `questions` (`id`, `content`, `block_id`, `skill_id`, `level_id`, `statement_id`, `status`, `photo_id`, `puntuation`) VALUES
+(16, 'Francisco escribe una carta sobre:', NULL, NULL, NULL, 17, 'active', NULL, NULL),
+(17, 'Va a empezar a trabajar:', NULL, NULL, NULL, 17, 'active', NULL, NULL),
+(18, 'Va a trabajar en:', NULL, NULL, NULL, 17, 'active', NULL, NULL),
+(19, 'En su trabajo, Francisco tiene que:', NULL, NULL, NULL, 17, 'active', NULL, NULL),
+(20, 'Cuándo tiene Francisco prácticas de laboratorio:', NULL, NULL, NULL, 17, 'active', NULL, '2'),
+(21, 'uyujtyjty', NULL, 1, 27, 1, 'active', NULL, '1'),
+(22, 'uyujtyjty', NULL, 1, 27, 0, 'active', NULL, '1'),
+(23, 'trrtrrrt', NULL, 1, 27, 0, 'active', NULL, '2'),
+(24, 'trrtrrrtiiiiiiii', NULL, 1, 27, 0, 'active', NULL, '2'),
+(25, 'gfhgffhgfghfgfh', NULL, 345, 34, 40, 'active', NULL, '2'),
+(26, 'gfhgffhgfghfgfh', NULL, 345, 34, 40, 'active', NULL, '2'),
+(27, 'gfhgffhgfghfgfh', NULL, 345, 34, 40, 'active', NULL, '2'),
+(28, 'gfhgffhgfghfgfh', NULL, 345, 34, 40, 'active', NULL, '2'),
+(29, 'gfhgffhgfghfgfh', NULL, 345, 34, 40, 'active', NULL, '2'),
+(30, 'gfhgffhgfghfgfh', NULL, 345, 34, 40, 'active', NULL, '2');
 
 -- --------------------------------------------------------
 
@@ -315,9 +358,13 @@ CREATE TABLE `skills` (
 --
 
 INSERT INTO `skills` (`id`, `name`, `description`, `level_id`, `status`) VALUES
-(1, 'Vocabulario', 'Habilidad de vocabulario', 1, 'active'),
-(2, 'Gramática', 'Habilidad de gramática', 2, 'active'),
-(3, 'Matemáticas', 'Habilidad de matemáticas', 3, 'active');
+(1, 'Léxico', 'Habilidad de vocabulario', 27, 'active'),
+(2, 'Gramática', 'Habilidad de gramática', 27, 'active'),
+(24, 'Redacción', NULL, 27, 'active'),
+(25, 'Compresión lectora', NULL, 27, 'active'),
+(26, 'Audio', NULL, 27, 'active'),
+(27, 'Oral', NULL, 27, 'active'),
+(345, 'Prueba destreza', NULL, 34, 'active');
 
 -- --------------------------------------------------------
 
@@ -342,11 +389,10 @@ CREATE TABLE `statements` (
 --
 
 INSERT INTO `statements` (`id`, `exam_id`, `content`, `skill_id`, `text`, `score`, `level_id`, `status`, `photo_id`) VALUES
-(1, NULL, 'Este examen evalúa el vocabulario básico.', 1, 'text1', 10, 1, 'active', NULL),
-(2, NULL, 'Este examen evalúa la gramática avanzada.', 2, 'text2', 20, 2, 'active', NULL),
-(3, NULL, 'Este examen evalúa las matemáticas intermedias.', 3, 'text3', 30, 3, 'active', NULL),
-(4, NULL, 'texto prueba ', 1, 'texto prueba  2', 10, 1, 'active', NULL),
-(5, NULL, 'qwerty', 2, 'tyutuytutuytuytuyuuytuyutyuyuuuuuytutyuututyutyutyutytyu', 20, 1, 'active', NULL);
+(16, NULL, 'Un amigo le escribe para saber cómo es su vida en Madrid. Escríbale un\ncorreo con esta información. En él debe saludar, describir su rutina y sus actividades de tiempo libre y despedirse. ', 24, 'El numero de palabras debe de ser  entre 20 y 30 palabras.', 30, 27, 'active', NULL),
+(17, NULL, 'Lea este mensaje de correo electrónico. A continuación, responda a cinco\npreguntas sobre el texto. Elija la respuesta correcta (a, b, c, d):', 25, '      ¡Hola familia!:\n\n¿Cómo estáis? Yo estoy muy contento porque el martes que viene empiezo a trabajar.\nVoy a trabajar en la biblioteca de mi universidad. Mis tareas son organizar los archivos\ny colocar los libros en las estanterías. Algunas veces también tengo que hablar con los\nestudiantes sobre los libros, pero no tengo que hacer fotocopias.\nTengo un horario muy bueno: todas las tardes de 16:00 a 20:00, así que puedo\nestudiar por las mañanas. Una vez al mes tengo que trabajar los sábados.\nLas clases en la universidad son muy interesantes. Tengo clase todos los días,\nexcepto los miércoles por la mañana, porque tengo prácticas en el laboratorio. Los\nfines de semana estudio con mis compañeros en la biblioteca de la universidad porque\ntenemos muchos exámenes. Por ejemplo, tengo un examen de lengua española el\njueves.\nBueno, ya sabéis las buenas noticias. Nos vemos el próximo mes porque en abril\ntenemos cuatro días de vacaciones.\nOs quiero mucho,\n\n      Francisco', 10, 27, 'active', NULL),
+(18, NULL, 'Prueba oral. Preséntese. Debe dar información personal como el nombre, la nacionalidad y la\nedad, y puede hablar de su trabajo o estudios, por qué estudia español, etc.\nSeleccione tres de las cinco opciones para hablar durante 2 o 3 minutos.', 27, 'Seleccione tres de las cinco opciones para hablar durante 2 o 3 minutos.', 15, 27, 'active', NULL),
+(40, NULL, 'qwqwqwqwqq', 345, 'qwqqqq', 5, 34, 'active', NULL);
 
 -- --------------------------------------------------------
 
@@ -374,9 +420,10 @@ CREATE TABLE `students` (
 --
 
 INSERT INTO `students` (`id`, `name`, `email`, `date_of_birth`, `enrollment_date`, `phone_number`, `address`, `last_name`, `identification_document`, `city`, `level_id`, `status`) VALUES
-(1, 'Juán Manuel', 'juan.perez@example.com', '2024-09-04', '2024-08-22', '963852741123', 'Juan de esplandiú', 'Pérez Rodriguez', '96332154K', 'Madrid', 1, 'active'),
-(2, 'María', 'maria.lopez@exple.com', '2024-09-06', '2024-08-22', '96321458741', 'odonell', 'Giménez Álvarez', '85463129P', 'Barcelona', 2, 'active'),
-(3, 'Carlos', 'carlos.garcia@example.com', '2024-09-03', '2024-08-22', '213654789512', 'Barbara de braganza', 'Fernandez Alonso', '74569832N', 'Málaga', 3, 'active');
+(1, 'Juán Manuel', 'juan.perez@example.com', '2024-09-04', '2024-08-22', '96385274112', 'Juan de esplandiú', 'Pérez Rodriguez', '96332154K', 'Madrid', 13, 'active'),
+(2, 'María', 'maria.lopez@exple.com', '2024-09-06', '2024-08-22', '96321458741', 'odonell', 'Giménez Álvarez', '85463129P', 'Barcelona', 17, 'active'),
+(3, 'Carlos', 'carlos.garcia@example.com', '2024-09-03', '2024-08-22', '213654789512', 'Barbara de braganza', 'Fernandez Alonso', '74569832N', 'Málaga', 31, 'active'),
+(6, 'Jimeno', 'sddfsfsfsf@efeflfd.cob', '2024-10-24', '2024-10-01', '963215478', 'qwerysddsds', 'Fernandez', '8755365D', 'valencia', 20, 'active');
 
 -- --------------------------------------------------------
 
@@ -396,14 +443,15 @@ CREATE TABLE `student_classes` (
 --
 
 INSERT INTO `student_classes` (`student_id`, `class_id`, `enrollment_date`, `status`) VALUES
-(1, 1, '2024-09-11', 'active'),
-(1, 2, '2024-09-16', 'active'),
-(1, 3, '2024-09-16', 'active'),
-(1, 6, '2024-08-28', 'active'),
-(2, 1, '2024-09-11', 'active'),
-(2, 2, '2024-08-22', 'active'),
-(3, 1, '2024-09-11', 'active'),
-(3, 3, '2024-08-22', 'active');
+(1, 1, '2024-10-02', 'active'),
+(1, 4, '2024-10-02', 'active'),
+(1, 6, '2024-10-02', 'active'),
+(3, 1, '2024-10-04', 'active'),
+(3, 2, '2024-10-04', 'active'),
+(3, 3, '2024-10-04', 'active'),
+(3, 6, '2024-10-04', 'active'),
+(6, 3, '2024-10-04', 'active'),
+(6, 4, '2024-10-04', 'active');
 
 -- --------------------------------------------------------
 
@@ -430,7 +478,8 @@ CREATE TABLE `teachers` (
 INSERT INTO `teachers` (`id`, `name`, `email`, `hire_date`, `phone_number`, `address`, `department`, `last_name`, `status`) VALUES
 (1, 'José', 'qwrty@qwerty.com', '2024-09-27', '693582471', 'calle barbara de braganza', 'Matematicas', 'Fernández', 'active'),
 (2, 'Luis', 'luis.fernandez@example.com', '2024-09-18', '753914826', 'calle odonell', 'Matemáticas', 'Fernández Torres', 'active'),
-(3, 'juan', 'qwerty@qwwrty.com', '2024-09-26', '987456321', 'juan de esplandiu', '6546554789321', 'gonzalez', 'active');
+(3, 'Juan', 'qwerty@qwwrty.com', '2024-09-26', '987456321', 'juan de esplandiu', '6546554789321', 'gonzalez', 'active'),
+(9, 'Francisco', 'pepee@gmail.com', '2024-10-03', '95123647', 'calle barbara de braganza, 155 alcala de hernares, comunidada de madird', 'matematicas', 'Gonzalez Fernandez', 'active');
 
 -- --------------------------------------------------------
 
@@ -458,7 +507,6 @@ CREATE TABLE `users` (
   `username` text NOT NULL,
   `email` text NOT NULL,
   `password_hash` text NOT NULL,
-  `role` enum('admin','editor','viewer') NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `name` text DEFAULT NULL,
   `last_name` text DEFAULT NULL,
@@ -472,12 +520,13 @@ CREATE TABLE `users` (
 -- Volcado de datos para la tabla `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `email`, `password_hash`, `role`, `created_at`, `name`, `last_name`, `phone_number`, `city`, `permissions`, `status`) VALUES
-(1, 'admin_user', 'admin@example.com', 'hashed_password_1', 'admin', '2024-08-22 09:44:43', NULL, NULL, NULL, NULL, NULL, 'active'),
-(2, 'editor_jane', 'jane.doe@example.com', 'hashed_password_2', 'editor', '2024-08-22 09:44:43', NULL, NULL, NULL, NULL, NULL, 'active'),
-(3, 'viewer_john', 'john.smith@example.com', 'hashed_password_3', 'viewer', '2024-08-22 09:44:43', NULL, NULL, NULL, NULL, NULL, 'active'),
-(4, 'editor_mary', 'mary.jones@example.com', 'hashed_password_4', 'editor', '2024-08-22 09:44:43', NULL, NULL, NULL, NULL, NULL, 'active'),
-(5, 'viewer_anna', 'anna.brown@example.com', 'hashed_password_5', 'viewer', '2024-08-22 09:44:43', NULL, NULL, NULL, NULL, NULL, 'active');
+INSERT INTO `users` (`id`, `username`, `email`, `password_hash`, `created_at`, `name`, `last_name`, `phone_number`, `city`, `permissions`, `status`) VALUES
+(1, 'admin_user', 'admin@example.com', '$2b$11$T/Pjr7e5oVv4RsGHi1irtuOhhFTMz7lkh5VfyBUxff96F1fNkoDTO', '2024-08-22 09:44:43', 'Fernando', 'Fernandez Gimenez', '714258369', 'Malaga', 'admin', 'active'),
+(2, 'pepete', 'qwerty@qmail.com', 'undefined', '2024-08-22 09:44:43', 'pepete', 'fernandez', '854631279', 'Valencia', 'employee', 'active'),
+(3, 'viewer_john', 'john.smith@example.com', 'undefined', '2024-08-22 09:44:43', 'john', 'john', '7428536774', 'Valencia', 'student', 'active'),
+(4, 'editor_mary', 'mary.jones@example.com', 'undefined', '2024-08-22 09:44:43', 'mary', 'mary', '987654321', 'Barcelona', 'employee', 'active'),
+(11, 'PEPE', 'pepe@gmail.com', '$2b$11$tMoN8Db8wR7tIhhaAjpujOTZPbJgQwUFselQzcp8x8.XFVfeOpBrG', '2024-10-03 13:57:25', 'Pepito', 'Jimenez Alvarez', '7896542123', 'Madrid', 'employee', 'active'),
+(19, 'qw', 'pepee@gmail.com', '$2b$11$/99cNAaLh5WruxCZFGq/Q.MeWC0ZmvT1s0MXBxSZUgQvh7EoratLy', '2024-10-04 07:22:02', 'qw', 'qw', '7896542123', 'qw', 'employee', 'active');
 
 -- --------------------------------------------------------
 
@@ -503,7 +552,8 @@ CREATE TABLE `user_actions` (
 --
 ALTER TABLE `answers`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `question_id` (`question_id`);
+  ADD KEY `question_id` (`question_id`),
+  ADD KEY `fk_answers_photos` (`photo_id`);
 
 --
 -- Indices de la tabla `blocks`
@@ -594,7 +644,6 @@ ALTER TABLE `skills`
 --
 ALTER TABLE `statements`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `exam_id` (`exam_id`),
   ADD KEY `skill_id` (`skill_id`),
   ADD KEY `level_id` (`level_id`),
   ADD KEY `fk_statements_photos` (`photo_id`);
@@ -650,19 +699,19 @@ ALTER TABLE `user_actions`
 -- AUTO_INCREMENT de la tabla `answers`
 --
 ALTER TABLE `answers`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT de la tabla `blocks`
 --
 ALTER TABLE `blocks`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- AUTO_INCREMENT de la tabla `classes`
 --
 ALTER TABLE `classes`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT de la tabla `exams`
@@ -680,43 +729,43 @@ ALTER TABLE `exam_requests`
 -- AUTO_INCREMENT de la tabla `levels`
 --
 ALTER TABLE `levels`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT de la tabla `photos`
 --
 ALTER TABLE `photos`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT de la tabla `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT de la tabla `skills`
 --
 ALTER TABLE `skills`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=346;
 
 --
 -- AUTO_INCREMENT de la tabla `statements`
 --
 ALTER TABLE `statements`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT de la tabla `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `teachers`
 --
 ALTER TABLE `teachers`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `triggers`
@@ -728,7 +777,7 @@ ALTER TABLE `triggers`
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de la tabla `user_actions`
