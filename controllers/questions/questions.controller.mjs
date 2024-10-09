@@ -25,9 +25,10 @@ export const addQuestion = async (req, res) => {
                             level_id, statement_id, photo_id) 
                     VALUES (
                         '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation},
-                        ${req.body.level_id}, ${req.body.statement_id}, ${id}
+                        ${req.body.level_id}, '${req.body.statement_id}', ${id}
                         );
                 `);
+                question_id = questions.insertId.toString();
             } else {
                 console.log("preguntas sin foto")
                 let questions = await conn.query(`
@@ -35,14 +36,10 @@ export const addQuestion = async (req, res) => {
                         questions (
                             content, skill_id, puntuation,
                             level_id, statement_id) 
-                    VALUES (
-                        '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation},
-                        ${req.body.level_id}, ${req.body.statement_id}
-                        );
-                `);
-            };
+                    VALUES ( '${req.body.question}', ${req.body.skill_id}, '${req.body.puntuation}', ${req.body.level_id}, '${req.body.statement_id}');`);
+                    question_id = questions.insertId.toString();
+                };
             console.log("sale de preguntas")
-            question_id = questions.insertId.toString();
             if ( req.body.typeAnswers === "photo" ) {
                 for(let i = 0; req.body.responses.length > i; i++){
 
@@ -60,7 +57,7 @@ export const addQuestion = async (req, res) => {
                             letter, photo_id) 
                         VALUES (
                             ${question_id}, '${req.body.responses[i].content}', 
-                            ${req.body.responses[i].is_correct}, ${req.body.responses[i].letter}, 
+                            ${req.body.responses[i].is_correct}, '${req.body.responses[i].letter}', 
                             ${id}
                             );
                     `);
@@ -75,11 +72,12 @@ export const addQuestion = async (req, res) => {
                             letter) 
                         VALUES (
                             ${question_id}, '${req.body.responses[i].content}', 
-                            ${req.body.responses[i].is_correct}, ${req.body.responses[i].letter}
+                            ${req.body.responses[i].is_correct}, '${req.body.responses[i].letter}'
                         );
                     `);
                 };
             };
+/* */
             res.json(200);
         } catch (error) {
             console.log(error);
