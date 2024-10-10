@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 09-10-2024 a las 15:53:23
+-- Tiempo de generación: 10-10-2024 a las 11:43:55
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -32,40 +32,10 @@ CREATE TABLE `answers` (
   `question_id` bigint(20) DEFAULT NULL,
   `content` text DEFAULT NULL,
   `is_correct` tinyint(1) NOT NULL,
-  `explanation` text DEFAULT NULL,
   `status` varchar(255) DEFAULT 'active',
   `letter` varchar(1) DEFAULT NULL,
-  `photo_id` bigint(20) DEFAULT NULL,
-  `puntuation` int(11) NOT NULL
+  `photo_id` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `answers`
---
-
-INSERT INTO `answers` (`id`, `question_id`, `content`, `is_correct`, `explanation`, `status`, `letter`, `photo_id`, `puntuation`) VALUES
-(48, 16, 'Sus compañeros de clase', 0, NULL, 'active', NULL, NULL, 0),
-(49, 16, 'Sus sentimientos', 0, NULL, 'active', NULL, NULL, 0),
-(50, 16, 'Su nuevo trabajo y sus estudios', 1, NULL, 'active', NULL, NULL, 0),
-(51, 17, 'En las vacaciones', 0, NULL, 'active', NULL, NULL, 0),
-(52, 17, 'En mayo', 0, NULL, 'active', NULL, NULL, 0),
-(53, 17, 'El próximo mes', 0, NULL, 'active', NULL, NULL, 0),
-(54, 17, 'El próximo martes', 1, NULL, 'active', NULL, NULL, 0),
-(55, 18, 'Una oficina', 0, NULL, 'active', NULL, NULL, 0),
-(56, 18, 'Una biblioteca', 1, NULL, 'active', NULL, NULL, 0),
-(57, 18, 'Un archivo', 0, NULL, 'active', NULL, NULL, 0),
-(58, 18, 'Una clase', 0, NULL, 'active', NULL, NULL, 0),
-(59, 19, 'Comprar libros', 0, NULL, 'active', NULL, NULL, 0),
-(60, 19, 'Hacer fotocopias', 0, NULL, 'active', NULL, NULL, 0),
-(61, 19, 'Ordenar la sala de lectura', 1, NULL, 'active', NULL, NULL, 0),
-(62, 19, 'Dar formularios a los estudiantes', 0, NULL, 'active', NULL, NULL, 0),
-(63, 20, 'Todos los días', 0, NULL, 'active', NULL, NULL, 0),
-(64, 20, 'Una vez al mes', 0, NULL, 'active', NULL, NULL, 0),
-(65, 20, 'Los miércoles por la tarde', 0, NULL, 'active', NULL, NULL, 0),
-(66, 20, 'Un día a la semana por la mañana', 1, NULL, 'active', NULL, NULL, 0),
-(67, 30, 'fhghf', 0, NULL, 'active', 'A', NULL, 0),
-(68, 30, 'hghgfhghgf', 0, NULL, 'active', 'B', NULL, 0),
-(69, 30, 'hghghgfhg', 1, NULL, 'active', 'C', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -296,9 +266,8 @@ CREATE TABLE `photos` (
 
 INSERT INTO `photos` (`id`, `base64_data`) VALUES
 (45, 'data:image/png;base64,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'),
-(50, 'undefined'),
-(51, 'undefined'),
-(52, 'undefined');
+(53, 'data:image/png;base64,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'),
+(56, 'data:image/png;base64,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');
 
 -- --------------------------------------------------------
 
@@ -308,7 +277,7 @@ INSERT INTO `photos` (`id`, `base64_data`) VALUES
 
 CREATE TABLE `questions` (
   `id` bigint(20) NOT NULL,
-  `content` text NOT NULL,
+  `content` text DEFAULT NULL,
   `block_id` bigint(20) DEFAULT NULL,
   `skill_id` bigint(20) DEFAULT NULL,
   `level_id` bigint(20) DEFAULT NULL,
@@ -323,21 +292,11 @@ CREATE TABLE `questions` (
 --
 
 INSERT INTO `questions` (`id`, `content`, `block_id`, `skill_id`, `level_id`, `statement_id`, `status`, `photo_id`, `puntuation`) VALUES
-(16, 'Francisco escribe una carta sobre:', NULL, NULL, NULL, 17, 'active', NULL, NULL),
-(17, 'Va a empezar a trabajar:', NULL, NULL, NULL, 17, 'active', NULL, NULL),
-(18, 'Va a trabajar en:', NULL, NULL, NULL, 17, 'active', NULL, NULL),
-(19, 'En su trabajo, Francisco tiene que:', NULL, NULL, NULL, 17, 'active', NULL, NULL),
-(20, 'Cuándo tiene Francisco prácticas de laboratorio:', NULL, NULL, NULL, 17, 'active', NULL, '2'),
-(21, 'uyujtyjty', NULL, 1, 27, 1, 'active', NULL, '1'),
-(22, 'uyujtyjty', NULL, 1, 27, 0, 'active', NULL, '1'),
-(23, 'trrtrrrt', NULL, 1, 27, 0, 'active', NULL, '2'),
-(24, 'trrtrrrtiiiiiiii', NULL, 1, 27, 0, 'active', NULL, '2'),
-(25, 'gfhgffhgfghfgfh', NULL, 345, 34, 40, 'active', NULL, '2'),
-(26, 'gfhgffhgfghfgfh', NULL, 345, 34, 40, 'active', NULL, '2'),
-(27, 'gfhgffhgfghfgfh', NULL, 345, 34, 40, 'active', NULL, '2'),
-(28, 'gfhgffhgfghfgfh', NULL, 345, 34, 40, 'active', NULL, '2'),
-(29, 'gfhgffhgfghfgfh', NULL, 345, 34, 40, 'active', NULL, '2'),
-(30, 'gfhgffhgfghfgfh', NULL, 345, 34, 40, 'active', NULL, '2');
+(16, 'Francisco escribe una carta sobre:', NULL, NULL, 27, 17, 'active', NULL, NULL),
+(17, 'Va a empezar a trabajar:', NULL, NULL, 27, 17, 'active', NULL, NULL),
+(18, 'Va a trabajar en:', NULL, NULL, 27, 17, 'active', NULL, NULL),
+(19, 'En su trabajo, Francisco tiene que:', NULL, NULL, 27, 17, 'active', NULL, NULL),
+(20, 'Cuándo tiene Francisco prácticas de laboratorio:', NULL, NULL, 27, 17, 'active', NULL, '2');
 
 -- --------------------------------------------------------
 
@@ -375,7 +334,7 @@ INSERT INTO `skills` (`id`, `name`, `description`, `level_id`, `status`) VALUES
 CREATE TABLE `statements` (
   `id` bigint(20) NOT NULL,
   `exam_id` bigint(20) DEFAULT NULL,
-  `content` text NOT NULL,
+  `content` text DEFAULT NULL,
   `skill_id` bigint(20) DEFAULT NULL,
   `text` text DEFAULT NULL,
   `score` int(11) DEFAULT NULL,
@@ -392,7 +351,7 @@ INSERT INTO `statements` (`id`, `exam_id`, `content`, `skill_id`, `text`, `score
 (16, NULL, 'Un amigo le escribe para saber cómo es su vida en Madrid. Escríbale un\ncorreo con esta información. En él debe saludar, describir su rutina y sus actividades de tiempo libre y despedirse. ', 24, 'El numero de palabras debe de ser  entre 20 y 30 palabras.', 30, 27, 'active', NULL),
 (17, NULL, 'Lea este mensaje de correo electrónico. A continuación, responda a cinco\npreguntas sobre el texto. Elija la respuesta correcta (a, b, c, d):', 25, '      ¡Hola familia!:\n\n¿Cómo estáis? Yo estoy muy contento porque el martes que viene empiezo a trabajar.\nVoy a trabajar en la biblioteca de mi universidad. Mis tareas son organizar los archivos\ny colocar los libros en las estanterías. Algunas veces también tengo que hablar con los\nestudiantes sobre los libros, pero no tengo que hacer fotocopias.\nTengo un horario muy bueno: todas las tardes de 16:00 a 20:00, así que puedo\nestudiar por las mañanas. Una vez al mes tengo que trabajar los sábados.\nLas clases en la universidad son muy interesantes. Tengo clase todos los días,\nexcepto los miércoles por la mañana, porque tengo prácticas en el laboratorio. Los\nfines de semana estudio con mis compañeros en la biblioteca de la universidad porque\ntenemos muchos exámenes. Por ejemplo, tengo un examen de lengua española el\njueves.\nBueno, ya sabéis las buenas noticias. Nos vemos el próximo mes porque en abril\ntenemos cuatro días de vacaciones.\nOs quiero mucho,\n\n      Francisco', 10, 27, 'active', NULL),
 (18, NULL, 'Prueba oral. Preséntese. Debe dar información personal como el nombre, la nacionalidad y la\nedad, y puede hablar de su trabajo o estudios, por qué estudia español, etc.\nSeleccione tres de las cinco opciones para hablar durante 2 o 3 minutos.', 27, 'Seleccione tres de las cinco opciones para hablar durante 2 o 3 minutos.', 15, 27, 'active', NULL),
-(40, NULL, 'qwqwqwqwqq', 345, 'qwqqqq', 5, 34, 'active', NULL);
+(43, NULL, 'ghjghhjghj', 345, 'jhgjjghgjhj', 10, 34, 'active', NULL);
 
 -- --------------------------------------------------------
 
@@ -630,7 +589,8 @@ ALTER TABLE `questions`
   ADD KEY `block_id` (`block_id`),
   ADD KEY `skill_id` (`skill_id`),
   ADD KEY `level_id` (`level_id`),
-  ADD KEY `fk_questions_photos` (`photo_id`);
+  ADD KEY `fk_questions_photos` (`photo_id`),
+  ADD KEY `statements_ibfk4` (`statement_id`);
 
 --
 -- Indices de la tabla `skills`
@@ -699,7 +659,7 @@ ALTER TABLE `user_actions`
 -- AUTO_INCREMENT de la tabla `answers`
 --
 ALTER TABLE `answers`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=118;
 
 --
 -- AUTO_INCREMENT de la tabla `blocks`
@@ -735,13 +695,13 @@ ALTER TABLE `levels`
 -- AUTO_INCREMENT de la tabla `photos`
 --
 ALTER TABLE `photos`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT de la tabla `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT de la tabla `skills`
@@ -753,7 +713,7 @@ ALTER TABLE `skills`
 -- AUTO_INCREMENT de la tabla `statements`
 --
 ALTER TABLE `statements`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT de la tabla `students`
@@ -852,7 +812,8 @@ ALTER TABLE `questions`
   ADD CONSTRAINT `fk_questions_photos` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `questions_ibfk_1` FOREIGN KEY (`block_id`) REFERENCES `blocks` (`id`),
   ADD CONSTRAINT `questions_ibfk_2` FOREIGN KEY (`skill_id`) REFERENCES `skills` (`id`),
-  ADD CONSTRAINT `questions_ibfk_3` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`);
+  ADD CONSTRAINT `questions_ibfk_3` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`),
+  ADD CONSTRAINT `statements_ibfk4` FOREIGN KEY (`statement_id`) REFERENCES `statements` (`id`);
 
 --
 -- Filtros para la tabla `skills`
@@ -865,9 +826,7 @@ ALTER TABLE `skills`
 --
 ALTER TABLE `statements`
   ADD CONSTRAINT `fk_statements_photos` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`) ON DELETE SET NULL,
-  ADD CONSTRAINT `statements_ibfk_1` FOREIGN KEY (`exam_id`) REFERENCES `exams` (`id`),
-  ADD CONSTRAINT `statements_ibfk_2` FOREIGN KEY (`skill_id`) REFERENCES `skills` (`id`),
-  ADD CONSTRAINT `statements_ibfk_3` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`);
+  ADD CONSTRAINT `statements_ibfk_2` FOREIGN KEY (`skill_id`) REFERENCES `skills` (`id`);
 
 --
 -- Filtros para la tabla `students`

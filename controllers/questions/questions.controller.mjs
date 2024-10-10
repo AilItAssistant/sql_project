@@ -9,7 +9,7 @@ export const addQuestion = async (req, res) => {
         let question_id;
         try {
             conn = await pool.getConnection();
-/**/ 
+/**/
             if ( req.body.photoQuestion ) {
                 console.log("preguntas con foto")
                 let photo = await conn.query(`
@@ -18,62 +18,70 @@ export const addQuestion = async (req, res) => {
                     VALUES ( '${req.body.photoQuestion}' );
                 `);
                 let id = photo.insertId.toString();
-                let questions = await conn.query(`
-                    INSERT INTO 
-                        questions (
-                            content, skill_id, puntuation 
-                            level_id, statement_id, photo_id) 
-                    VALUES (
-                        '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation},
-                        ${req.body.level_id}, '${req.body.statement_id}', ${id}
-                        );
-                `);
-                question_id = questions.insertId.toString();
+                if( req.body.statement_id ){
+                    let questions = await conn.query(`
+                        INSERT INTO 
+                            questions (
+                                content, skill_id, puntuation, level_id, statement_id, photo_id, block_id) 
+                        VALUES (
+                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${req.body.statement_id}, ${id}, ${req.body.block});
+                    `);
+                    question_id = questions.insertId.toString();
+                } else {
+                    let questions = await conn.query(`
+                        INSERT INTO 
+                            questions (
+                                content, skill_id, puntuation, level_id, photo_id, block_id) 
+                        VALUES (
+                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${id}, ${req.body.block});
+                    `);
+                    question_id = questions.insertId.toString();
+                };
             } else {
                 console.log("preguntas sin foto")
-                let questions = await conn.query(`
-                    INSERT INTO 
-                        questions (
-                            content, skill_id, puntuation,
-                            level_id, statement_id) 
-                    VALUES ( '${req.body.question}', ${req.body.skill_id}, '${req.body.puntuation}', ${req.body.level_id}, '${req.body.statement_id}');`);
+                if( req.body.statement_id ){
+                    let questions = await conn.query(`
+                        INSERT INTO 
+                            questions (
+                                content, skill_id, puntuation, level_id, statement_id, block_id) 
+                        VALUES (
+                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${req.body.statement_id}, ${req.body.block});
+                    `);
                     question_id = questions.insertId.toString();
+                } else {
+                    let questions = await conn.query(`
+                        INSERT INTO 
+                            questions (
+                                content, skill_id, puntuation, level_id, block_id) 
+                        VALUES (
+                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${req.body.block});
+                    `);
+                    question_id = questions.insertId.toString();
+                };
                 };
             console.log("sale de preguntas")
             if ( req.body.typeAnswers === "photo" ) {
                 for(let i = 0; req.body.responses.length > i; i++){
-
                     let photoAnswer = await conn.query(`
                         INSERT INTO 
                             photos ( base64_data ) 
-                        VALUES ( '${req.body.photoId}' );
+                        VALUES ( '${req.body.responses[i].photo}' );
                     `);
                     let id = photoAnswer.insertId.toString();
                     let responses = await conn.query(`
                         INSERT INTO 
-                            answers (
-                            question_id, 
-                            content, is_correct,
-                            letter, photo_id) 
+                            answers ( question_id, content, is_correct, letter, photo_id) 
                         VALUES (
-                            ${question_id}, '${req.body.responses[i].content}', 
-                            ${req.body.responses[i].is_correct}, '${req.body.responses[i].letter}', 
-                            ${id}
-                            );
+                            ${question_id}, '${req.body.responses[i].content}', ${req.body.responses[i].is_correct}, '${req.body.responses[i].letter}', ${id});
                     `);
                 };
             } else if ( req.body.typeAnswers === "phrase" ) {
                 for(let i = 0; req.body.responses.length > i; i++){
                     let responses = await conn.query(`
                         INSERT INTO 
-                            answers (
-                            question_id, 
-                            content, is_correct,
-                            letter) 
+                            answers (question_id, content, is_correct, letter) 
                         VALUES (
-                            ${question_id}, '${req.body.responses[i].content}', 
-                            ${req.body.responses[i].is_correct}, '${req.body.responses[i].letter}'
-                        );
+                            ${question_id}, '${req.body.responses[i].content}', ${req.body.responses[i].is_correct}, '${req.body.responses[i].letter}');
                     `);
                 };
             };

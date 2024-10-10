@@ -66,6 +66,7 @@ export const levelSkillStatements = async (req, res) => {
 
 //?GET STATEMENTS BY ID
 export const getStatementsById = async (req, res) => {
+    console.log(req.body)
     if ( req.data ) {
         let conn;
         try {
@@ -80,7 +81,7 @@ export const getStatementsById = async (req, res) => {
                     s.score,
                     s.level_id,
                     l.name AS level_name,
-                    GROUP_CONCAT(q.content ORDER BY q.id ASC SEPARATOR ', ') AS questions
+                    GROUP_CONCAT(q.id ORDER BY q.id ASC SEPARATOR ', ') AS questions
                 FROM 
                     statements s
                 LEFT JOIN 

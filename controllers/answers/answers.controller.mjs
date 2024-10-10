@@ -17,6 +17,7 @@ export const getAnswerById = async (req, res) => {
             answer.forEach((element) => {
                 element.id = element.id.toString();
                 if(element.question_id){element.question_id = element.question_id.toString();}
+                if(element.photo_id){element.photo_id = element.photo_id.toString();}
             });
             res.json(answer);
         } catch (error) {
