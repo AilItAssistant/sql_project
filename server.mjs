@@ -13,6 +13,7 @@ import { skills } from "./routes/skill/skill.routes.mjs";
 import { blocks } from "./routes/blocks/blocks.routes.mjs";
 import { users } from "./routes/users/users.routes.mjs";
 import { answers } from "./routes/answers/answers.routes.mjs";
+import { photo } from "./routes/photo/photo.routes.mjs";
 
 const app = express();
 
@@ -61,7 +62,7 @@ app.use("/api/users", users);
 //ANSWERS
 app.use("/api/answers", answers);
 
-//COMPLETE EXAMS
-//app.use("/api/completeExams", completeExams);
+//COMPLETE PHOTO
+app.use("/api/photo", photo);
 
 export default app;

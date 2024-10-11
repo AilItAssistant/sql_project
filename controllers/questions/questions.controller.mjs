@@ -9,9 +9,7 @@ export const addQuestion = async (req, res) => {
         let question_id;
         try {
             conn = await pool.getConnection();
-/**/
             if ( req.body.photoQuestion ) {
-                console.log("preguntas con foto")
                 let photo = await conn.query(`
                     INSERT INTO 
                         photos ( base64_data ) 
@@ -38,7 +36,6 @@ export const addQuestion = async (req, res) => {
                     question_id = questions.insertId.toString();
                 };
             } else {
-                console.log("preguntas sin foto")
                 if( req.body.statement_id ){
                     let questions = await conn.query(`
                         INSERT INTO 
@@ -59,7 +56,6 @@ export const addQuestion = async (req, res) => {
                     question_id = questions.insertId.toString();
                 };
                 };
-            console.log("sale de preguntas")
             if ( req.body.typeAnswers === "photo" ) {
                 for(let i = 0; req.body.responses.length > i; i++){
                     let photoAnswer = await conn.query(`
@@ -85,7 +81,6 @@ export const addQuestion = async (req, res) => {
                     `);
                 };
             };
-/* */
             res.json(200);
         } catch (error) {
             console.log(error);
@@ -103,22 +98,20 @@ export const getQuestionById = async (req, res) => {
             let question = await conn.query(`
                 SELECT
                     q.*,
-                GROUP_CONCAT(
-                    a.id 
-                    ORDER BY 
-                    a.id)
+                GROUP_CONCAT( a.id ORDER BY a.id )
                     AS 
-                    answers_ids
+                    answers_ids,
+                    p.base64_data AS photo_base64
                 FROM
                     questions q
                 LEFT JOIN
-                    answers a 
-                ON 
-                    q.id = a.question_id
+                    answers a ON q.id = a.question_id
+                LEFT JOIN
+                    photos p ON q.photo_id = p.id
                 WHERE
                     q.id = ${req.body.id}
                 GROUP BY
-                    q.id;
+                    q.id, p.base64_data;
             `);
             question.forEach((element) => {
                 element.id = element.id.toString();

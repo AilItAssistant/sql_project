@@ -78,6 +78,7 @@ export const getStatementsById = async (req, res) => {
                     s.skill_id,
                     sk.name AS skill_name,
                     s.text,
+                    s.photo_id,
                     s.score,
                     s.level_id,
                     l.name AS level_name,
