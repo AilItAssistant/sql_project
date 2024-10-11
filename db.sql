@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 10-10-2024 a las 15:55:15
+-- Tiempo de generación: 11-10-2024 a las 11:19:17
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `bd_2.1`
+-- Base de datos: `db`
 --
 
 -- --------------------------------------------------------
@@ -225,15 +225,6 @@ CREATE TABLE `exam_questions` (
   `status` varchar(255) DEFAULT 'active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `exam_questions`
---
-
-INSERT INTO `exam_questions` (`exam_id`, `question_id`, `chosen_answer_id`, `is_correct`, `status`) VALUES
-(1, 1, 1, 1, 'active'),
-(2, 2, 3, 1, 'active'),
-(3, 3, 5, 1, 'active');
-
 -- --------------------------------------------------------
 
 --
@@ -269,15 +260,6 @@ CREATE TABLE `exam_statements` (
   `statement_id` bigint(20) NOT NULL,
   `status` varchar(255) DEFAULT 'active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `exam_statements`
---
-
-INSERT INTO `exam_statements` (`exam_id`, `statement_id`, `status`) VALUES
-(1, 1, 'active'),
-(2, 2, 'active'),
-(3, 3, 'active');
 
 -- --------------------------------------------------------
 
@@ -684,7 +666,8 @@ ALTER TABLE `statements`
   ADD PRIMARY KEY (`id`),
   ADD KEY `skill_id` (`skill_id`),
   ADD KEY `level_id` (`level_id`),
-  ADD KEY `fk_statements_photos` (`photo_id`);
+  ADD KEY `fk_statements_photos` (`photo_id`),
+  ADD KEY `statements_ibfk_1` (`exam_id`);
 
 --
 -- Indices de la tabla `students`
@@ -867,8 +850,7 @@ ALTER TABLE `exams`
 --
 ALTER TABLE `exam_questions`
   ADD CONSTRAINT `exam_questions_ibfk_1` FOREIGN KEY (`exam_id`) REFERENCES `exams` (`id`),
-  ADD CONSTRAINT `exam_questions_ibfk_2` FOREIGN KEY (`question_id`) REFERENCES `questions` (`id`),
-  ADD CONSTRAINT `exam_questions_ibfk_3` FOREIGN KEY (`chosen_answer_id`) REFERENCES `answers` (`id`);
+  ADD CONSTRAINT `exam_questions_ibfk_2` FOREIGN KEY (`question_id`) REFERENCES `questions` (`id`);
 
 --
 -- Filtros para la tabla `exam_requests`
@@ -888,43 +870,39 @@ ALTER TABLE `exam_statements`
 -- Filtros para la tabla `questions`
 --
 ALTER TABLE `questions`
-  ADD CONSTRAINT `fk_questions_photos` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `questions_ibfk_1` FOREIGN KEY (`block_id`) REFERENCES `blocks` (`id`),
-  ADD CONSTRAINT `questions_ibfk_2` FOREIGN KEY (`skill_id`) REFERENCES `skills` (`id`),
-  ADD CONSTRAINT `questions_ibfk_3` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`),
-  ADD CONSTRAINT `statements_ibfk4` FOREIGN KEY (`statement_id`) REFERENCES `statements` (`id`);
+  ADD CONSTRAINT `questions_ibfk_2` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`),
+  ADD CONSTRAINT `questions_ibfk_3` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`),
+  ADD CONSTRAINT `questions_ibfk_4` FOREIGN KEY (`skill_id`) REFERENCES `skills` (`id`),
+  ADD CONSTRAINT `questions_ibfk_5` FOREIGN KEY (`statement_id`) REFERENCES `statements` (`id`);
 
 --
 -- Filtros para la tabla `skills`
 --
 ALTER TABLE `skills`
-  ADD CONSTRAINT `skills_ibfk_1` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`);
+  ADD CONSTRAINT `levels_ibfk_1` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`);
 
 --
 -- Filtros para la tabla `statements`
 --
 ALTER TABLE `statements`
-  ADD CONSTRAINT `fk_statements_photos` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`) ON DELETE SET NULL,
-  ADD CONSTRAINT `statements_ibfk_2` FOREIGN KEY (`skill_id`) REFERENCES `skills` (`id`);
+  ADD CONSTRAINT `statements_ibfk_1` FOREIGN KEY (`exam_id`) REFERENCES `exams` (`id`),
+  ADD CONSTRAINT `statements_ibfk_2` FOREIGN KEY (`skill_id`) REFERENCES `skills` (`id`),
+  ADD CONSTRAINT `statements_ibfk_3` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`),
+  ADD CONSTRAINT `statements_ibfk_4` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`);
 
 --
 -- Filtros para la tabla `students`
 --
 ALTER TABLE `students`
-  ADD CONSTRAINT `students_ibfk_1` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`);
+  ADD CONSTRAINT `student_ibfk_1` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`);
 
 --
 -- Filtros para la tabla `student_classes`
 --
 ALTER TABLE `student_classes`
-  ADD CONSTRAINT `student_classes_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`),
-  ADD CONSTRAINT `student_classes_ibfk_2` FOREIGN KEY (`class_id`) REFERENCES `classes` (`id`);
-
---
--- Filtros para la tabla `user_actions`
---
-ALTER TABLE `user_actions`
-  ADD CONSTRAINT `user_actions_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `student_classes_ibfk_1` FOREIGN KEY (`class_id`) REFERENCES `classes` (`id`),
+  ADD CONSTRAINT `student_classes_ibfk_2` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
