@@ -41,19 +41,93 @@ export const levelSkillStatements = async (req, res) => {
             conn = await pool.getConnection();
             let rows = await conn.query(`
                 SELECT 
-                    s.id AS id,
-                    s.content AS content
+                    s.id,
+                    s.content,
+                    s.skill_id,
+                    s.text,
+                    s.score,
+                    s.level_id,
+                    s.status,
+                    s.photo_id,
+                    GROUP_CONCAT(q.id ORDER BY q.id ASC SEPARATOR ', ') AS questionsId
                 FROM 
                     statements s
+                LEFT JOIN 
+                    questions q ON q.statement_id = s.id
                 WHERE 
                     s.skill_id = ${req.body.skill_id} 
                     AND 
-                    s.level_id = ${req.body.level_id};
+                    s.level_id = ${req.body.level_id}
+                GROUP BY 
+                    s.id, s.content, s.skill_id, s.text, s.score, 
+                    s.level_id, s.status, s.photo_id;;
             `);
             rows.forEach((element) => {
                 if (element.id) {
                     element.id = element.id.toString();
-                }
+                };
+                if (element.skill_id) {
+                    element.skill_id = element.skill_id.toString();
+                };
+                if (element.level_id) {
+                    element.level_id = element.level_id.toString();
+                };
+                if (element.photo_id) {
+                    element.photo_id = element.photo_id.toString();
+                };
+            });
+            res.json(rows);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        }
+    }
+};
+
+//?GET STATEMENTS BY LEVEL_ID, BLOCK_ID AND SKILL_ID 
+export const levelSkillBlockStatements = async (req, res) => {
+    if ( req.data ) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            let rows = await conn.query(`
+                SELECT 
+                    s.id,
+                    s.content,
+                    s.skill_id,
+                    s.text,
+                    s.score,
+                    s.level_id,
+                    s.status,
+                    s.photo_id
+                FROM 
+                    statements s
+                JOIN 
+                    questions q ON s.id = q.statement_id
+                JOIN 
+                    blocks b ON q.block_id = b.id
+                WHERE 
+                    s.skill_id = ${req.body.skill_id} 
+                    AND 
+                    s.level_id = ${req.body.level_id}
+                    AND 
+                    b.id = ${req.body.block_id};
+            `);
+            console.log(rows)
+            rows.forEach((element) => {
+                if (element.id) {
+                    element.id = element.id.toString();
+                };
+                if (element.skill_id) {
+                    element.skill_id = element.skill_id.toString();
+                };
+                if (element.level_id) {
+                    element.level_id = element.level_id.toString();
+                };
+                if (element.photo_id) {
+                    element.photo_id = element.photo_id.toString();
+                };
             });
             res.json(rows);
         } catch (error) {
