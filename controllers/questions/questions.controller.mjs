@@ -129,3 +129,71 @@ export const getQuestionById = async (req, res) => {
         };
     };
 };
+
+//?GET QUESTIONS AND ANSWERS
+export const getQuestionsAnswers = async (req, res) => {
+    //console.log(req.body)
+    if ( req.data ) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            let questions = await conn.query(`
+                SELECT
+                    q.id,
+                    q.photo_id,
+                    q.content,
+                    q.puntuation,
+                    p.base64_data,
+                    (
+                        SELECT
+                            GROUP_CONCAT(a.id ORDER BY a.id ASC SEPARATOR ', ') AS answers_ids
+                        FROM
+                            answers a
+                        WHERE
+                            a.question_id = q.id
+                    ) AS answers_ids
+                FROM
+                    questions q
+                LEFT JOIN
+                    photos p ON q.photo_id = p.id
+                WHERE
+                    q.statement_id = ${req.body.statement_id} AND q.status = 'active';
+            `);
+            for (const question of questions) {
+                question.id = question.id.toString();
+                if (question.photo_id) question.photo_id = question.photo_id.toString();
+                question.answers = [];
+                let answers_ids = question.answers_ids.split(",");
+                //console.log(question.answers_ids)
+                for (let answer_id of answers_ids) {
+                    let answers = await conn.query(`
+                        SELECT 
+                            a.id, 
+                            a.content, 
+                            a.is_correct, 
+                            a.letter, 
+                            a.photo_id, 
+                            p.base64_data
+                        FROM 
+                            answers a
+                        LEFT JOIN 
+                            photos p ON a.photo_id = p.id
+                        WHERE 
+                            a.id = ${answer_id} AND a.status = 'active';  
+                    `);
+                    answers.forEach((answer) => {
+                        answer.id = answer.id.toString();
+                        if (answer.photo_id) answer.photo_id = answer.photo_id.toString();
+                    });
+                    question.answers.push(answers[0]);
+                };
+            };
+            console.log(questions)
+            res.json(questions);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        };
+    };
+}
