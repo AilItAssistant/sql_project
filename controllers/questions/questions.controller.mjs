@@ -143,6 +143,7 @@ export const getQuestionsAnswers = async (req, res) => {
                     q.photo_id,
                     q.content,
                     q.puntuation,
+                    q.block_id,
                     p.base64_data,
                     (
                         SELECT
@@ -162,6 +163,7 @@ export const getQuestionsAnswers = async (req, res) => {
             for (const question of questions) {
                 question.id = question.id.toString();
                 if (question.photo_id) question.photo_id = question.photo_id.toString();
+                if (question.block_id) question.block_id = question.block_id.toString();
                 question.answers = [];
                 let answers_ids = question.answers_ids.split(",");
                 //console.log(question.answers_ids)
