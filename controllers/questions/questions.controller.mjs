@@ -198,4 +198,4 @@ export const getQuestionsAnswers = async (req, res) => {
             if (conn) return conn.end();
         };
     };
-}
+};
