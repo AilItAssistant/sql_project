@@ -199,3 +199,48 @@ export const getQuestionsAnswers = async (req, res) => {
         };
     };
 };
+
+export const editQuestions = async (req, res) => {
+    console.log(req.body)
+    if ( req.data ) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            let photo_id = null;
+            if(req.body.photo ) {
+                let photo_id = await conn.query(`
+                    INSERT INTO
+                        photos (
+                            base64_data
+                        )
+                    VALUES (
+                        '${req.body.photo}'
+                    );`);
+                    id = await conn.query(`
+                    SELECT
+                        LAST_INSERT_ID()
+                    AS
+                        last_id;
+                    `);
+                    photo_id = photo_id[0].last_id.toString()
+            };
+            let rows = await conn.query(`
+                UPDATE
+                    questions
+                SET
+                    statement_id = CASE WHEN ${req.body.statement_id} IS NOT NULL THEN '${req.body.statement_id}' ELSE statement_id END,
+                    block_id = CASE WHEN ${req.body.block_id} IS NOT NULL THEN '${req.body.block_id}' ELSE block_id END,
+                    puntuation = CASE WHEN ${req.body.puntuation} IS NOT NULL THEN '${req.body.puntuation}' ELSE puntuation END,
+                    content = CASE WHEN ${req.body.question} IS NOT NULL THEN '${req.body.question}' ELSE content END,
+                    photo_id = CASE WHEN ${photo_id} IS NOT NULL THEN '${photo_id}' ELSE photo_id END
+                WHERE
+                    id = ${req.body.id};
+                `);
+            res.json(200);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        }
+    }
+};
