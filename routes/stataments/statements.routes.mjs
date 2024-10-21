@@ -7,7 +7,8 @@ import {
     postStatements,
     getStatementsAndDetails,
     levelSkillStatements,
-    levelSkillBlockStatements
+    levelSkillBlockStatements,
+    editStatements
 } from "../../controllers/statements/statements.controller.mjs";
 
 export const statements = Router();
@@ -29,3 +30,6 @@ statements.get("/:statementId", verifyToken, getStatementsById);
 
 //?POST STATEMENTS
 statements.post("/add", verifyToken, postStatements);
+
+//?EDIT STATEMENTS
+statements.put("/edit", verifyToken, editStatements);

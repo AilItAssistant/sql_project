@@ -35,12 +35,13 @@ export const getStatements = async (req, res) => {
 
 //?GET STATEMENTS BY LEVEL_ID AND SKILL_ID
 export const levelSkillStatements = async (req, res) => {
+    console.log(req.body);
     if ( req.data ) {
         let conn;
         try {
             conn = await pool.getConnection();
             let rows = await conn.query(`
-                SELECT 
+                SELECT
                     s.id,
                     s.content,
                     s.skill_id,
@@ -50,16 +51,16 @@ export const levelSkillStatements = async (req, res) => {
                     s.status,
                     s.photo_id,
                     GROUP_CONCAT(q.id ORDER BY q.id ASC SEPARATOR ', ') AS questionsId
-                FROM 
+                FROM
                     statements s
-                LEFT JOIN 
+                LEFT JOIN
                     questions q ON q.statement_id = s.id
-                WHERE 
-                    s.skill_id = ${req.body.skill_id} 
-                    AND 
+                WHERE
+                    s.skill_id = ${req.body.skill_id}
+                    AND
                     s.level_id = ${req.body.level_id}
-                GROUP BY 
-                    s.id, s.content, s.skill_id, s.text, s.score, 
+                GROUP BY
+                    s.id, s.content, s.skill_id, s.text, s.score,
                     s.level_id, s.status, s.photo_id;;
             `);
             rows.forEach((element) => {
@@ -85,14 +86,14 @@ export const levelSkillStatements = async (req, res) => {
     }
 };
 
-//?GET STATEMENTS BY LEVEL_ID, BLOCK_ID AND SKILL_ID 
+//?GET STATEMENTS BY LEVEL_ID, BLOCK_ID AND SKILL_ID
 export const levelSkillBlockStatements = async (req, res) => {
     if ( req.data ) {
         let conn;
         try {
             conn = await pool.getConnection();
             let rows = await conn.query(`
-                SELECT 
+                SELECT
                     s.id,
                     s.content,
                     s.skill_id,
@@ -101,17 +102,17 @@ export const levelSkillBlockStatements = async (req, res) => {
                     s.level_id,
                     s.status,
                     s.photo_id
-                FROM 
+                FROM
                     statements s
-                JOIN 
+                JOIN
                     questions q ON s.id = q.statement_id
-                JOIN 
+                JOIN
                     blocks b ON q.block_id = b.id
-                WHERE 
-                    s.skill_id = ${req.body.skill_id} 
-                    AND 
+                WHERE
+                    s.skill_id = ${req.body.skill_id}
+                    AND
                     s.level_id = ${req.body.level_id}
-                    AND 
+                    AND
                     b.id = ${req.body.block_id};
             `);
             console.log(rows)
@@ -262,4 +263,49 @@ export const getStatementsAndDetails = async (req, res) => {
             if (conn) return conn.end();
         };
     };
+};
+
+export const editStatements = async (req, res) => {
+    if ( req.data ) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            let photo_id = null;
+            if(req.body.photo ) {
+                let photo_id = await conn.query(`
+                    INSERT INTO
+                        photos (
+                            base64_data
+                        )
+                    VALUES (
+                        '${req.body.photo}'
+                    );`);
+                    id = await conn.query(`
+                    SELECT
+                        LAST_INSERT_ID()
+                    AS
+                        last_id;
+                    `);
+                    photo_id = photo_id[0].last_id.toString()
+            };
+            let rows = await conn.query(`
+                UPDATE
+                    statements
+                SET
+                    level_id = CASE WHEN ${req.body.level_id} IS NOT NULL THEN '${req.body.level_id}' ELSE level_id END,
+                    skill_id = CASE WHEN ${req.body.skill_id} IS NOT NULL THEN '${req.body.skill_id}' ELSE skill_id END,
+                    score = CASE WHEN ${req.body.score} IS NOT NULL THEN '${req.body.score}' ELSE score END,
+                    content = CASE WHEN ${req.body.content} IS NOT NULL THEN '${req.body.content}' ELSE content END,
+                    text = CASE WHEN ${req.body.text} IS NOT NULL THEN '${req.body.text}' ELSE text END,
+                    photo_id = CASE WHEN ${photo_id} IS NOT NULL THEN '${photo_id}' ELSE photo_id END
+                WHERE
+                    id = ${req.body.id};
+                `);
+            res.json(200);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        }
+    }
 };
