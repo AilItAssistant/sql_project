@@ -25,7 +25,7 @@ questions.post("/getQuestionsAnswers", verifyToken, getQuestionsAnswers);
 questions.put("/edit", verifyToken, editQuestions);
 
 //?INACTIVATE QUESTION
-questions.post("/inactivate", verifyToken, statusQuestionById);
+questions.put("/status", verifyToken, statusQuestionById);
 
 //?DELETE QUESTION
 questions.delete("/delete", verifyToken, deleteQuestionById);

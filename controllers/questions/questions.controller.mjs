@@ -142,6 +142,7 @@ export const getQuestionsAnswers = async (req, res) => {
                     q.content,
                     q.puntuation,
                     q.block_id,
+                    q.status,
                     p.base64_data,
                     (
                         SELECT
@@ -156,7 +157,7 @@ export const getQuestionsAnswers = async (req, res) => {
                 LEFT JOIN
                     photos p ON q.photo_id = p.id
                 WHERE
-                    q.statement_id = ${req.body.statement_id} AND q.status = 'active';
+                    q.statement_id = ${req.body.statement_id};
             `);
             for (const question of questions) {
                 question.id = question.id.toString();
@@ -172,13 +173,14 @@ export const getQuestionsAnswers = async (req, res) => {
                             a.is_correct,
                             a.letter,
                             a.photo_id,
+                            a.status,
                             p.base64_data
                         FROM
                             answers a
                         LEFT JOIN
                             photos p ON a.photo_id = p.id
                         WHERE
-                            a.id = ${answer_id} AND a.status = 'active';
+                            a.id = ${answer_id};
                     `);
                     answers.forEach((answer) => {
                         answer.id = answer.id.toString();
@@ -259,7 +261,7 @@ export const statusQuestionById = async (req, res) => {
                         id = ${req.body.id};
                 `);
             };
-            res.status(200);
+            res.json(200);
         } catch (error) {
             console.log(error);
         } finally {

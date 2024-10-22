@@ -325,7 +325,7 @@ export const statusStatementById = async (req, res) => {
                         id = ${req.body.id};
                 `);
             };
-            res.status(200);
+            res.json(200);
         } catch (error) {
             console.log(error);
         } finally {

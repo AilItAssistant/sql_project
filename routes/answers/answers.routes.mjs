@@ -17,7 +17,7 @@ answers.put("/getById", verifyToken, getAnswerById);
 answers.put("/edit", verifyToken, editAnswers);
 
 //?INACTIVATE ANSWER
-answers.post("/inactivate", verifyToken, statusAnswerById);
+answers.put("/status", verifyToken, statusAnswerById);
 
 //?DELETE ANSWER
 answers.delete("/delete", verifyToken, deleteAnswerById);

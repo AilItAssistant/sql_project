@@ -37,7 +37,7 @@ statements.post("/add", verifyToken, postStatements);
 statements.put("/edit", verifyToken, editStatements);
 
 //?INACTIVATE STATEMENT
-statements.post("/inactivate", verifyToken, statusStatementById);
+statements.put("/status", verifyToken, statusStatementById);
 
 //?DELETE STATEMENT
 statements.delete("/delete", verifyToken, deleteStatementById);
