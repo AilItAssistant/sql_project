@@ -23,7 +23,6 @@ export const getStatements = async (req, res) => {
                     element.photo_id = element.photo_id.toString();
                 }
             });
-    
             res.json(rows);
         } catch (error) {
             console.log(error);
@@ -35,7 +34,6 @@ export const getStatements = async (req, res) => {
 
 //?GET STATEMENTS BY LEVEL_ID AND SKILL_ID
 export const levelSkillStatements = async (req, res) => {
-    console.log(req.body);
     if ( req.data ) {
         let conn;
         try {
@@ -141,13 +139,12 @@ export const levelSkillBlockStatements = async (req, res) => {
 
 //?GET STATEMENTS BY ID
 export const getStatementsById = async (req, res) => {
-    console.log(req.body)
     if ( req.data ) {
         let conn;
         try {
             conn = await pool.getConnection();
             let rows = await conn.query(`
-                SELECT 
+                SELECT
                     s.id,
                     s.content AS statement_content,
                     s.skill_id,
@@ -158,17 +155,17 @@ export const getStatementsById = async (req, res) => {
                     s.level_id,
                     l.name AS level_name,
                     GROUP_CONCAT(q.id ORDER BY q.id ASC SEPARATOR ', ') AS questions
-                FROM 
+                FROM
                     statements s
-                LEFT JOIN 
+                LEFT JOIN
                     levels l ON s.level_id = l.id
-                LEFT JOIN 
+                LEFT JOIN
                     skills sk ON s.skill_id = sk.id
-                LEFT JOIN 
+                LEFT JOIN
                     questions q ON q.statement_id = s.id
-                WHERE 
+                WHERE
                     s.id = ${req.params.statementId}
-                GROUP BY 
+                GROUP BY
                     s.id, l.name;
             `);
             rows.forEach((element) => {
@@ -179,7 +176,6 @@ export const getStatementsById = async (req, res) => {
                 if(element.photo_id){element.photo_id = element.photo_id.toString();}
                 if(element.score){element.score = element.score.toString();}
             });
-            console.log(rows)
             res.json(rows);
         } catch (error) {
             console.log(error);
@@ -198,17 +194,17 @@ export const postStatements = async (req, res) => {
             conn = await pool.getConnection();
             if(req.body.photo !== undefined){
                 let photo = await conn.query(`
-                    INSERT INTO 
+                    INSERT INTO
                         photos (
                             base64_data
-                        ) 
+                        )
                     VALUES (
                         '${req.body.photo}'
                     );`);
                     id = await conn.query(`
-                    SELECT 
-                        LAST_INSERT_ID() 
-                    AS 
+                    SELECT
+                        LAST_INSERT_ID()
+                    AS
                         last_id;
                     `);
                     id = id[0].last_id.toString();
@@ -216,20 +212,20 @@ export const postStatements = async (req, res) => {
                 id = null;
             }
             let rows = await conn.query(
-                `INSERT INTO 
+                `INSERT INTO
                     statements (
-                        content, 
-                        skill_id, 
-                        text, 
-                        score, 
+                        content,
+                        skill_id,
+                        text,
+                        score,
                         level_id,
                         photo_id
-                    ) 
+                    )
                 VALUES (
-                '${req.body.statement}', 
-                ${req.body.skills}, 
-                '${req.body.text}', 
-                ${req.body.puntuation}, 
+                '${req.body.statement}',
+                ${req.body.skills},
+                '${req.body.text}',
+                ${req.body.puntuation},
                 ${req.body.level},
                 ${id});`
             );
@@ -268,9 +264,9 @@ export const getStatementsAndDetails = async (req, res) => {
 export const editStatements = async (req, res) => {
     if ( req.data ) {
         let conn;
+        let photoId = null;
         try {
             conn = await pool.getConnection();
-            let photo_id = null;
             if(req.body.photo ) {
                 let photo_id = await conn.query(`
                     INSERT INTO
@@ -280,13 +276,8 @@ export const editStatements = async (req, res) => {
                     VALUES (
                         '${req.body.photo}'
                     );`);
-                    id = await conn.query(`
-                    SELECT
-                        LAST_INSERT_ID()
-                    AS
-                        last_id;
-                    `);
-                    photo_id = photo_id[0].last_id.toString()
+                    console.log(photo_id.insertId.toString());
+                    photoId = photo_id.insertId.toString();
             };
             let rows = await conn.query(`
                 UPDATE
@@ -297,7 +288,7 @@ export const editStatements = async (req, res) => {
                     score = CASE WHEN ${req.body.score} IS NOT NULL THEN '${req.body.score}' ELSE score END,
                     content = CASE WHEN ${req.body.content} IS NOT NULL THEN '${req.body.content}' ELSE content END,
                     text = CASE WHEN ${req.body.text} IS NOT NULL THEN '${req.body.text}' ELSE text END,
-                    photo_id = CASE WHEN ${photo_id} IS NOT NULL THEN '${photo_id}' ELSE photo_id END
+                    photo_id = CASE WHEN ${photoId} IS NOT NULL THEN '${photoId}' ELSE photo_id END
                 WHERE
                     id = ${req.body.id};
                 `);
@@ -308,4 +299,57 @@ export const editStatements = async (req, res) => {
             if (conn) return conn.end();
         }
     }
+};
+
+export const statusStatementById = async (req, res) => {
+    if ( req.data ) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            if(req.body.status === 'active'){
+                let statement = await conn.query(`
+                    UPDATE
+                        statements
+                    SET
+                        status = 'inactive'
+                    WHERE
+                        id = ${req.body.id};
+                `);
+            } else if (req.body.status === 'inactive') {
+                let statement = await conn.query(`
+                    UPDATE
+                        statements
+                    SET
+                        status = 'active'
+                    WHERE
+                        id = ${req.body.id};
+                `);
+            };
+            res.status(200);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        };
+    };
+};
+
+export const deleteStatementById = async (req, res) => {
+    if ( req.data ) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            let statement = await conn.query(`
+                DELETE FROM
+                    statements
+                WHERE
+                    id = ${req.body.id};
+            `);
+            res.status(200);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        };
+    };
 };

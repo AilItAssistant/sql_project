@@ -3,7 +3,6 @@ import { pool } from "../../index.mjs"
 
 //?ADD QUESTION
 export const addQuestion = async (req, res) => {
-    console.log(req.body)
     if ( req.data ) {
         let conn;
         let question_id;
@@ -132,7 +131,6 @@ export const getQuestionById = async (req, res) => {
 
 //?GET QUESTIONS AND ANSWERS
 export const getQuestionsAnswers = async (req, res) => {
-    //console.log(req.body)
     if ( req.data ) {
         let conn;
         try {
@@ -166,22 +164,21 @@ export const getQuestionsAnswers = async (req, res) => {
                 if (question.block_id) question.block_id = question.block_id.toString();
                 question.answers = [];
                 let answers_ids = question.answers_ids.split(",");
-                //console.log(question.answers_ids)
                 for (let answer_id of answers_ids) {
                     let answers = await conn.query(`
-                        SELECT 
-                            a.id, 
-                            a.content, 
-                            a.is_correct, 
-                            a.letter, 
-                            a.photo_id, 
+                        SELECT
+                            a.id,
+                            a.content,
+                            a.is_correct,
+                            a.letter,
+                            a.photo_id,
                             p.base64_data
-                        FROM 
+                        FROM
                             answers a
-                        LEFT JOIN 
+                        LEFT JOIN
                             photos p ON a.photo_id = p.id
-                        WHERE 
-                            a.id = ${answer_id} AND a.status = 'active';  
+                        WHERE
+                            a.id = ${answer_id} AND a.status = 'active';
                     `);
                     answers.forEach((answer) => {
                         answer.id = answer.id.toString();
@@ -190,7 +187,6 @@ export const getQuestionsAnswers = async (req, res) => {
                     question.answers.push(answers[0]);
                 };
             };
-            console.log(questions)
             res.json(questions);
         } catch (error) {
             console.log(error);
@@ -204,9 +200,9 @@ export const editQuestions = async (req, res) => {
     console.log(req.body)
     if ( req.data ) {
         let conn;
+        let photoId = null;
         try {
             conn = await pool.getConnection();
-            let photo_id = null;
             if(req.body.photo ) {
                 let photo_id = await conn.query(`
                     INSERT INTO
@@ -216,13 +212,7 @@ export const editQuestions = async (req, res) => {
                     VALUES (
                         '${req.body.photo}'
                     );`);
-                    id = await conn.query(`
-                    SELECT
-                        LAST_INSERT_ID()
-                    AS
-                        last_id;
-                    `);
-                    photo_id = photo_id[0].last_id.toString()
+                    photoId = photo_id.insertId.toString();
             };
             let rows = await conn.query(`
                 UPDATE
@@ -232,7 +222,7 @@ export const editQuestions = async (req, res) => {
                     block_id = CASE WHEN ${req.body.block_id} IS NOT NULL THEN '${req.body.block_id}' ELSE block_id END,
                     puntuation = CASE WHEN ${req.body.puntuation} IS NOT NULL THEN '${req.body.puntuation}' ELSE puntuation END,
                     content = CASE WHEN ${req.body.question} IS NOT NULL THEN '${req.body.question}' ELSE content END,
-                    photo_id = CASE WHEN ${photo_id} IS NOT NULL THEN '${photo_id}' ELSE photo_id END
+                    photo_id = CASE WHEN ${photoId} IS NOT NULL THEN '${photoId}' ELSE photo_id END
                 WHERE
                     id = ${req.body.id};
                 `);
@@ -243,4 +233,57 @@ export const editQuestions = async (req, res) => {
             if (conn) return conn.end();
         }
     }
+};
+
+export const statusQuestionById = async (req, res) => {
+    if ( req.data ) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            if(req.body.status === 'active'){
+                let question = await conn.query(`
+                    UPDATE
+                        questions
+                    SET
+                        status = 'inactive'
+                    WHERE
+                        id = ${req.body.id};
+                `);
+            } else if (req.body.status === 'inactive') {
+                let question = await conn.query(`
+                    UPDATE
+                        questions
+                    SET
+                        status = 'active'
+                    WHERE
+                        id = ${req.body.id};
+                `);
+            };
+            res.status(200);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        };
+    };
+};
+
+export const deleteQuestionById = async (req, res) => {
+    if ( req.data ) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            let question = await conn.query(`
+                DELETE FROM
+                    questions
+                WHERE
+                    id = ${req.body.id};
+            `);
+            res.status(200);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        };
+    };
 };

@@ -8,7 +8,9 @@ import {
     getStatementsAndDetails,
     levelSkillStatements,
     levelSkillBlockStatements,
-    editStatements
+    editStatements,
+    statusStatementById,
+    deleteStatementById
 } from "../../controllers/statements/statements.controller.mjs";
 
 export const statements = Router();
@@ -33,3 +35,9 @@ statements.post("/add", verifyToken, postStatements);
 
 //?EDIT STATEMENTS
 statements.put("/edit", verifyToken, editStatements);
+
+//?INACTIVATE STATEMENT
+statements.post("/inactivate", verifyToken, statusStatementById);
+
+//?DELETE STATEMENT
+statements.delete("/delete", verifyToken, deleteStatementById);

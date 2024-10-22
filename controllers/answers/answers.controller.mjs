@@ -32,6 +32,7 @@ export const editAnswers = async (req, res) => {
     console.log(req.body)
     if ( req.data ) {
         let conn;
+        let photoId = null;
         try {
             conn = await pool.getConnection();
             let photo_id = null;
@@ -44,23 +45,45 @@ export const editAnswers = async (req, res) => {
                     VALUES (
                         '${req.body.photo}'
                     );`);
-                    id = await conn.query(`
-                    SELECT
-                        LAST_INSERT_ID()
-                    AS
-                        last_id;
-                `);
-                photo_id = photo_id[0].last_id.toString()
+                    photoId = photo_id.insertId.toString();
             };
-            let rows = await conn.query(`
-                UPDATE
-                    answers
-                SET
-                    content = CASE WHEN ${req.body.content} IS NOT NULL THEN '${req.body.content}' ELSE content END,
-                    photo_id = CASE WHEN ${photo_id} IS NOT NULL THEN '${photo_id}' ELSE photo_id END
-                WHERE
-                    id = ${req.body.id};
+            if(req.body.is_correct && req.body.is_correct === 1){
+                let question_id = await conn.query(`
+                    SELECT question_id FROM answers WHERE id = ${req.body.id};
                 `);
+                question_id = question_id[0].question_id.toString();
+                let answers_ids = await conn.query(`
+                    SELECT id
+                    FROM answers WHERE question_id = ${question_id};
+                `);
+                answers_ids.forEach((id) => {
+                    let solutions = conn.query(`
+                        UPDATE answers
+                        SET is_correct = 0 WHERE id = ${id.id.toString()};
+                    `);
+                });
+            };
+            if( req.body.content === null){
+                let rows = await conn.query(`
+                    UPDATE
+                        answers
+                    SET
+                        is_correct = CASE WHEN ${req.body.is_correct} IS NOT NULL THEN '${req.body.is_correct}' ELSE is_correct END,
+                        photo_id = CASE WHEN ${photoId} IS NOT NULL THEN '${photoId}' ELSE photo_id END
+                    WHERE
+                        id = ${req.body.id};
+                    `);
+            } else if (req.body.content !== null){
+                let rows = await conn.query(`
+                    UPDATE
+                        answers
+                    SET
+                        is_correct = CASE WHEN ${req.body.is_correct} IS NOT NULL THEN '${req.body.is_correct}' ELSE is_correct END,
+                        content = '${req.body.content}'
+                    WHERE
+                        id = ${req.body.id};
+                    `);
+            };
             res.json(200);
         } catch (error) {
             console.log(error);
@@ -68,4 +91,57 @@ export const editAnswers = async (req, res) => {
             if (conn) return conn.end();
         }
     }
+};
+
+export const statusAnswerById = async (req, res) => {
+    if ( req.data ) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            if(req.body.status === 'active'){
+                let answer = await conn.query(`
+                    UPDATE
+                        answers
+                    SET
+                        status = 'inactive'
+                    WHERE
+                        id = ${req.body.id};
+                `);
+            } else if (req.body.status === 'inactive') {
+                let answer = await conn.query(`
+                    UPDATE
+                        answers
+                    SET
+                        status = 'active'
+                    WHERE
+                        id = ${req.body.id};
+                `);
+            };
+            res.status(200);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        };
+    };
+};
+
+export const deleteAnswerById = async (req, res) => {
+    if ( req.data ) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            let answer = await conn.query(`
+                DELETE FROM
+                    answers
+                WHERE
+                    id = ${req.body.id};
+            `);
+            res.status(200);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        };
+    };
 };

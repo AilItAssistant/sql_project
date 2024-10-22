@@ -5,7 +5,9 @@ import {
     addQuestion,
     getQuestionById,
     getQuestionsAnswers,
-    editQuestions
+    editQuestions,
+    statusQuestionById,
+    deleteQuestionById
 } from "../../controllers/questions/questions.controller.mjs";
 
 export const questions = Router();
@@ -21,3 +23,9 @@ questions.post("/getQuestionsAnswers", verifyToken, getQuestionsAnswers);
 
 //?EDIT QUESTIONS
 questions.put("/edit", verifyToken, editQuestions);
+
+//?INACTIVATE QUESTION
+questions.post("/inactivate", verifyToken, statusQuestionById);
+
+//?DELETE QUESTION
+questions.delete("/delete", verifyToken, deleteQuestionById);

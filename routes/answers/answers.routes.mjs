@@ -3,7 +3,9 @@ import { Router } from "express";
 import { verifyToken } from "../../controllers/users/users.controller.mjs";
 import {
     getAnswerById,
-    editAnswers
+    editAnswers,
+    statusAnswerById,
+    deleteAnswerById
 } from "../../controllers/answers/answers.controller.mjs";
 
 export const answers = Router();
@@ -13,3 +15,9 @@ answers.put("/getById", verifyToken, getAnswerById);
 
 //?EDIT ANSWERS
 answers.put("/edit", verifyToken, editAnswers);
+
+//?INACTIVATE ANSWER
+answers.post("/inactivate", verifyToken, statusAnswerById);
+
+//?DELETE ANSWER
+answers.delete("/delete", verifyToken, deleteAnswerById);
