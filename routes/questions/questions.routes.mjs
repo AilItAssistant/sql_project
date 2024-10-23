@@ -28,4 +28,4 @@ questions.put("/edit", verifyToken, editQuestions);
 questions.put("/status", verifyToken, statusQuestionById);
 
 //?DELETE QUESTION
-questions.delete("/delete", verifyToken, deleteQuestionById);
+questions.put("/delete", verifyToken, deleteQuestionById);

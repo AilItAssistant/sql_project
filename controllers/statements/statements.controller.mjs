@@ -335,6 +335,7 @@ export const statusStatementById = async (req, res) => {
 };
 
 export const deleteStatementById = async (req, res) => {
+    console.log(req.body)
     if ( req.data ) {
         let conn;
         try {
@@ -345,7 +346,7 @@ export const deleteStatementById = async (req, res) => {
                 WHERE
                     id = ${req.body.id};
             `);
-            res.status(200);
+            res.json(200);
         } catch (error) {
             console.log(error);
         } finally {

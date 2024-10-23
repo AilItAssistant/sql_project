@@ -164,29 +164,32 @@ export const getQuestionsAnswers = async (req, res) => {
                 if (question.photo_id) question.photo_id = question.photo_id.toString();
                 if (question.block_id) question.block_id = question.block_id.toString();
                 question.answers = [];
-                let answers_ids = question.answers_ids.split(",");
-                for (let answer_id of answers_ids) {
-                    let answers = await conn.query(`
-                        SELECT
-                            a.id,
-                            a.content,
-                            a.is_correct,
-                            a.letter,
-                            a.photo_id,
-                            a.status,
-                            p.base64_data
-                        FROM
-                            answers a
-                        LEFT JOIN
-                            photos p ON a.photo_id = p.id
-                        WHERE
-                            a.id = ${answer_id};
-                    `);
-                    answers.forEach((answer) => {
-                        answer.id = answer.id.toString();
-                        if (answer.photo_id) answer.photo_id = answer.photo_id.toString();
-                    });
-                    question.answers.push(answers[0]);
+                let answers_ids;
+                if(question.answers_ids && typeof question.answers_ids === "string" && question.answers_ids.length >= 1){
+                    answers_ids = question.answers_ids.split(",");
+                    for (let answer_id of answers_ids) {
+                        let answers = await conn.query(`
+                            SELECT
+                                a.id,
+                                a.content,
+                                a.is_correct,
+                                a.letter,
+                                a.photo_id,
+                                a.status,
+                                p.base64_data
+                            FROM
+                                answers a
+                            LEFT JOIN
+                                photos p ON a.photo_id = p.id
+                            WHERE
+                                a.id = ${answer_id};
+                        `);
+                        answers.forEach((answer) => {
+                            answer.id = answer.id.toString();
+                            if (answer.photo_id) answer.photo_id = answer.photo_id.toString();
+                        });
+                        question.answers.push(answers[0]);
+                    };
                 };
             };
             res.json(questions);
@@ -281,7 +284,7 @@ export const deleteQuestionById = async (req, res) => {
                 WHERE
                     id = ${req.body.id};
             `);
-            res.status(200);
+            res.json(200);
         } catch (error) {
             console.log(error);
         } finally {

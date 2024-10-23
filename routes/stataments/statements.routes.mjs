@@ -40,4 +40,4 @@ statements.put("/edit", verifyToken, editStatements);
 statements.put("/status", verifyToken, statusStatementById);
 
 //?DELETE STATEMENT
-statements.delete("/delete", verifyToken, deleteStatementById);
+statements.put("/delete", verifyToken, deleteStatementById);

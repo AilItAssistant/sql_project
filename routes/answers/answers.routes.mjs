@@ -20,4 +20,4 @@ answers.put("/edit", verifyToken, editAnswers);
 answers.put("/status", verifyToken, statusAnswerById);
 
 //?DELETE ANSWER
-answers.delete("/delete", verifyToken, deleteAnswerById);
+answers.put("/delete", verifyToken, deleteAnswerById);
