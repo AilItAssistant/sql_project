@@ -7,7 +7,8 @@ import {
     getQuestionsAnswers,
     editQuestions,
     statusQuestionById,
-    deleteQuestionById
+    deleteQuestionById,
+    getQuestionsAnswersByBlockId
 } from "../../controllers/questions/questions.controller.mjs";
 
 export const questions = Router();
@@ -29,3 +30,6 @@ questions.put("/status", verifyToken, statusQuestionById);
 
 //?DELETE QUESTION
 questions.put("/delete", verifyToken, deleteQuestionById);
+
+//?GET QUESTIONS AND ANSWERS BY BLOCK ID
+questions.post("/getQuestionsAnswersByBlockId", verifyToken, getQuestionsAnswersByBlockId);
