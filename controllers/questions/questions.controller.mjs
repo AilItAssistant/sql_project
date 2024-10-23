@@ -131,6 +131,7 @@ export const getQuestionById = async (req, res) => {
 
 //?GET QUESTIONS AND ANSWERS
 export const getQuestionsAnswers = async (req, res) => {
+    console.log(req.body)
     if ( req.data ) {
         let conn;
         try {
@@ -159,6 +160,7 @@ export const getQuestionsAnswers = async (req, res) => {
                 WHERE
                     q.statement_id = ${req.body.statement_id};
             `);
+            console.log(questions)
             for (const question of questions) {
                 question.id = question.id.toString();
                 if (question.photo_id) question.photo_id = question.photo_id.toString();
@@ -192,6 +194,7 @@ export const getQuestionsAnswers = async (req, res) => {
                     };
                 };
             };
+            console.log(questions)
             res.json(questions);
         } catch (error) {
             console.log(error);
