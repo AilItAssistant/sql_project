@@ -3,6 +3,7 @@ import { pool } from "../../index.mjs"
 
 //?ADD QUESTION
 export const addQuestion = async (req, res) => {
+    console.log(req.body)
     if ( req.data ) {
         let conn;
         let question_id;
@@ -10,25 +11,25 @@ export const addQuestion = async (req, res) => {
             conn = await pool.getConnection();
             if ( req.body.photoQuestion ) {
                 let photo = await conn.query(`
-                    INSERT INTO 
-                        photos ( base64_data ) 
+                    INSERT INTO
+                        photos ( base64_data )
                     VALUES ( '${req.body.photoQuestion}' );
                 `);
                 let id = photo.insertId.toString();
                 if( req.body.statement_id ){
                     let questions = await conn.query(`
-                        INSERT INTO 
+                        INSERT INTO
                             questions (
-                                content, skill_id, puntuation, level_id, statement_id, photo_id, block_id) 
+                                content, skill_id, puntuation, level_id, statement_id, photo_id, block_id)
                         VALUES (
                             '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${req.body.statement_id}, ${id}, ${req.body.block});
                     `);
                     question_id = questions.insertId.toString();
                 } else {
                     let questions = await conn.query(`
-                        INSERT INTO 
+                        INSERT INTO
                             questions (
-                                content, skill_id, puntuation, level_id, photo_id, block_id) 
+                                content, skill_id, puntuation, level_id, photo_id, block_id)
                         VALUES (
                             '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${id}, ${req.body.block});
                     `);
@@ -37,35 +38,35 @@ export const addQuestion = async (req, res) => {
             } else {
                 if( req.body.statement_id ){
                     let questions = await conn.query(`
-                        INSERT INTO 
+                        INSERT INTO
                             questions (
-                                content, skill_id, puntuation, level_id, statement_id, block_id) 
+                                content, skill_id, puntuation, level_id, statement_id, block_id)
                         VALUES (
                             '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${req.body.statement_id}, ${req.body.block});
                     `);
                     question_id = questions.insertId.toString();
                 } else {
                     let questions = await conn.query(`
-                        INSERT INTO 
+                        INSERT INTO
                             questions (
-                                content, skill_id, puntuation, level_id, block_id) 
+                                content, skill_id, puntuation, level_id, block_id)
                         VALUES (
                             '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${req.body.block});
                     `);
                     question_id = questions.insertId.toString();
                 };
-                };
+            };
             if ( req.body.typeAnswers === "photo" ) {
                 for(let i = 0; req.body.responses.length > i; i++){
                     let photoAnswer = await conn.query(`
-                        INSERT INTO 
-                            photos ( base64_data ) 
+                        INSERT INTO
+                            photos ( base64_data )
                         VALUES ( '${req.body.responses[i].photo}' );
                     `);
                     let id = photoAnswer.insertId.toString();
                     let responses = await conn.query(`
-                        INSERT INTO 
-                            answers ( question_id, content, is_correct, letter, photo_id) 
+                        INSERT INTO
+                            answers ( question_id, content, is_correct, letter, photo_id)
                         VALUES (
                             ${question_id}, '${req.body.responses[i].content}', ${req.body.responses[i].is_correct}, '${req.body.responses[i].letter}', ${id});
                     `);
@@ -73,13 +74,28 @@ export const addQuestion = async (req, res) => {
             } else if ( req.body.typeAnswers === "phrase" ) {
                 for(let i = 0; req.body.responses.length > i; i++){
                     let responses = await conn.query(`
-                        INSERT INTO 
-                            answers (question_id, content, is_correct, letter) 
+                        INSERT INTO
+                            answers (question_id, content, is_correct, letter)
                         VALUES (
                             ${question_id}, '${req.body.responses[i].content}', ${req.body.responses[i].is_correct}, '${req.body.responses[i].letter}');
                     `);
                 };
-            };
+            } else if ( req.body.typeAnswers === "multiple" ){
+                for(let i = 0; req.body.responses.length > i; i++){
+                    let photoAnswer = await conn.query(`
+                        INSERT INTO
+                            photos ( base64_data )
+                        VALUES ( '${req.body.responses[i].photo}' );
+                    `);
+                    let id = photoAnswer.insertId.toString();
+                    let responses = await conn.query(`
+                        INSERT INTO
+                            answers ( question_id, content, letter, photo_id, response)
+                        VALUES (
+                            ${question_id}, '${req.body.responses[i].content}', '${req.body.responses[i].letter}', ${id}, ${req.body.responses[i].response});
+                    `);
+                };
+            };;
             res.json(200);
         } catch (error) {
             console.log(error);
@@ -178,6 +194,7 @@ export const getQuestionsAnswers = async (req, res) => {
                                 a.letter,
                                 a.photo_id,
                                 a.status,
+                                a.response,
                                 p.base64_data
                             FROM
                                 answers a
@@ -343,6 +360,7 @@ export const getQuestionsAnswersByBlockId = async (req, res) => {
                                 a.letter,
                                 a.photo_id,
                                 a.status,
+                                a.response,
                                 p.base64_data
                             FROM
                                 answers a
