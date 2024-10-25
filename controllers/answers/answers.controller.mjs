@@ -32,12 +32,13 @@ export const editAnswers = async (req, res) => {
     console.log(req.body)
     if ( req.data ) {
         let conn;
+        if(req.body.content === undefined) {req.body.content = null} else {req.body.content = `'${req.body.content}'`};
         let photoId = null;
         try {
             conn = await pool.getConnection();
             let photo_id = null;
-            if(req.body.photo ) {
-                let photo_id = await conn.query(`
+            if(req.body.photo && req.body.photo !== null && req.body.photo !== undefined) {
+                photo_id = await conn.query(`
                     INSERT INTO
                         photos (
                             base64_data
@@ -47,7 +48,7 @@ export const editAnswers = async (req, res) => {
                     );`);
                     photoId = photo_id.insertId.toString();
             };
-            if(req.body.is_correct && req.body.is_correct === 1){
+            /*if(req.body.is_correct && req.body.is_correct === 1){
                 let question_id = await conn.query(`
                     SELECT question_id FROM answers WHERE id = ${req.body.id};
                 `);
@@ -62,28 +63,18 @@ export const editAnswers = async (req, res) => {
                         SET is_correct = 0 WHERE id = ${id.id.toString()};
                     `);
                 });
-            };
-            if( req.body.content === null){
-                let rows = await conn.query(`
-                    UPDATE
-                        answers
-                    SET
-                        is_correct = CASE WHEN ${req.body.is_correct} IS NOT NULL THEN '${req.body.is_correct}' ELSE is_correct END,
-                        photo_id = CASE WHEN ${photoId} IS NOT NULL THEN '${photoId}' ELSE photo_id END
-                    WHERE
-                        id = ${req.body.id};
-                    `);
-            } else if (req.body.content !== null){
-                let rows = await conn.query(`
-                    UPDATE
-                        answers
-                    SET
-                        is_correct = CASE WHEN ${req.body.is_correct} IS NOT NULL THEN '${req.body.is_correct}' ELSE is_correct END,
-                        content = '${req.body.content}'
-                    WHERE
-                        id = ${req.body.id};
-                    `);
-            };
+            };*/
+            let rows = await conn.query(`
+                UPDATE
+                    answers
+                SET
+                    is_correct = COALESCE(${req.body.is_correct}, is_correct),
+                    photo_id = COALESCE(${photoId}, photo_id),
+                    content = COALESCE(${req.body.content}, content),
+                    response = COALESCE(${req.body.link}, response)
+                WHERE
+                    id = ${req.body.id};
+                `);
             res.json(200);
         } catch (error) {
             console.log(error);

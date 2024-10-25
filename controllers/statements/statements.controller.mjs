@@ -192,7 +192,7 @@ export const postStatements = async (req, res) => {
         let id;
         try {
             conn = await pool.getConnection();
-            if(req.body.photo !== undefined){
+            if(req.body.photo && req.body.photo !== null && req.body.photo !== undefined){
                 let photo = await conn.query(`
                     INSERT INTO
                         photos (
