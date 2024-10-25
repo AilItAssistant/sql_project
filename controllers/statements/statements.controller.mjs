@@ -286,7 +286,7 @@ export const editStatements = async (req, res) => {
                     level_id = CASE WHEN ${req.body.level_id} IS NOT NULL THEN '${req.body.level_id}' ELSE level_id END,
                     skill_id = CASE WHEN ${req.body.skill_id} IS NOT NULL THEN '${req.body.skill_id}' ELSE skill_id END,
                     score = CASE WHEN ${req.body.score} IS NOT NULL THEN '${req.body.score}' ELSE score END,
-                    content = CASE WHEN ${req.body.content} IS NOT NULL THEN '${req.body.content}' ELSE content END,
+                    content = COALESCE('${req.body.content}', content),
                     text = CASE WHEN ${req.body.text} IS NOT NULL THEN '${req.body.text}' ELSE text END,
                     photo_id = CASE WHEN ${photoId} IS NOT NULL THEN '${photoId}' ELSE photo_id END
                 WHERE

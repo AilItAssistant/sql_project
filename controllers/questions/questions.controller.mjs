@@ -239,15 +239,16 @@ export const editQuestions = async (req, res) => {
                     );`);
                     photoId = photo_id.insertId.toString();
             };
+            console.log(photoId)
             let rows = await conn.query(`
                 UPDATE
                     questions
                 SET
-                    statement_id = CASE WHEN ${req.body.statement_id} IS NOT NULL THEN '${req.body.statement_id}' ELSE statement_id END,
-                    block_id = CASE WHEN ${req.body.block_id} IS NOT NULL THEN '${req.body.block_id}' ELSE block_id END,
-                    puntuation = CASE WHEN ${req.body.puntuation} IS NOT NULL THEN '${req.body.puntuation}' ELSE puntuation END,
-                    content = CASE WHEN ${req.body.question} IS NOT NULL THEN '${req.body.question}' ELSE content END,
-                    photo_id = CASE WHEN ${photoId} IS NOT NULL THEN '${photoId}' ELSE photo_id END
+                    statement_id = COALESCE(${req.body.statement_id}, statement_id),
+                    block_id = COALESCE(${req.body.block_id}, block_id),
+                    puntuation = COALESCE(${req.body.puntuation}, puntuation),
+                    content = COALESCE('${req.body.question}', content),
+                    photo_id = COALESCE(${photoId}, photo_id)
                 WHERE
                     id = ${req.body.id};
                 `);
