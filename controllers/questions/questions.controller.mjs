@@ -3,7 +3,7 @@ import { pool } from "../../index.mjs"
 
 //?ADD QUESTION
 export const addQuestion = async (req, res) => {
-    console.log(req.body)
+    //console.log(req.body)
     if ( req.data ) {
         let conn;
         let question_id;
@@ -82,6 +82,7 @@ export const addQuestion = async (req, res) => {
                 };
             } else if ( req.body.typeAnswers === "multiple" ){
                 for(let i = 0; req.body.responses.length > i; i++){
+                    console.log(req.body.responses[i].response);
                     let photoAnswer = await conn.query(`
                         INSERT INTO
                             photos ( base64_data )
