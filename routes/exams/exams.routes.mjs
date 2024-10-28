@@ -1,22 +1,10 @@
 import { Router } from "express";
 
+import { verifyToken } from "../../controllers/users/users.controller.mjs";
 import {
-    getExams,
-    getUnvalidated,
-    getOnlineExam
-    
+    generateExamByLevel
 } from "../../controllers/exams/exams.controller.mjs";
 
 export const exams = Router();
 
-//? GET ALL EXAMS
-
-exams.get("/", getExams);
-
-//? GET UNVALIDATED ALL EXAMS
-
-exams.get("/unvalidated", getUnvalidated);
-
-//? GET EXAM BY STUDENT ID
-
-exams.get("/onlineExam", getOnlineExam);
+exams.post("/generate", verifyToken, generateExamByLevel);
