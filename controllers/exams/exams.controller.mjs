@@ -23,23 +23,30 @@ export const generateExamByLevel = async (req, res) => {
             examIds.reading = reading[Math.floor( Math.random() * reading.length )];
             examIds.reading.id = examIds.reading.id.toString();
             //!5 test con las respuestas
-            examIds.reading.sol = await conn.query(`select * from questions where statement_id = ${examIds.reading.id}`);
+            examIds.reading.sol = await conn.query(`select * from statements where id = ${examIds.reading.id}`);
             examIds.reading.sol.forEach(element => {
+                element.id = element.id.toString();
+                if(element.skill_id){element.skill_id = element.skill_id.toString();}
+                if(element.level_id){element.level_id = element.level_id.toString();}
+            });
+            let questions = await conn.query(`select * from questions where statement_id = ${examIds.reading.id}`);
+            questions.forEach(element => {
                 element.id = element.id.toString();
                 if(element.skill_id){element.skill_id = element.skill_id.toString();}
                 if(element.level_id){element.level_id = element.level_id.toString();}
                 if(element.statement_id){element.statement_id = element.statement_id.toString();}
             });
-            for(let i = 0; examIds.reading.sol.length > i ; i++ ){
-                let answers = await conn.query(`select * from answers where question_id = ${examIds.reading.sol[i].id}`);
+            for(let i = 0; questions.length > i ; i++ ){
+                let answers = await conn.query(`select * from answers where question_id = ${questions[i].id}`);
                 answers.forEach(element => {
                     element.id = element.id.toString();
                     if(element.question_id){element.question_id = element.question_id.toString();}
                 });
-                examIds.reading.sol[i].answers = [];
-                examIds.reading.sol[i].answers.push(answers);
+                questions[i].answers = [];
+                questions[i].answers.push(answers);
             };
-            console.log(examIds.reading.sol[1].answers);
+            examIds.reading.sol.questions = [];
+            examIds.reading.sol.questions.push(questions);
 
             /*examIds.audio = await conn.query(`
                 select id from statements where status = "active" and level_id = ${req.body.level_id} and skill_id = 26;`);
