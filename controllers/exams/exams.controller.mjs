@@ -151,7 +151,7 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.skill_id) element.skill_id = element.skill_id.toString();
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
-            });
+            })[0];
 
             examIds.lexiconC = await conn.query(`
                 select id from questions where status = "active" and level_id = ${req.body.level_id} and skill_id = 1 and block_id = 54;`);
@@ -164,7 +164,7 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.skill_id) element.skill_id = element.skill_id.toString();
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
-            });
+            })[0];
 
             examIds.lexiconR = await conn.query(`
                 select id from questions where status = "active" and level_id = ${req.body.level_id} and skill_id = 1 and block_id = 56;`);
@@ -177,7 +177,7 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.skill_id) element.skill_id = element.skill_id.toString();
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
-            });
+            })[0];
 
             examIds.lexiconTA = await conn.query(`
                 select id from questions where status = "active" and level_id = ${req.body.level_id} and skill_id = 1 and block_id = 57;`);
@@ -190,7 +190,7 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.skill_id) element.skill_id = element.skill_id.toString();
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
-            });
+            })[0];
 
             examIds.lexiconVO = await conn.query(`
                 select id from questions where status = "active" and level_id = ${req.body.level_id} and skill_id = 1 and block_id = 61;`);
@@ -203,7 +203,7 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.skill_id) element.skill_id = element.skill_id.toString();
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
-            });
+            })[0];
 
             //block 2 => 10
             examIds.grammarEH = await conn.query(`
@@ -217,7 +217,7 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.skill_id) element.skill_id = element.skill_id.toString();
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
-            });
+            })[0];
 
             examIds.grammarTH = await conn.query(`
                 select id from questions where status = "active" and level_id = ${req.body.level_id} and skill_id = 2 and block_id = 49;`);
@@ -230,7 +230,7 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.skill_id) element.skill_id = element.skill_id.toString();
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
-            });
+            })[0];
 
             examIds.grammarGS = await conn.query(`
                 select id from questions where status = "active" and level_id = ${req.body.level_id} and skill_id = 2 and block_id = 50;`);
@@ -243,7 +243,7 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.skill_id) element.skill_id = element.skill_id.toString();
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
-            });
+            })[0];
 
             examIds.grammarPI = await conn.query(`
                 select id from questions where status = "active" and level_id = ${req.body.level_id} and skill_id = 2 and block_id = 51;`);
@@ -256,7 +256,7 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.skill_id) element.skill_id = element.skill_id.toString();
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
-            });
+            })[0];
 
             examIds.grammarGN = await conn.query(`
                 select id from questions where status = "active" and level_id = ${req.body.level_id} and skill_id = 2 and block_id = 53;`);
@@ -269,7 +269,7 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.skill_id) element.skill_id = element.skill_id.toString();
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
-            });
+            })[0];
 
             examIds.grammarR = await conn.query(`
                 select id from questions where status = "active" and level_id = ${req.body.level_id} and skill_id = 2 and block_id = 55;`);
@@ -282,7 +282,7 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.skill_id) element.skill_id = element.skill_id.toString();
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
-            });
+            })[0];
 
             examIds.grammarPP = await conn.query(`
                 select id from questions where status = "active" and level_id = ${req.body.level_id} and skill_id = 2 and block_id = 58;`);
@@ -295,7 +295,7 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.skill_id) element.skill_id = element.skill_id.toString();
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
-            });
+            })[0];
 
             examIds.grammarPG = await conn.query(`
                 select id from questions where status = "active" and level_id = ${req.body.level_id} and skill_id = 2 and block_id = 59;`);
@@ -308,7 +308,7 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.skill_id) element.skill_id = element.skill_id.toString();
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
-            });
+            })[0];
 
             examIds.grammarP = await conn.query(`
                 select id from questions where status = "active" and level_id = ${req.body.level_id} and skill_id = 2 and block_id = 60;`);
@@ -321,7 +321,7 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.skill_id) element.skill_id = element.skill_id.toString();
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
-            });
+            })[0];
 
             examIds.grammarVG = await conn.query(`
                 select id from questions where status = "active" and level_id = ${req.body.level_id} and skill_id = 2 and block_id = 62;`);
@@ -334,7 +334,7 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.skill_id) element.skill_id = element.skill_id.toString();
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
-            });
+            })[0];
 
             res.json(examIds);
         } catch (error) {
