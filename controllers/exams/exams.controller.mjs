@@ -25,6 +25,10 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.photo_id) element.photo_id = element.photo_id.toString();
                 return element;
             })[0];
+            if (examIds.writting.statement.photo_id){
+                examIds.writting.statement.photo = await conn.query(`select base64_data from photos where id = ${examIds.writting.statement.photo_id}`);
+                examIds.writting.statement.photo = examIds.writting.statement.photo[0].base64_data;
+            };
 
 
             //*Reading
@@ -77,6 +81,10 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.photo_id) element.photo_id = element.photo_id.toString();
                 return element;
             })[0];
+            if (examIds.oral.statement.photo_id){
+                examIds.oral.statement.photo = await conn.query(`select base64_data from photos where id = ${examIds.oral.statement.photo_id}`);
+                examIds.oral.statement.photo = examIds.oral.statement.photo[0].base64_data;
+            };
 
 
             //*Audio
@@ -102,7 +110,7 @@ export const generateExamByLevel = async (req, res) => {
                 return element;
             });
 
-            //?
+            //? Multi photos question
             examIds.audio.multiQuestion = await conn.query(`select id from questions where status = "active" and level_id = ${req.body.level_id} and skill_id = 26 and block_id = 64;`);
             examIds.audio.multiQuestion = examIds.audio.multiQuestion[Math.floor( Math.random() * examIds.audio.multiQuestion.length )];
             examIds.audio.multiQuestion.id = examIds.audio.multiQuestion.id.toString();
@@ -122,6 +130,12 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.photo_id) element.photo_id = element.photo_id.toString();
                 return element;
             });
+            for(let i = 0; examIds.audio.multiQuestion.question.answers.length > i; i++){
+                if (examIds.audio.multiQuestion.question.answers[i].photo_id){
+                    examIds.audio.multiQuestion.question.answers[i].photo = await conn.query(`select base64_data from photos where id = ${examIds.audio.multiQuestion.question.answers[i].photo_id}`);
+                    examIds.audio.multiQuestion.question.answers[i].photo = examIds.audio.multiQuestion.question.answers[i].photo[0].base64_data;
+                };
+            }
 
 
             //*Lexicon and grammar blocks 1 => 5
