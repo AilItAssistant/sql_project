@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 30-10-2024 a las 13:28:38
+-- Tiempo de generación: 31-10-2024 a las 15:23:30
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -241,23 +241,8 @@ INSERT INTO `answers` (`id`, `question_id`, `content`, `is_correct`, `status`, `
 (412, 138, 'Dar formularios a los estudiantes', 0, 'active', 'D', NULL, NULL),
 (413, 139, 'Todos los días', 0, 'active', 'A', NULL, NULL),
 (414, 139, 'Una vez al mes', 0, 'active', 'B', NULL, NULL),
-(415, 139, ' Los miércoles por la tarde', 0, 'active', 'C', NULL, NULL),
+(415, 139, 'Los miércoles por la tarde', 0, 'active', 'C', NULL, NULL),
 (416, 139, 'Un día a la semana por la mañana', 1, 'active', 'D', NULL, NULL),
-(417, 140, 'Una mujer que dedicó su vida a viajar.', 1, 'active', 'A', NULL, NULL),
-(418, 140, 'La larga vida de una mujer intelectual', 0, 'active', 'B', NULL, NULL),
-(419, 140, 'La vida familiar de una política española.', 0, 'active', 'C', NULL, NULL),
-(420, 141, 'Se casó con una actriz.', 0, 'active', 'A', NULL, NULL),
-(421, 141, 'Era actor de teatro', 1, 'active', 'B', NULL, NULL),
-(422, 141, 'Se separó de su esposa', 0, 'active', 'C', NULL, NULL),
-(423, 142, 'Fue ignorado por su familia.', 0, 'active', 'A', NULL, NULL),
-(424, 142, 'Tenía un nuevo pseudónimo.', 1, 'active', 'B', NULL, NULL),
-(425, 142, 'Se lo regaló a su esposo.', 0, 'active', 'C', NULL, NULL),
-(426, 143, 'Solo tenía amigas intelectuales y feministas.', 0, 'active', 'A', NULL, NULL),
-(427, 143, 'Fue la primera diputada en el Parlamento.', 0, 'active', 'B', NULL, NULL),
-(428, 143, 'Escribió obras literarias en distintos géneros', 1, 'active', 'C', NULL, NULL),
-(429, 144, 'Se convirtió en película.', 0, 'active', 'A', NULL, NULL),
-(430, 144, 'Se publicó tres veces en un año.', 0, 'active', 'B', NULL, NULL),
-(431, 144, 'La escribió tras nacer su hija', 1, 'active', 'C', NULL, NULL),
 (447, 162, 'Mensaje:____', 0, 'active', 'A', 217, '1'),
 (448, 162, 'Mensaje:____', 0, 'active', 'B', 218, '2'),
 (449, 162, 'Mensaje:____', 0, 'active', 'C', 219, '3'),
@@ -272,7 +257,7 @@ INSERT INTO `answers` (`id`, `question_id`, `content`, `is_correct`, `status`, `
 (461, 165, 'Mensaje:____', 0, 'active', 'C', 231, '3'),
 (462, 165, 'Mensaje:____', 0, 'active', 'D', 232, '4'),
 (463, 165, 'Mensaje:____', 0, 'active', 'E', 233, '5'),
-(464, 165, 'Mensaje:____', 0, 'active', 'F', 234, '0'),
+(464, 165, 'Mensaje:____', 0, 'active', 'F', 234, '6'),
 (465, 165, 'Mensaje:____', 0, 'active', 'G', 235, '0'),
 (466, 165, 'Mensaje:____', 0, 'active', 'H', 236, 'false'),
 (467, 166, 'Mensaje:____', 0, 'active', 'A', 237, '1'),
@@ -293,7 +278,33 @@ INSERT INTO `answers` (`id`, `question_id`, `content`, `is_correct`, `status`, `
 (509, 171, 'En este instituto se puede estudiar español, inglés y _____________.', 0, 'active', 'B', NULL, NULL),
 (510, 171, 'Esta semana Pedro tiene ______________ estudiantes en su clase.', 0, 'active', 'C', NULL, NULL),
 (511, 171, 'Pedro trabaja por la _________________ y estudia en la universidad por la mañana,', 0, 'active', 'D', NULL, NULL),
-(512, 171, 'Hay cursos de lunes a viernes y también los _____________ por la mañana.', 0, 'active', 'E', NULL, NULL);
+(512, 171, 'Hay cursos de lunes a viernes y también los _____________ por la mañana.', 0, 'active', 'E', NULL, NULL),
+(513, 172, 'come con sus compañeras suecas.', 0, 'active', 'A', NULL, NULL),
+(514, 172, 'desayuna con sus compañeros de clase.', 1, 'active', 'B', NULL, NULL),
+(515, 172, 'come con sus compañeros de clase.', 0, 'active', 'C', NULL, NULL),
+(516, 172, 'almuerza por la mañana.', 0, 'active', 'D', NULL, NULL),
+(517, 173, 'Segovia, pero no Valladolid y Madrid.', 1, 'active', 'A', NULL, NULL),
+(518, 173, 'Ávila, pero no Valladolid y Segovia.', 0, 'active', 'B', NULL, NULL),
+(519, 173, 'Ávila y Segovia pero no Madrid.', 0, 'active', 'C', NULL, NULL),
+(520, 173, 'Segovia y Madrid, pero no Valladolid.', 0, 'active', 'D', NULL, NULL),
+(521, 174, 'el Museo Reina Sofía.', 0, 'active', 'A', NULL, NULL),
+(522, 174, 'el Palacio Real y el Reina Sofia.', 0, 'active', 'B', NULL, NULL),
+(523, 174, 'el Palacio Real.', 0, 'active', 'C', NULL, NULL),
+(524, 174, 'el Museo del Prado y Reina Sofía.', 1, 'active', 'D', NULL, NULL),
+(525, 175, 'van a visitar Salamanca una semana.', 1, 'active', 'A', NULL, NULL),
+(526, 175, 'van a visitar Madrid dos semanas.', 0, 'active', 'B', NULL, NULL),
+(527, 175, 'van a estar en Madrid en una semana.', 0, 'active', 'C', NULL, NULL),
+(528, 175, 'van a visitar Madrid una semana.', 0, 'active', 'D', NULL, NULL),
+(529, 176, 'come con sus compañeras suecas.', 0, 'active', 'A', NULL, NULL),
+(530, 176, 'desayuna con sus compañeros de clase.', 0, 'active', 'B', NULL, NULL),
+(531, 176, 'come con sus compañeros de clase.', 1, 'active', 'C', NULL, NULL),
+(532, 176, 'almuerza por la mañana.', 0, 'active', 'D', NULL, NULL),
+(533, 165, 'Mensaje:____', 0, 'active', 'I', 236, 'false'),
+(534, 177, 'Pedro es profesor de ________________ en un instituto de ', 0, 'active', 'A', NULL, NULL),
+(535, 177, 'Pedro es profesor de ________________ en un instituto de idiomas', 1, 'active', 'B', NULL, NULL),
+(536, 177, 'Pedro es profesor de ________________ en de idiomas', 0, 'active', 'C', NULL, NULL),
+(537, 177, 'Pedro esor de ________________ en un instituto de idiomas', 0, 'active', 'D', NULL, NULL),
+(538, 177, ' es profesor de ________________ en un instituto de idiomas', 0, 'active', 'E', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -589,7 +600,7 @@ CREATE TABLE `questions` (
 
 INSERT INTO `questions` (`id`, `content`, `block_id`, `skill_id`, `level_id`, `statement_id`, `status`, `photo_id`, `puntuation`) VALUES
 (75, '¿Dónde ______ una papelera? Necesito tirar este papel.', 48, 2, 27, NULL, 'active', NULL, '1'),
-(76, 'Disculpe, ¿puede decirme dónde _____ la estación de metro más\ncercana?', 48, 2, 27, NULL, 'active', NULL, '1'),
+(76, 'Disculpe, ¿puede decirme dónde _____ la estación de metro más cercana?', 48, 2, 27, NULL, 'active', NULL, '1'),
 (77, 'En la esquina de la avenida ______ tres bancos.', 48, 2, 27, NULL, 'active', NULL, '1'),
 (78, 'Algunas personas de la clase ______ en el pasillo.', 48, 2, 27, NULL, 'active', NULL, '1'),
 (79, 'En mi ciudad ______ muchas zonas verdes.', 49, 2, 27, NULL, 'active', NULL, '1'),
@@ -600,7 +611,7 @@ INSERT INTO `questions` (`id`, `content`, `block_id`, `skill_id`, `level_id`, `s
 (84, '¿Te ________ la cultura española?', 50, 2, 27, NULL, 'active', NULL, '1'),
 (85, 'A mi hermano le _______ hacer senderismo.', 50, 2, 27, NULL, 'active', NULL, '1'),
 (86, 'Nos _______ el flamenco y el tango.', 50, 2, 27, NULL, 'active', NULL, '1'),
-(87, 'Mientras tú preparas la comida, yo ______ la mesa, ¿vale?', 51, 2, 27, NULL, 'active', NULL, '1'),
+(87, 'Mientras tú preparas la comida, yo ______ la mesa,¿vale?', 51, 2, 27, NULL, 'active', NULL, '1'),
 (88, 'Cuando yo _______, siempre escucho música.', 51, 2, 27, NULL, 'active', NULL, '1'),
 (89, '¿No _______ que la comida ecuatoriana es deliciosa?', 51, 2, 27, NULL, 'active', NULL, '1'),
 (90, 'Estamos buscando trabajo, pero no lo _______.', 51, 2, 27, NULL, 'active', NULL, '1'),
@@ -643,7 +654,7 @@ INSERT INTO `questions` (`id`, `content`, `block_id`, `skill_id`, `level_id`, `s
 (127, '¿Me trae, por favor, una ______ para comer la sopa?', 61, 1, 27, NULL, 'active', NULL, '1'),
 (128, 'Voy a ir a la playa y quiero llevarme una camiseta de _______.', 61, 1, 27, NULL, 'active', NULL, '1'),
 (129, 'Su tío pone todas las cosas en su lugar. Es muy ________.', 61, 1, 27, NULL, 'active', NULL, '1'),
-(130, 'Su barrio tiene mucha vida nocturna, todas las noches hay gente, es\nmuy _______.', 61, 1, 27, NULL, 'active', NULL, '1'),
+(130, 'Su barrio tiene mucha vida nocturna, todas las noches hay gente, es muy _______.', 61, 1, 27, NULL, 'active', NULL, '1'),
 (131, '_______ desierto es el más grande del mundo.', 62, 2, 27, NULL, 'active', NULL, '1'),
 (132, '¿ ________ son las castañuelas? ¿Un instrumento musical?', 62, 2, 27, NULL, 'active', NULL, '1'),
 (133, 'Leandro tiene dos cuñadas. ______ cuñadas son de México.', 62, 2, 27, NULL, 'active', NULL, '1'),
@@ -653,16 +664,17 @@ INSERT INTO `questions` (`id`, `content`, `block_id`, `skill_id`, `level_id`, `s
 (137, 'Va a trabajar en:', NULL, 25, 27, 17, 'active', NULL, '3'),
 (138, 'En su trabajo, Francisco tiene que:', NULL, 25, 27, 17, 'active', NULL, '3'),
 (139, 'Cuándo tiene Francisco prácticas de laboratorio:', NULL, 25, 27, 17, 'active', NULL, '3'),
-(140, 'El texto trata de…', NULL, 25, 27, 54, 'active', NULL, '3'),
-(141, 'Según el texto, Gregorio Martínez Sierra…', NULL, 25, 27, 54, 'active', NULL, '3'),
-(142, 'El primer libro publicado por María…', NULL, 25, 27, 54, 'active', NULL, '3'),
-(143, 'Según el texto, María de la O….', NULL, 25, 27, 54, 'active', NULL, '3'),
-(144, 'Una de las obras más conocidas de la autora…', NULL, 25, 27, 54, 'active', NULL, '3'),
-(162, 'A continuación, escuchará cinco mensajes muy breves. Oirá cada mensaje\ndos veces. Relacione los textos con las imágenes. Después de la segunda\naudición, marque la opción correcta. Hay tres imágenes que no debe\nseleccionar:', 64, 26, 27, NULL, 'active', NULL, '5'),
+(162, 'A continuación, escuchará cinco mensajes muy breves. Oirá cada mensaje dos veces. Relacione los textos con las imágenes. Después de la segunda audición, marque la opción correcta. Hay tres imágenes que no debe seleccionar:', 64, 26, 27, NULL, 'active', NULL, '5'),
 (165, 'Usted va a escuchar a dos personas hablando sobre sus hijos y su trabajo. Oirá la conversación dos veces. Seleccione la imagen (A---H) que corresponde a cada enunciado (26- --30). Hay ocho imágenes. Seleccione cinco:', 64, 26, 27, NULL, 'active', NULL, '5'),
 (166, 'A continuación escuchará cinco mensajes muy breves. Oirá cada mensaje dos veces. Relacione los textos con las imágenes. Después de la segunda audición, marque la opción correcta. Hay tres imágenes que no debe seleccionar', 64, 26, 27, NULL, 'active', NULL, '5'),
-(170, 'Petra habla con una amiga sobre su alimentación. Oirá la audición tres\nveces. Complete el texto con la información:', 63, 26, 27, NULL, 'active', NULL, '5'),
-(171, 'Pedro es profesor en un instituto de idiomas y cuenta a su amiga cómo es su trabajo. Complete el texto con la información. Escuchará la audición tres veces:', 63, 26, 27, NULL, 'active', NULL, '5');
+(170, 'Petra habla con una amiga sobre su alimentación. Oirá la audición tres veces. Complete el texto con la información:', 63, 26, 27, NULL, 'active', NULL, '5'),
+(171, 'Pedro es profesor en un instituto de idiomas y cuenta a su amiga cómo es su trabajo. Complete el texto con la información. Escuchará la audición tres veces:', 63, 26, 27, NULL, 'active', NULL, '5'),
+(172, 'Rose todos los días:', NULL, 25, 27, 76, 'active', NULL, '3'),
+(173, 'Ha visitado:', NULL, 25, 27, 76, 'active', NULL, '3'),
+(174, 'Rose va a visitar con sus padres;', NULL, 25, 27, 76, 'active', NULL, '3'),
+(175, 'Sus padres:', NULL, 25, 27, 76, 'active', NULL, '3'),
+(176, 'Rose todos los días:', NULL, 25, 27, 76, 'active', NULL, '3'),
+(177, 'Pedro es profesor en un instituto de idiomas y cuenta a su amiga cómo es su trabajo. Complete el texto con la información. Escuchará la audición tres veces: audio 3', 65, 345, 34, NULL, 'active', NULL, '1');
 
 -- --------------------------------------------------------
 
@@ -716,10 +728,10 @@ CREATE TABLE `statements` (
 INSERT INTO `statements` (`id`, `exam_id`, `content`, `skill_id`, `text`, `score`, `level_id`, `status`, `photo_id`) VALUES
 (16, NULL, 'Un amigo le escribe para saber cómo es su vida en Madrid. Escríbale un\ncorreo con esta información. En él debe saludar, describir su rutina y sus actividades de tiempo libre y despedirse. ', 24, 'El numero de palabras debe de ser  entre 20 y 30 palabras.', 20, 27, 'active', 171),
 (17, NULL, 'Lea este mensaje de correo electrónico. A continuación, responda a cinco\npreguntas sobre el texto. Elija la respuesta correcta (a, b, c, d):', 25, '      ¡Hola familia!:\n\n¿Cómo estáis? Yo estoy muy contento porque el martes que viene empiezo a trabajar.\nVoy a trabajar en la biblioteca de mi universidad. Mis tareas son organizar los archivos\ny colocar los libros en las estanterías. Algunas veces también tengo que hablar con los\nestudiantes sobre los libros, pero no tengo que hacer fotocopias.\nTengo un horario muy bueno: todas las tardes de 16:00 a 20:00, así que puedo\nestudiar por las mañanas. Una vez al mes tengo que trabajar los sábados.\nLas clases en la universidad son muy interesantes. Tengo clase todos los días,\nexcepto los miércoles por la mañana, porque tengo prácticas en el laboratorio. Los\nfines de semana estudio con mis compañeros en la biblioteca de la universidad porque\ntenemos muchos exámenes. Por ejemplo, tengo un examen de lengua española el\njueves.\nBueno, ya sabéis las buenas noticias. Nos vemos el próximo mes porque en abril\ntenemos cuatro días de vacaciones.\nOs quiero mucho,\n\n      Francisco', 15, 27, 'active', NULL),
-(54, NULL, 'Comprensión de lectura. Va a leer un fragmento de una biografía de la escritora y política María Lejárraga. A continuación, conteste a las preguntas. Seleccione la opción correcta (A, B o C):\n', 25, 'María de la O Lejárraga, que era el verdadero nombre de María Martínez Sierra, nació en La Rioja, en San Millán de la Cogolla, en 1874, aunque creció en el pueblo de Carabanchel (Madrid). Estudió Magisterio en la Escuela Normal de Madrid y en esta ciudad trabajó como maestra en los barrios obreros de la capital hasta 1907. En el verano de 1897 conoció a Gregorio Martínez Sierra, seis años más joven que ella, y empieza una colaboración literaria que marcará toda su vida. Se casaron en el año 1900, después de publicar varias obras, solo firmadas con el nombre de Gregorio. Cuando María publicó su primer libro, Cuentos breves, en 1899, su familia no dio ninguna importancia al libro que la joven María les llevó de regalo y lo dejaron en la estantería\nsin abrirlo. En ese momento, María decidió no volver a firmar con su nombre ninguna de sus obras.\n\nEn 1905 María recibió una ayuda de la Escuela Normal para ir a Bélgica; al año siguiente, su marido, que trabajaba como editor de revistas literarias y era director del Teatro Eslava, se enamoró de la actriz cubana Catalina Bárcena. Durante los años siguientes, el matrimonio sigue unido profesionalmente, siendo estos años los más productivos para la pareja, que publica obras teatrales de gran éxito, como Canción de cuna, en 1911, varias veces adaptada al cine. Las obras más importantes de Gregorio Martínez Sierra fueron las escritas (por su esposa) entre 1905 y 1921, con tres títulos publicados cada año, que se convirtieron en los grandes éxitos teatrales de cada temporada. En 1922, al nacer su hija Katia, el matrimonio se divorció.\n\nA partir de 1914, María empieza a participar en el movimiento feminista español y escribe varios ensayos sobre el tema. En 1930 fue elegida presidenta de la Asociación femenina de educación cívica, al que pertenecían otras muchas mujeres intelectuales de la época, entre ellas Zenobia Camprubí, Victoria Kent, Ernestina Champourcín, Concha Méndez y María Teresa León, entre otras. Fue entonces cuando se dedicó más intensamente a la política, siendo elegida diputada en el Parlamento español por la provincia de Granada en las elecciones de 1933. Cuando comenzó la guerra civil española fue enviada a la Embajada en Suiza, y desde allí se fue a vivir a Niza, primera etapa de su largo exilio.\n\nEntre 1950 y 1953 vivió en Nueva York y más tarde en México y en Argentina, donde permaneció hasta su muerte, en 1974.', 15, 27, 'active', NULL),
 (73, NULL, 'Tienes una migo que quiere vivir en tu barrio. Escribe un correo electrónico a tu amigo para darle la siguiente información de tu barrio. En él debes: saludar, describir tu barrio y despedirte. ', 24, 'Número de palabara: entre 20 y 30.', 20, 27, 'active', 279),
 (74, NULL, 'Preséntese. Debe dar información personal como el nombre, la nacionalidad y la edad, y puede hablar de su trabajo o estudios, por qué estudia español, etc. Seleccione tres de las cinco opciones para hablar durante 2 o 3 minutos.', 27, '', 25, 27, 'active', 282),
-(75, NULL, 'Preséntese. Debe dar información personal como el nombre, la nacionalidad y la\nedad, y puede hablar de su trabajo o estudios, por qué estudia español, etc.\nSeleccione tres de las cinco opciones para hablar durante 2 o 3 minutos', 27, '', 25, 27, 'active', 283);
+(75, NULL, 'Preséntese. Debe dar información personal como el nombre, la nacionalidad y la edad, y puede hablar de su trabajo o estudios, por qué estudia español, etc.\nSeleccione tres de las cinco opciones para hablar durante 2 o 3 minutos', 27, '', 25, 27, 'active', 283),
+(76, NULL, 'Lea este mensaje de correo electrónico. A continuación, responda a cinco preguntas sobre el texto. Elija la respuesta correcta (a, b, c, d):', 25, '¡Hola Steven! \n¿Qué tal estás? yo estoy contentísima en Salamanca, estoy viviendo una experiencia única. \nVivo cerca de la Plaza Mayor con dos chicas de Suecia que estudian derecho. Por las mañanas, todos los días hago un curso intensivo de español en una escuela del centro. Después, mis compañeros y yo vamos a una pequeña cafetería donde almorzamos a la 14:00 todos juntos. Por la tarde, hacemos turismo. Hace dos días, visitamos Ávila, una pequeña ciudad que está cerca y de verdad, nunca he visto una muralla tan bien conservada. Es espectacular. Ahora me falta Segovia y algunos compañeros quieren pasar dos de días en Valladolid, seguro que vamos pronto. En un par de semanas, voy a Madrid para estar con mis padres que vienen una semana. Vamos a visitar juntos el Palacio Real y algunos museos. Mi madre planea ver una exposición sola en el Museo del Prado, pero mi padre y yo vamos a ir los dos al Reina Sofía porque no lo conocemos. Bueno, dicen que la obra de Picasso es increíble, ¡no hay dudal \nTe escribo pronto y te cuento todo. \nUn beso, \n\n      Rose', 15, 27, 'active', NULL);
 
 -- --------------------------------------------------------
 
@@ -1028,7 +1040,7 @@ ALTER TABLE `user_actions`
 -- AUTO_INCREMENT de la tabla `answers`
 --
 ALTER TABLE `answers`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=513;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=539;
 
 --
 -- AUTO_INCREMENT de la tabla `blocks`
@@ -1070,7 +1082,7 @@ ALTER TABLE `photos`
 -- AUTO_INCREMENT de la tabla `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=172;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=178;
 
 --
 -- AUTO_INCREMENT de la tabla `skills`
@@ -1082,7 +1094,7 @@ ALTER TABLE `skills`
 -- AUTO_INCREMENT de la tabla `statements`
 --
 ALTER TABLE `statements`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
 
 --
 -- AUTO_INCREMENT de la tabla `students`
