@@ -152,6 +152,13 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
             })[0];
+            let answersDF = await conn.query(`SELECT * FROM answers WHERE status = 'active' AND question_id = ${examIds.lexiconDF.question.id}`);
+            examIds.lexiconDF.question.answers = answersDF.map( element => {
+                element.id = element.id.toString();
+                if (element.question_id) element.question_id = element.question_id.toString();
+                return element;
+            });
+
 
             examIds.lexiconC = await conn.query(`
                 select id from questions where status = "active" and level_id = ${req.body.level_id} and skill_id = 1 and block_id = 54;`);
@@ -165,6 +172,12 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
             })[0];
+            let answersC = await conn.query(`SELECT * FROM answers WHERE status = 'active' AND question_id = ${examIds.lexiconC.question.id}`);
+            examIds.lexiconC.question.answers = answersC.map( element => {
+                element.id = element.id.toString();
+                if (element.question_id) element.question_id = element.question_id.toString();
+                return element;
+            });
 
             examIds.lexiconR = await conn.query(`
                 select id from questions where status = "active" and level_id = ${req.body.level_id} and skill_id = 1 and block_id = 56;`);
@@ -178,6 +191,12 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
             })[0];
+            let answersR = await conn.query(`SELECT * FROM answers WHERE status = 'active' AND question_id = ${examIds.lexiconR.question.id}`);
+            examIds.lexiconR.question.answers = answersR.map( element => {
+                element.id = element.id.toString();
+                if (element.question_id) element.question_id = element.question_id.toString();
+                return element;
+            });
 
             examIds.lexiconTA = await conn.query(`
                 select id from questions where status = "active" and level_id = ${req.body.level_id} and skill_id = 1 and block_id = 57;`);
@@ -191,6 +210,12 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
             })[0];
+            let answersTA = await conn.query(`SELECT * FROM answers WHERE status = 'active' AND question_id = ${examIds.lexiconTA.question.id}`);
+            examIds.lexiconTA.question.answers = answersTA.map( element => {
+                element.id = element.id.toString();
+                if (element.question_id) element.question_id = element.question_id.toString();
+                return element;
+            });
 
             examIds.lexiconVO = await conn.query(`
                 select id from questions where status = "active" and level_id = ${req.body.level_id} and skill_id = 1 and block_id = 61;`);
@@ -204,6 +229,12 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
             })[0];
+            let answersVO = await conn.query(`SELECT * FROM answers WHERE status = 'active' AND question_id = ${examIds.lexiconVO.question.id}`);
+            examIds.lexiconVO.question.answers = answersVO.map( element => {
+                element.id = element.id.toString();
+                if (element.question_id) element.question_id = element.question_id.toString();
+                return element;
+            });
 
             //block 2 => 10
             examIds.grammarEH = await conn.query(`
@@ -218,6 +249,12 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
             })[0];
+            let answersEH = await conn.query(`SELECT * FROM answers WHERE status = 'active' AND question_id = ${examIds.grammarEH.question.id}`);
+            examIds.grammarEH.question.answers = answersEH.map( element => {
+                element.id = element.id.toString();
+                if (element.question_id) element.question_id = element.question_id.toString();
+                return element;
+            });
 
             examIds.grammarTH = await conn.query(`
                 select id from questions where status = "active" and level_id = ${req.body.level_id} and skill_id = 2 and block_id = 49;`);
@@ -231,6 +268,12 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
             })[0];
+            let answersTH = await conn.query(`SELECT * FROM answers WHERE status = 'active' AND question_id = ${examIds.grammarTH.question.id}`);
+            examIds.grammarTH.question.answers = answersTH.map( element => {
+                element.id = element.id.toString();
+                if (element.question_id) element.question_id = element.question_id.toString();
+                return element;
+            });
 
             examIds.grammarGS = await conn.query(`
                 select id from questions where status = "active" and level_id = ${req.body.level_id} and skill_id = 2 and block_id = 50;`);
@@ -244,6 +287,12 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
             })[0];
+            let answersGS = await conn.query(`SELECT * FROM answers WHERE status = 'active' AND question_id = ${examIds.grammarGS.question.id}`);
+            examIds.grammarGS.question.answers = answersGS.map( element => {
+                element.id = element.id.toString();
+                if (element.question_id) element.question_id = element.question_id.toString();
+                return element;
+            });
 
             examIds.grammarPI = await conn.query(`
                 select id from questions where status = "active" and level_id = ${req.body.level_id} and skill_id = 2 and block_id = 51;`);
@@ -257,6 +306,12 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
             })[0];
+            let answersPI = await conn.query(`SELECT * FROM answers WHERE status = 'active' AND question_id = ${examIds.grammarPI.question.id}`);
+            examIds.grammarPI.question.answers = answersPI.map( element => {
+                element.id = element.id.toString();
+                if (element.question_id) element.question_id = element.question_id.toString();
+                return element;
+            });
 
             examIds.grammarGN = await conn.query(`
                 select id from questions where status = "active" and level_id = ${req.body.level_id} and skill_id = 2 and block_id = 53;`);
@@ -270,6 +325,12 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
             })[0];
+            let answersGN = await conn.query(`SELECT * FROM answers WHERE status = 'active' AND question_id = ${examIds.grammarGN.question.id}`);
+            examIds.grammarGN.question.answers = answersGN.map( element => {
+                element.id = element.id.toString();
+                if (element.question_id) element.question_id = element.question_id.toString();
+                return element;
+            });
 
             examIds.grammarR = await conn.query(`
                 select id from questions where status = "active" and level_id = ${req.body.level_id} and skill_id = 2 and block_id = 55;`);
@@ -283,6 +344,12 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
             })[0];
+            let answersRG = await conn.query(`SELECT * FROM answers WHERE status = 'active' AND question_id = ${examIds.grammarR.question.id}`);
+            examIds.grammarR.question.answers = answersRG.map( element => {
+                element.id = element.id.toString();
+                if (element.question_id) element.question_id = element.question_id.toString();
+                return element;
+            });
 
             examIds.grammarPP = await conn.query(`
                 select id from questions where status = "active" and level_id = ${req.body.level_id} and skill_id = 2 and block_id = 58;`);
@@ -296,6 +363,12 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
             })[0];
+            let answersPP = await conn.query(`SELECT * FROM answers WHERE status = 'active' AND question_id = ${examIds.grammarPP.question.id}`);
+            examIds.grammarPP.question.answers = answersPP.map( element => {
+                element.id = element.id.toString();
+                if (element.question_id) element.question_id = element.question_id.toString();
+                return element;
+            });
 
             examIds.grammarPG = await conn.query(`
                 select id from questions where status = "active" and level_id = ${req.body.level_id} and skill_id = 2 and block_id = 59;`);
@@ -309,6 +382,12 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
             })[0];
+            let answersPG = await conn.query(`SELECT * FROM answers WHERE status = 'active' AND question_id = ${examIds.grammarPG.question.id}`);
+            examIds.grammarPG.question.answers = answersPG.map( element => {
+                element.id = element.id.toString();
+                if (element.question_id) element.question_id = element.question_id.toString();
+                return element;
+            });
 
             examIds.grammarP = await conn.query(`
                 select id from questions where status = "active" and level_id = ${req.body.level_id} and skill_id = 2 and block_id = 60;`);
@@ -322,6 +401,12 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
             })[0];
+            let answersP = await conn.query(`SELECT * FROM answers WHERE status = 'active' AND question_id = ${examIds.grammarP.question.id}`);
+            examIds.grammarP.question.answers = answersP.map( element => {
+                element.id = element.id.toString();
+                if (element.question_id) element.question_id = element.question_id.toString();
+                return element;
+            });
 
             examIds.grammarVG = await conn.query(`
                 select id from questions where status = "active" and level_id = ${req.body.level_id} and skill_id = 2 and block_id = 62;`);
@@ -335,6 +420,12 @@ export const generateExamByLevel = async (req, res) => {
                 if (element.level_id) element.level_id = element.level_id.toString();
                 return element;
             })[0];
+            let answersVG = await conn.query(`SELECT * FROM answers WHERE status = 'active' AND question_id = ${examIds.grammarVG.question.id}`);
+            examIds.grammarVG.question.answers = answersVG.map( element => {
+                element.id = element.id.toString();
+                if (element.question_id) element.question_id = element.question_id.toString();
+                return element;
+            });
 
             res.json(examIds);
         } catch (error) {
