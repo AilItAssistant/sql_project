@@ -7,7 +7,22 @@ export const getBlocks = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            let rows = await conn.query("select b.id as id, b.name as name, b.status as status, b.skill_id as skill_id, s.name as skill_name from blocks b left join skills s on b.skill_id = s.id order by b.id; ");
+            let rows = await conn.query(`
+                SELECT
+                    b.id AS id,
+                    b.name AS name,
+                    b.status AS status,
+                    b.skill_id AS skill_id,
+                    s.name AS skill_name,
+                    b.is_selected,
+                    b.max_score,
+                    qt.name AS question_type_name
+                FROM
+                    blocks b
+                LEFT JOIN skills s ON b.skill_id = s.id
+                LEFT JOIN question_types qt ON b.question_type_id = qt.id
+                ORDER BY b.id;
+                `);
             rows.forEach(element => {
                 element.id = element.id.toString();
                 if(element.skill_id){element.skill_id = element.skill_id.toString();}
@@ -52,15 +67,15 @@ export const blocksById = async (req, res) => {
         try {
             conn = await pool.getConnection();
             let rows = await conn.query(`
-                select 
+                select
                     b.id as id, b.name as name, b.status as status,
-                     b.skill_id as skill_id, s.name as skill_name from blocks b 
-                left join 
-                    skills s on b.skill_id = s.id 
-                where 
+                    b.skill_id as skill_id, s.name as skill_name from blocks b
+                left join
+                    skills s on b.skill_id = s.id
+                where
                     b.skill_id = ${req.body.skill_id} and b.status = 'active'
-                order 
-                    by b.id; 
+                order
+                    by b.id;
             `);
             rows.forEach(element => {
                 element.id = element.id.toString();
@@ -142,21 +157,38 @@ export const searchBlock = async (req, res) => {
             console.log(req.body)
             conn = await pool.getConnection();
             if ( req.body.name === "" || req.body.name === null ){
-                let rows = await conn.query(`select b.id as id, b.name as name, b.status as status, b.skill_id as skill_id, s.name as skill_name from blocks b left join skills s on b.skill_id = s.id WHERE skill_id LIKE ${req.body.skill};`);
+                let rows = await conn.query(`
+                    select
+                        b.id as id, b.name as name, b.status as status, b.skill_id as skill_id, s.name as skill_name, b.is_selected, b.max_score, qt.name AS question_type_name
+                    from blocks b
+                    LEFT JOIN question_types qt ON b.question_type_id = qt.id
+                    left join skills s on b.skill_id = s.id
+                    WHERE skill_id LIKE ${req.body.skill};`);
                 rows.forEach(element => {
                 element.id = element.id.toString();
                 if(element.skill_id){element.skill_id = element.skill_id.toString();}
             });
                 res.json(rows);
             } else if( req.body.skill === ""  || req.body.skill === null ){
-                let rows = await conn.query(`select b.id as id, b.name as name, b.status as status, b.skill_id as skill_id, s.name as skill_name from blocks b left join skills s on b.skill_id = s.id WHERE b.name LIKE '${req.body.name}%';`);
+                let rows = await conn.query(`
+                    select
+                        b.id as id, b.name as name, b.status as status, b.skill_id as skill_id, s.name as skill_name, b.is_selected, b.max_score, qt.name AS question_type_name
+                    from blocks b
+                    LEFT JOIN question_types qt ON b.question_type_id = qt.id
+                    left join skills s on b.skill_id = s.id
+                    WHERE b.name LIKE '${req.body.name}%';`);
                 rows.forEach(element => {
                 element.id = element.id.toString();
                 if(element.skill_id){element.skill_id = element.skill_id.toString();}
             });
                 res.json(rows);
             } else if( req.body.skill !== "" && req.body.name !== "" ){
-                let rows = await conn.query(`select b.id as id, b.name as name, b.status as status, b.skill_id as skill_id, s.name as skill_name from blocks b left join skills s on b.skill_id = s.id WHERE b.name LIKE '${req.body.name}%' AND skill_id = ${req.body.skill};`);
+                let rows = await conn.query(`
+                    select b.id as id, b.name as name, b.status as status, b.skill_id as skill_id, s.name as skill_name, b.is_selected, b.max_score, qt.name AS question_type_name
+                    from blocks b
+                    LEFT JOIN question_types qt ON b.question_type_id = qt.id
+                    left join skills s on b.skill_id = s.id
+                    WHERE b.name LIKE '${req.body.name}%' AND skill_id = ${req.body.skill};`);
                 rows.forEach(element => {
                 element.id = element.id.toString();
                 if(element.skill_id){element.skill_id = element.skill_id.toString();}
