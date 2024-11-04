@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 31-10-2024 a las 15:23:30
+-- Tiempo de generación: 04-11-2024 a las 09:54:40
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -317,32 +317,62 @@ CREATE TABLE `blocks` (
   `name` text NOT NULL,
   `skill_id` bigint(20) DEFAULT NULL,
   `description` text DEFAULT NULL,
-  `status` varchar(255) DEFAULT 'active'
+  `status` varchar(255) DEFAULT 'active',
+  `is_selected` tinyint(1) DEFAULT 0,
+  `max_score` int(11) DEFAULT NULL,
+  `block_union_id` bigint(20) DEFAULT NULL,
+  `question_type_id` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `blocks`
 --
 
-INSERT INTO `blocks` (`id`, `name`, `skill_id`, `description`, `status`) VALUES
-(48, 'Estar o hay', 2, NULL, 'active'),
-(49, 'Tener y haber', 2, NULL, 'active'),
-(50, 'Gustar y similares', 2, NULL, 'active'),
-(51, 'Presente irregular', 2, NULL, 'active'),
-(52, 'Descripción física', 1, NULL, 'active'),
-(53, 'Género y número', 2, NULL, 'active'),
-(54, 'Cantidad', 1, NULL, 'active'),
-(55, 'Reflexivos', 2, NULL, 'active'),
-(56, 'Ropa', 1, NULL, 'active'),
-(57, 'Tiempo atmosférico', 1, NULL, 'active'),
-(58, 'Pretérito perfecto', 2, NULL, 'active'),
-(59, 'Pronombres OD y OI gustar', 2, NULL, 'active'),
-(60, 'Preposiciones', 2, NULL, 'active'),
-(61, 'Vocabulario', 1, NULL, 'active'),
-(62, 'Variadas gramatica', 2, NULL, 'active'),
-(63, 'Preguntas con frases', 26, NULL, 'active'),
-(64, 'Preguntas con imágenes', 26, NULL, 'active'),
-(65, 'prueba Bloque', 345, NULL, 'active');
+INSERT INTO `blocks` (`id`, `name`, `skill_id`, `description`, `status`, `is_selected`, `max_score`, `block_union_id`, `question_type_id`) VALUES
+(48, 'Estar o hay', 2, NULL, 'active', 0, NULL, NULL, NULL),
+(49, 'Tener y haber', 2, NULL, 'active', 0, NULL, NULL, NULL),
+(50, 'Gustar y similares', 2, NULL, 'active', 0, NULL, NULL, NULL),
+(51, 'Presente irregular', 2, NULL, 'active', 0, NULL, NULL, NULL),
+(52, 'Descripción física', 1, NULL, 'active', 0, NULL, NULL, NULL),
+(53, 'Género y número', 2, NULL, 'active', 0, NULL, NULL, NULL),
+(54, 'Cantidad', 1, NULL, 'active', 0, NULL, NULL, NULL),
+(55, 'Reflexivos', 2, NULL, 'active', 0, NULL, NULL, NULL),
+(56, 'Ropa', 1, NULL, 'active', 0, NULL, NULL, NULL),
+(57, 'Tiempo atmosférico', 1, NULL, 'active', 0, NULL, NULL, NULL),
+(58, 'Pretérito perfecto', 2, NULL, 'active', 0, NULL, NULL, NULL),
+(59, 'Pronombres OD y OI gustar', 2, NULL, 'active', 0, NULL, NULL, NULL),
+(60, 'Preposiciones', 2, NULL, 'active', 0, NULL, NULL, NULL),
+(61, 'Vocabulario', 1, NULL, 'active', 0, NULL, NULL, NULL),
+(62, 'Variadas gramatica', 2, NULL, 'active', 0, NULL, NULL, NULL),
+(63, 'Preguntas con frases', 26, NULL, 'active', 0, NULL, NULL, NULL),
+(64, 'Preguntas con imágenes', 26, NULL, 'active', 0, NULL, NULL, NULL),
+(65, 'prueba Bloque', 345, NULL, 'active', 0, NULL, NULL, NULL),
+(66, 'General redacción', 24, NULL, 'active', 0, NULL, NULL, NULL),
+(67, 'General oral', 27, NULL, 'active', 0, NULL, NULL, NULL),
+(68, 'General comprensión lectora', 25, NULL, 'active', 0, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `block_unions`
+--
+
+CREATE TABLE `block_unions` (
+  `id` bigint(20) NOT NULL,
+  `common_statement` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `block_union_blocks`
+--
+
+CREATE TABLE `block_union_blocks` (
+  `id` bigint(20) NOT NULL,
+  `block_union_id` bigint(20) NOT NULL,
+  `block_id` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -679,6 +709,23 @@ INSERT INTO `questions` (`id`, `content`, `block_id`, `skill_id`, `level_id`, `s
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `question_types`
+--
+
+CREATE TABLE `question_types` (
+  `id` bigint(20) NOT NULL,
+  `name` text NOT NULL,
+  `statement` text DEFAULT NULL,
+  `photo` text DEFAULT NULL,
+  `text` text DEFAULT NULL,
+  `question` text DEFAULT NULL,
+  `answer` int(11) DEFAULT NULL,
+  `space` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `skills`
 --
 
@@ -899,7 +946,23 @@ ALTER TABLE `answers`
 --
 ALTER TABLE `blocks`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `skill_id` (`skill_id`);
+  ADD KEY `skill_id` (`skill_id`),
+  ADD KEY `block_union_id` (`block_union_id`),
+  ADD KEY `question_type_id` (`question_type_id`);
+
+--
+-- Indices de la tabla `block_unions`
+--
+ALTER TABLE `block_unions`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `block_union_blocks`
+--
+ALTER TABLE `block_union_blocks`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `block_union_id` (`block_union_id`),
+  ADD KEY `block_id` (`block_id`);
 
 --
 -- Indices de la tabla `classes`
@@ -971,6 +1034,12 @@ ALTER TABLE `questions`
   ADD KEY `level_id` (`level_id`),
   ADD KEY `fk_questions_photos` (`photo_id`),
   ADD KEY `statements_ibfk4` (`statement_id`);
+
+--
+-- Indices de la tabla `question_types`
+--
+ALTER TABLE `question_types`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `skills`
@@ -1046,7 +1115,19 @@ ALTER TABLE `answers`
 -- AUTO_INCREMENT de la tabla `blocks`
 --
 ALTER TABLE `blocks`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
+
+--
+-- AUTO_INCREMENT de la tabla `block_unions`
+--
+ALTER TABLE `block_unions`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `block_union_blocks`
+--
+ALTER TABLE `block_union_blocks`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `classes`
@@ -1083,6 +1164,12 @@ ALTER TABLE `photos`
 --
 ALTER TABLE `questions`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=178;
+
+--
+-- AUTO_INCREMENT de la tabla `question_types`
+--
+ALTER TABLE `question_types`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `skills`
@@ -1141,7 +1228,16 @@ ALTER TABLE `answers`
 -- Filtros para la tabla `blocks`
 --
 ALTER TABLE `blocks`
-  ADD CONSTRAINT `blocks_ibfk_1` FOREIGN KEY (`skill_id`) REFERENCES `skills` (`id`);
+  ADD CONSTRAINT `blocks_ibfk_1` FOREIGN KEY (`skill_id`) REFERENCES `skills` (`id`),
+  ADD CONSTRAINT `blocks_ibfk_2` FOREIGN KEY (`block_union_id`) REFERENCES `block_unions` (`id`),
+  ADD CONSTRAINT `blocks_ibfk_3` FOREIGN KEY (`question_type_id`) REFERENCES `question_types` (`id`);
+
+--
+-- Filtros para la tabla `block_union_blocks`
+--
+ALTER TABLE `block_union_blocks`
+  ADD CONSTRAINT `block_union_blocks_ibfk_1` FOREIGN KEY (`block_union_id`) REFERENCES `block_unions` (`id`),
+  ADD CONSTRAINT `block_union_blocks_ibfk_2` FOREIGN KEY (`block_id`) REFERENCES `blocks` (`id`);
 
 --
 -- Filtros para la tabla `classes`
