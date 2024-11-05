@@ -16,7 +16,8 @@ export const getBlocks = async (req, res) => {
                     s.name AS skill_name,
                     b.is_selected,
                     b.max_score,
-                    qt.name AS question_type_name
+                    qt.name AS question_type_name,
+                    qt.id AS question_type_id
                 FROM
                     blocks b
                 LEFT JOIN skills s ON b.skill_id = s.id
@@ -26,6 +27,7 @@ export const getBlocks = async (req, res) => {
             rows.forEach(element => {
                 element.id = element.id.toString();
                 if(element.skill_id){element.skill_id = element.skill_id.toString();}
+                if(element.question_type_id){element.question_type_id = element.question_type_id.toString();}
             });
             let response = {
                 blocks: rows,
@@ -91,11 +93,21 @@ export const blocksById = async (req, res) => {
 };
 
 export const editBlock = async (req, res) => {
+    console.log(req.body)
     if ( req.data ) {
         let conn;
         try {
             conn = await pool.getConnection();
-            let rows = await conn.query(`UPDATE blocks SET name = '${req.body.name}', status = '${req.body.status}', skill_id = '${req.body.secondId}' WHERE id = ${req.body.id};`);
+            let rows = await conn.query(`
+                UPDATE blocks
+                SET
+                    skill_id = COALESCE(${req.body.secondId}, skill_id),
+                    name = COALESCE(${req.body.name}, name),
+                    status = COALESCE(${req.body.status}, status),
+                    question_type_id = COALESCE(${req.body.type}, question_type_id),
+                    max_score = COALESCE(${req.body.score}, max_score)
+                WHERE id = ${req.body.id};
+            `);
             res.json(200);
         } catch (error) {
             console.log(error);
@@ -125,7 +137,17 @@ export const addBlock = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            let rows = await conn.query(`INSERT INTO blocks (name, status, skill_id) VALUES ('${req.body.name}', '${req.body.status}', '${req.body.skillId}');`);
+            if ( req.body.type === null ) {
+                let rows = await conn.query(`
+                    INSERT INTO blocks (name, status, skill_id, max_score, question_type_id)
+                    VALUES ('${req.body.name}', '${req.body.status}', '${req.body.skillId}', ${req.body.score}, ${req.body.type});
+                `);
+            } else {
+                let rows = await conn.query(`
+                    INSERT INTO blocks (name, status, skill_id, max_score)
+                    VALUES ('${req.body.name}', '${req.body.status}', '${req.body.skillId}', ${req.body.score});
+                `);
+            };
             res.json(200);
         } catch (error) {
             console.log(error);

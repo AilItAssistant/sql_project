@@ -14,6 +14,7 @@ import { blocks } from "./routes/blocks/blocks.routes.mjs";
 import { users } from "./routes/users/users.routes.mjs";
 import { answers } from "./routes/answers/answers.routes.mjs";
 import { photo } from "./routes/photo/photo.routes.mjs";
+import { types } from "./routes/questions_type/questions_type.routes.mjs";
 
 const app = express();
 
@@ -64,5 +65,8 @@ app.use("/api/answers", answers);
 
 //COMPLETE PHOTO
 app.use("/api/photo", photo);
+
+//QUESTIONS TYPES
+app.use("/api/types", types);
 
 export default app;
