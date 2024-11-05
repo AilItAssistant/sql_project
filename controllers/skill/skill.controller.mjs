@@ -7,7 +7,7 @@ export const getSkills = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            let rows = await conn.query("select s.id as id, s.name as name, s.status as status, s.level_id as level_id, l.name as level_name from skills s left join levels l on s.level_id = l.id order by s.id; ");
+            let rows = await conn.query("select s.id as id, s.name as name, s.status as status, s.level_id as level_id, s.statement, l.name as level_name from skills s left join levels l on s.level_id = l.id order by s.id; ");
             rows.forEach(element => {
                 element.id = element.id.toString();
                 if(element.level_id){element.level_id = element.level_id.toString();}
@@ -66,11 +66,31 @@ export const skillsId = async (req, res) => {
 };
 
 export const editSkill = async (req, res) => {
+    console.log(req.body)
     if ( req.data ) {
         let conn;
         try {
             conn = await pool.getConnection();
-            let rows = await conn.query(`UPDATE skills SET name = '${req.body.name}', status = '${req.body.status}', level_id = '${req.body.secondId}' WHERE id = ${req.body.id};`);
+            if(req.body.statement === null) {
+                let rows = await conn.query(`
+                    UPDATE skills
+                    SET
+                        name = CASE WHEN '${req.body.name}' IS NOT NULL AND '${req.body.name}' != 'null' THEN '${req.body.name}' ELSE name END,
+                        status = COALESCE(${req.body.status}, status),
+                        level_id = COALESCE(${req.body.secondId}, level_id)
+                    WHERE id = ${req.body.id};
+                `);
+            } else {
+                let rows = await conn.query(`
+                    UPDATE skills
+                    SET
+                        name = CASE WHEN '${req.body.name}' IS NOT NULL AND '${req.body.name}' != 'null' THEN '${req.body.name}' ELSE name END,
+                        status = COALESCE(${req.body.status}, status),
+                        level_id = COALESCE(${req.body.secondId}, level_id),
+                        statement = CASE WHEN '${req.body.statement}' IS NOT NULL AND '${req.body.statement}' != 'null' THEN '${req.body.statement}' ELSE statement END
+                    WHERE id = ${req.body.id};
+                `);
+            };
             res.json(200);
         } catch (error) {
             console.log(error);
@@ -96,11 +116,16 @@ export const statusSkill = async (req, res) => {
 };
 
 export const addSkill = async (req, res) => {
+    console.log(req.body)
     if ( req.data ) {
         let conn;
         try {
             conn = await pool.getConnection();
-            let rows = await conn.query(`INSERT INTO skills (name, status, level_id) VALUES ('${req.body.name}', '${req.body.status}', '${req.body.levelId}');`);
+            if(req.body.statement !== null) {
+                let rows = await conn.query(`INSERT INTO skills (name, status, level_id, statement) VALUES ('${req.body.name}', '${req.body.status}', '${req.body.levelId}', '${req.body.statement}');`);
+            } else {
+                let rows = await conn.query(`INSERT INTO skills (name, status, level_id) VALUES ('${req.body.name}', '${req.body.status}', '${req.body.levelId}');`);
+            };
             res.json(200);
         } catch (error) {
             console.log(error);

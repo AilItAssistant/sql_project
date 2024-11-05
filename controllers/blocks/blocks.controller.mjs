@@ -102,7 +102,7 @@ export const editBlock = async (req, res) => {
                 UPDATE blocks
                 SET
                     skill_id = COALESCE(${req.body.secondId}, skill_id),
-                    name = COALESCE(${req.body.name}, name),
+                    name = CASE WHEN '${req.body.name}' IS NOT NULL AND '${req.body.name}' != 'null' THEN '${req.body.name}' ELSE name END,
                     status = COALESCE(${req.body.status}, status),
                     question_type_id = COALESCE(${req.body.type}, question_type_id),
                     max_score = COALESCE(${req.body.score}, max_score)
