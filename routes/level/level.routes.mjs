@@ -8,7 +8,8 @@ import {
     addLevel,
     deleteLevel,
     searchLevel,
-    getActiveLevels
+    getActiveLevels,
+    getActiveLevelsSkillsBlocks
 } from "../../controllers/level/level.controller.mjs";
 
 export const levels = Router();
@@ -33,3 +34,6 @@ levels.put("/delete", verifyToken, deleteLevel);
 
 //?SEARCH LEVELS
 levels.put("/search", verifyToken, searchLevel);
+
+//?GET ACTIVE LEVELS, SKILLS AND BLOCKS
+levels.get("/activeLevelsSkillsBlocks", verifyToken, getActiveLevelsSkillsBlocks);
