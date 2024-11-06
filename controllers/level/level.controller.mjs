@@ -160,7 +160,7 @@ export const getActiveLevelsSkillsBlocks = async (req, res) => {
             };
             console.log(levels[0].skills[0].blocks)
 
-            res.json(200);
+            res.json(levels);
         } catch (error) {
             console.log(error);
         } finally {
