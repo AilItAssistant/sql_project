@@ -155,11 +155,7 @@ export const getActiveLevelsSkillsBlocks = async (req, res) => {
                     });
                     levels[i].skills[x].blocks = blocks;
                 }
-
-
             };
-            console.log(levels[0].skills[0].blocks)
-
             res.json(levels);
         } catch (error) {
             console.log(error);

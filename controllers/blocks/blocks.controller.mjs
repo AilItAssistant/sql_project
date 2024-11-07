@@ -223,4 +223,24 @@ export const searchBlock = async (req, res) => {
             if (conn) return conn.end();
         };
     };
-}
+};
+
+export const selectedChange = async (req, res) => {
+    if ( req.data ) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            let select = await conn.query(`select is_selected from blocks where id = ${req.body.id};`);
+            if(select[0].is_selected === 0){
+                let rows = await conn.query(`UPDATE blocks SET is_selected = 1 WHERE id = ${req.body.id};`);
+            } else if (select[0].is_selected === 1) {
+                let rows = await conn.query(`UPDATE blocks SET is_selected = 0 WHERE id = ${req.body.id};`);
+            };
+            res.json(200);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        };
+    };
+};

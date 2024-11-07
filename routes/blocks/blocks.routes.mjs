@@ -9,7 +9,8 @@ import {
     deleteBlock,
     searchBlock,
     getActiveBlocks,
-    blocksById
+    blocksById,
+    selectedChange
 } from "../../controllers/blocks/blocks.controller.mjs";
 
 export const blocks = Router();
@@ -26,7 +27,7 @@ blocks.put("/edit", verifyToken, editBlock);
 //?BLOCKS CHANGE STATUS
 blocks.put("/status", verifyToken, statusBlock);
 
-//?ADD BLOCKS 
+//?ADD BLOCKS
 blocks.post("/add", verifyToken, addBlock);
 
 //?DELETE BLOCKS
@@ -37,3 +38,6 @@ blocks.put("/search", verifyToken, searchBlock);
 
 //?GET BLOCK BY ID
 blocks.post("/blocksId", verifyToken, blocksById);
+
+//?BLOCKS CHANGE IS_SELECTED
+blocks.put("/selected", verifyToken, selectedChange);
