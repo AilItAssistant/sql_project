@@ -8,7 +8,8 @@ import {
     editQuestions,
     statusQuestionById,
     deleteQuestionById,
-    getQuestionsAnswersByBlockId
+    getQuestionsAnswersByBlockId,
+    deleteImage
 } from "../../controllers/questions/questions.controller.mjs";
 
 export const questions = Router();
@@ -33,3 +34,6 @@ questions.put("/delete", verifyToken, deleteQuestionById);
 
 //?GET QUESTIONS AND ANSWERS BY BLOCK ID
 questions.post("/getQuestionsAnswersByBlockId", verifyToken, getQuestionsAnswersByBlockId);
+
+//?DELETE PHOTO TO QUESTIONS ANND PHOTO TABLE
+questions.put("/deleteImage", verifyToken, deleteImage);

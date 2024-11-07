@@ -5,7 +5,8 @@ import {
     getAnswerById,
     editAnswers,
     statusAnswerById,
-    deleteAnswerById
+    deleteAnswerById,
+    deleteImage
 } from "../../controllers/answers/answers.controller.mjs";
 
 export const answers = Router();
@@ -21,3 +22,6 @@ answers.put("/status", verifyToken, statusAnswerById);
 
 //?DELETE ANSWER
 answers.put("/delete", verifyToken, deleteAnswerById);
+
+//?DELETE PHOTO TO ANSWERS ANND PHOTO TABLE
+answers.put("/deleteImage", verifyToken, deleteImage);

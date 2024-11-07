@@ -354,3 +354,21 @@ export const deleteStatementById = async (req, res) => {
         };
     };
 };
+
+export const deleteImage = async (req, res) => {
+    if ( req.data ) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            let rows = await conn.query(`
+                UPDATE statements SET photo_id = NULL WHERE id = <statement_id>;
+                DELETE FROM photos WHERE id = <photo_id>;
+            `);
+            res.json(200);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        };
+    };
+};

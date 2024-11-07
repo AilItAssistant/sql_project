@@ -10,7 +10,8 @@ import {
     levelSkillBlockStatements,
     editStatements,
     statusStatementById,
-    deleteStatementById
+    deleteStatementById,
+    deleteImage
 } from "../../controllers/statements/statements.controller.mjs";
 
 export const statements = Router();
@@ -41,3 +42,6 @@ statements.put("/status", verifyToken, statusStatementById);
 
 //?DELETE STATEMENT
 statements.put("/delete", verifyToken, deleteStatementById);
+
+//?DELETE PHOTO TO STATEMENTS ANND PHOTO TABLE
+statements.put("/deleteImage", verifyToken, deleteImage);
