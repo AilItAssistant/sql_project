@@ -17,7 +17,7 @@ export const levels = Router();
 //?GET ALL LEVELS
 levels.get("/", verifyToken, getLevels);
 
-//?GET ALL LEVELS
+//?GET ALL ACTIVE LEVELS
 levels.get("/active", verifyToken, getActiveLevels);
 
 //?EDIT LEVEL

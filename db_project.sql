@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-11-2024 a las 10:54:01
+-- Tiempo de generación: 08-11-2024 a las 15:49:28
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -730,17 +730,25 @@ INSERT INTO `skills` (`id`, `name`, `description`, `level_id`, `status`, `statem
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `skill_unions`
+-- Estructura de tabla para la tabla `skills_unions`
 --
 
-CREATE TABLE `skill_unions` (
+CREATE TABLE `skills_unions` (
   `id` bigint(20) NOT NULL,
   `name` text NOT NULL,
   `statement` text DEFAULT NULL,
   `skill_id_1` bigint(20) NOT NULL,
   `skill_id_2` bigint(20) NOT NULL,
-  `status` varchar(10) NOT NULL DEFAULT 'active'
+  `status` varchar(10) NOT NULL DEFAULT 'active',
+  `level_id` bigint(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `skills_unions`
+--
+
+INSERT INTO `skills_unions` (`id`, `name`, `statement`, `skill_id_1`, `skill_id_2`, `status`, `level_id`) VALUES
+(1, 'test', 'test test test test test test test test test test test test test test test ', 1, 2, 'active', 27);
 
 -- --------------------------------------------------------
 
@@ -1026,12 +1034,13 @@ ALTER TABLE `skills`
   ADD KEY `level_id` (`level_id`);
 
 --
--- Indices de la tabla `skill_unions`
+-- Indices de la tabla `skills_unions`
 --
-ALTER TABLE `skill_unions`
+ALTER TABLE `skills_unions`
   ADD PRIMARY KEY (`id`),
   ADD KEY `skill_id_1` (`skill_id_1`),
-  ADD KEY `skill_id_2` (`skill_id_2`);
+  ADD KEY `skill_id_2` (`skill_id_2`),
+  ADD KEY `level_id` (`level_id`);
 
 --
 -- Indices de la tabla `statements`
@@ -1151,10 +1160,10 @@ ALTER TABLE `skills`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=349;
 
 --
--- AUTO_INCREMENT de la tabla `skill_unions`
+-- AUTO_INCREMENT de la tabla `skills_unions`
 --
-ALTER TABLE `skill_unions`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `skills_unions`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `statements`
@@ -1270,11 +1279,12 @@ ALTER TABLE `skills`
   ADD CONSTRAINT `levels_ibfk_1` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`);
 
 --
--- Filtros para la tabla `skill_unions`
+-- Filtros para la tabla `skills_unions`
 --
-ALTER TABLE `skill_unions`
-  ADD CONSTRAINT `skill_unions_ibfk_1` FOREIGN KEY (`skill_id_1`) REFERENCES `skills` (`id`),
-  ADD CONSTRAINT `skill_unions_ibfk_2` FOREIGN KEY (`skill_id_2`) REFERENCES `skills` (`id`);
+ALTER TABLE `skills_unions`
+  ADD CONSTRAINT `level_id` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`),
+  ADD CONSTRAINT `skills_unions_ibfk_1` FOREIGN KEY (`skill_id_1`) REFERENCES `skills` (`id`),
+  ADD CONSTRAINT `skills_unions_ibfk_2` FOREIGN KEY (`skill_id_2`) REFERENCES `skills` (`id`);
 
 --
 -- Filtros para la tabla `statements`

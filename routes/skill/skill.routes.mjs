@@ -9,7 +9,8 @@ import {
     deleteSkill,
     searchSkill,
     getActiveSkills,
-    skillsId
+    skillsId,
+    getSkillsByLevels
 } from "../../controllers/skill/skill.controller.mjs";
 
 export const skills = Router();
@@ -36,4 +37,7 @@ skills.put("/delete", verifyToken, deleteSkill);
 skills.put("/search", verifyToken, searchSkill);
 
 //?GET SKILLS BY ID
-skills.post("/skillsId", verifyToken, skillsId)
+skills.post("/skillsId", verifyToken, skillsId);
+
+//?GET SKILL BY LEVEL ID
+skills.post("/skillsLevel", verifyToken, getSkillsByLevels);

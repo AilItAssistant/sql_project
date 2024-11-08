@@ -171,3 +171,28 @@ export const searchSkill = async (req, res) => {
         };
     };
 };
+
+//?GET ACTIVE SKILLS
+export const getSkillsByLevels = async (req, res) => {
+    if ( req.data ) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            let rows = await conn.query(`
+                select s.id as id, s.name as name, s.status as status, s.level_id as level_id, l.name as level_name
+                from skills s
+                left join levels l on s.level_id = l.id
+                where s.status = 'active' and s.level_id = ${req.body.id}
+                order by s.id; `);
+            rows.forEach(element => {
+                element.id = element.id.toString();
+                if(element.level_id){element.level_id = element.level_id.toString();}
+            });
+            res.json(rows);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        };
+    };
+};

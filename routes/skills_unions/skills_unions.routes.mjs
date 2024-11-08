@@ -18,7 +18,7 @@ skills_unions.get("/", verifyToken, getSkillsUnions);
 skills_unions.put("/delete", verifyToken, deleteSkillsUnions);
 
 //?DESACTIVATE SKILL_UNION
-skills_unions.put("/desactivate", verifyToken, desactivateSkillsUnions);
+skills_unions.put("/status", verifyToken, desactivateSkillsUnions);
 
 //?EDIT SKILL_UNION
 skills_unions.put("/edit", verifyToken, editSkillsUnions);
