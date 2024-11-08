@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 04-11-2024 a las 13:22:32
+-- Tiempo de generación: 08-11-2024 a las 10:54:01
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -299,12 +299,7 @@ INSERT INTO `answers` (`id`, `question_id`, `content`, `is_correct`, `status`, `
 (530, 176, 'desayuna con sus compañeros de clase.', 0, 'active', 'B', NULL, NULL),
 (531, 176, 'come con sus compañeros de clase.', 1, 'active', 'C', NULL, NULL),
 (532, 176, 'almuerza por la mañana.', 0, 'active', 'D', NULL, NULL),
-(533, 165, 'Mensaje:____', 0, 'active', 'I', 236, 'false'),
-(534, 177, 'Pedro es profesor de ________________ en un instituto de ', 0, 'active', 'A', NULL, NULL),
-(535, 177, 'Pedro es profesor de ________________ en un instituto de idiomas', 1, 'active', 'B', NULL, NULL),
-(536, 177, 'Pedro es profesor de ________________ en de idiomas', 0, 'active', 'C', NULL, NULL),
-(537, 177, 'Pedro esor de ________________ en un instituto de idiomas', 0, 'active', 'D', NULL, NULL),
-(538, 177, ' es profesor de ________________ en un instituto de idiomas', 0, 'active', 'E', NULL, NULL);
+(533, 165, 'Mensaje:____', 0, 'active', 'I', 236, 'false');
 
 -- --------------------------------------------------------
 
@@ -317,7 +312,7 @@ CREATE TABLE `blocks` (
   `name` text NOT NULL,
   `skill_id` bigint(20) DEFAULT NULL,
   `status` varchar(255) DEFAULT 'active',
-  `is_selected` tinyint(1) DEFAULT 0,
+  `is_selected` tinyint(4) DEFAULT 0,
   `max_score` int(11) DEFAULT NULL,
   `question_type_id` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -327,27 +322,27 @@ CREATE TABLE `blocks` (
 --
 
 INSERT INTO `blocks` (`id`, `name`, `skill_id`, `status`, `is_selected`, `max_score`, `question_type_id`) VALUES
-(48, 'Estar o hay', 2, 'active', 0, NULL, NULL),
-(49, 'Tener y haber', 2, 'active', 0, NULL, NULL),
-(50, 'Gustar y similares', 2, 'active', 0, NULL, NULL),
-(51, 'Presente irregular', 2, 'active', 0, NULL, NULL),
-(52, 'Descripción física', 1, 'active', 0, NULL, NULL),
-(53, 'Género y número', 2, 'active', 0, NULL, NULL),
-(54, 'Cantidad', 1, 'active', 0, NULL, NULL),
-(55, 'Reflexivos', 2, 'active', 0, NULL, NULL),
-(56, 'Ropa', 1, 'active', 0, NULL, NULL),
-(57, 'Tiempo atmosférico', 1, 'active', 0, NULL, NULL),
-(58, 'Pretérito perfecto', 2, 'active', 0, NULL, NULL),
-(59, 'Pronombres OD y OI gustar', 2, 'active', 0, NULL, NULL),
-(60, 'Preposiciones', 2, 'active', 0, NULL, NULL),
-(61, 'Vocabulario', 1, 'active', 0, NULL, NULL),
-(62, 'Variadas gramatica', 2, 'active', 0, NULL, NULL),
-(63, 'Preguntas con frases', 26, 'active', 0, NULL, NULL),
-(64, 'Preguntas con imágenes', 26, 'active', 0, NULL, NULL),
-(65, 'prueba Bloque', 345, 'active', 1, 150000000, NULL),
-(66, 'General redacción', 24, 'active', 0, NULL, NULL),
+(48, 'Estar o hay', 2, 'active', 1, NULL, NULL),
+(49, 'Tener y haber', 2, 'active', 1, NULL, NULL),
+(50, 'Gustar y similares', 2, 'active', 1, NULL, NULL),
+(51, 'Presente irregular', 2, 'active', 1, NULL, NULL),
+(52, 'Descripción física', 1, 'active', 1, NULL, NULL),
+(53, 'Género y número', 2, 'active', 1, NULL, NULL),
+(54, 'Cantidad', 1, 'active', 1, NULL, NULL),
+(55, 'Reflexivos', 2, 'active', 1, NULL, NULL),
+(56, 'Ropa', 1, 'active', 1, NULL, NULL),
+(57, 'Tiempo atmosférico', 1, 'active', 1, NULL, NULL),
+(58, 'Pretérito perfecto', 2, 'active', 1, NULL, NULL),
+(59, 'Pronombres OD y OI gustar', 2, 'active', 1, NULL, NULL),
+(60, 'Preposiciones', 2, 'active', 1, NULL, NULL),
+(61, 'Vocabulario', 1, 'active', 1, NULL, NULL),
+(62, 'Variadas gramatica', 2, 'active', 1, NULL, NULL),
+(63, 'Preguntas con frases', 26, 'active', 1, NULL, NULL),
+(64, 'Preguntas con imágenes', 26, 'active', 1, NULL, NULL),
+(66, 'General redacción', 24, 'active', 1, NULL, NULL),
 (67, 'General oral', 27, 'active', 1, NULL, NULL),
-(68, 'General comprensión lectora', 25, 'active', 0, NULL, NULL);
+(68, 'General comprensión lectora', 25, 'active', 1, NULL, NULL),
+(74, 'test', 348, 'active', 1, 2, NULL);
 
 -- --------------------------------------------------------
 
@@ -503,7 +498,7 @@ INSERT INTO `levels` (`id`, `name`, `status`) VALUES
 (20, 'C2', 'inactive'),
 (27, 'A1', 'active'),
 (31, 'A2', 'inactive'),
-(34, 'Prueba nivel', 'active');
+(35, 'test', 'active');
 
 -- --------------------------------------------------------
 
@@ -678,8 +673,7 @@ INSERT INTO `questions` (`id`, `content`, `block_id`, `skill_id`, `level_id`, `s
 (173, 'Ha visitado:', NULL, 25, 27, 76, 'active', NULL, '3'),
 (174, 'Rose va a visitar con sus padres;', NULL, 25, 27, 76, 'active', NULL, '3'),
 (175, 'Sus padres:', NULL, 25, 27, 76, 'active', NULL, '3'),
-(176, 'Rose todos los días:', NULL, 25, 27, 76, 'active', NULL, '3'),
-(177, 'Pedro es profesor en un instituto de idiomas y cuenta a su amiga cómo es su trabajo. Complete el texto con la información. Escuchará la audición tres veces: audio 3', 65, 345, 34, NULL, 'active', NULL, '1');
+(176, 'Rose todos los días:', NULL, 25, 27, 76, 'active', NULL, '3');
 
 -- --------------------------------------------------------
 
@@ -697,6 +691,13 @@ CREATE TABLE `question_types` (
   `answer` int(11) DEFAULT NULL,
   `space` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `question_types`
+--
+
+INSERT INTO `question_types` (`id`, `name`, `statement`, `photo`, `text`, `question`, `answer`, `space`) VALUES
+(1, 'prueba de lexico y gramatica', 'statement', 'photo', 'text', 'question', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -724,7 +725,22 @@ INSERT INTO `skills` (`id`, `name`, `description`, `level_id`, `status`, `statem
 (25, 'Compresión lectora', NULL, 27, 'active', NULL),
 (26, 'Audio', NULL, 27, 'active', NULL),
 (27, 'Oral', NULL, 27, 'active', NULL),
-(345, 'Prueba destreza', NULL, 34, 'active', NULL);
+(348, 'test', NULL, 35, 'active', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `skill_unions`
+--
+
+CREATE TABLE `skill_unions` (
+  `id` bigint(20) NOT NULL,
+  `name` text NOT NULL,
+  `statement` text DEFAULT NULL,
+  `skill_id_1` bigint(20) NOT NULL,
+  `skill_id_2` bigint(20) NOT NULL,
+  `status` varchar(10) NOT NULL DEFAULT 'active'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1010,6 +1026,14 @@ ALTER TABLE `skills`
   ADD KEY `level_id` (`level_id`);
 
 --
+-- Indices de la tabla `skill_unions`
+--
+ALTER TABLE `skill_unions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `skill_id_1` (`skill_id_1`),
+  ADD KEY `skill_id_2` (`skill_id_2`);
+
+--
 -- Indices de la tabla `statements`
 --
 ALTER TABLE `statements`
@@ -1070,13 +1094,13 @@ ALTER TABLE `user_actions`
 -- AUTO_INCREMENT de la tabla `answers`
 --
 ALTER TABLE `answers`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=539;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=542;
 
 --
 -- AUTO_INCREMENT de la tabla `blocks`
 --
 ALTER TABLE `blocks`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
 
 --
 -- AUTO_INCREMENT de la tabla `classes`
@@ -1100,37 +1124,43 @@ ALTER TABLE `exam_requests`
 -- AUTO_INCREMENT de la tabla `levels`
 --
 ALTER TABLE `levels`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT de la tabla `photos`
 --
 ALTER TABLE `photos`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=284;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=292;
 
 --
 -- AUTO_INCREMENT de la tabla `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=178;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=179;
 
 --
 -- AUTO_INCREMENT de la tabla `question_types`
 --
 ALTER TABLE `question_types`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `skills`
 --
 ALTER TABLE `skills`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=346;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=349;
+
+--
+-- AUTO_INCREMENT de la tabla `skill_unions`
+--
+ALTER TABLE `skill_unions`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `statements`
 --
 ALTER TABLE `statements`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
 
 --
 -- AUTO_INCREMENT de la tabla `students`
@@ -1238,6 +1268,13 @@ ALTER TABLE `questions`
 --
 ALTER TABLE `skills`
   ADD CONSTRAINT `levels_ibfk_1` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`);
+
+--
+-- Filtros para la tabla `skill_unions`
+--
+ALTER TABLE `skill_unions`
+  ADD CONSTRAINT `skill_unions_ibfk_1` FOREIGN KEY (`skill_id_1`) REFERENCES `skills` (`id`),
+  ADD CONSTRAINT `skill_unions_ibfk_2` FOREIGN KEY (`skill_id_2`) REFERENCES `skills` (`id`);
 
 --
 -- Filtros para la tabla `statements`
