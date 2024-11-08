@@ -3,10 +3,10 @@ import { Router } from "express";
 import { verifyToken } from "../../controllers/users/users.controller.mjs";
 import {
     getSkillsUnions,
-    deleteSkillUnion,
-    desactivateSkillUnion,
-    editSkillUnion,
-    addSkillUnion
+    deleteSkillsUnions,
+    desactivateSkillsUnions,
+    editSkillsUnions,
+    addSkillsUnions
 } from "../../controllers/skills_unions/skills_unions.controller.mjs";
 
 export const skills_unions = Router();
@@ -15,13 +15,13 @@ export const skills_unions = Router();
 skills_unions.get("/", verifyToken, getSkillsUnions);
 
 //?DELETE SKILL_UNION
-skills_unions.put("/delete", verifyToken, deleteSkillUnion);
+skills_unions.put("/delete", verifyToken, deleteSkillsUnions);
 
 //?DESACTIVATE SKILL_UNION
-skills_unions.put("/desactivate", verifyToken, desactivateSkillUnion);
+skills_unions.put("/desactivate", verifyToken, desactivateSkillsUnions);
 
 //?EDIT SKILL_UNION
-skills_unions.put("/edit", verifyToken, editSkillUnion);
+skills_unions.put("/edit", verifyToken, editSkillsUnions);
 
 //?ADD SKILL_UNION
-skills_unions.put("/add", verifyToken, addSkillUnion);
+skills_unions.put("/add", verifyToken, addSkillsUnions);
