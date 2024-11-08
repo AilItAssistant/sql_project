@@ -23,5 +23,5 @@ answers.put("/status", verifyToken, statusAnswerById);
 //?DELETE ANSWER
 answers.put("/delete", verifyToken, deleteAnswerById);
 
-//?DELETE PHOTO TO ANSWERS ANND PHOTO TABLE
+//?DELETE PHOTO TO ANSWERS AND PHOTO TABLE
 answers.put("/deleteImage", verifyToken, deleteImage);

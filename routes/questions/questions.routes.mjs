@@ -35,5 +35,5 @@ questions.put("/delete", verifyToken, deleteQuestionById);
 //?GET QUESTIONS AND ANSWERS BY BLOCK ID
 questions.post("/getQuestionsAnswersByBlockId", verifyToken, getQuestionsAnswersByBlockId);
 
-//?DELETE PHOTO TO QUESTIONS ANND PHOTO TABLE
+//?DELETE PHOTO TO QUESTIONS AND PHOTO TABLE
 questions.put("/deleteImage", verifyToken, deleteImage);

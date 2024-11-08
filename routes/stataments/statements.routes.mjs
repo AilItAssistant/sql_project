@@ -43,5 +43,5 @@ statements.put("/status", verifyToken, statusStatementById);
 //?DELETE STATEMENT
 statements.put("/delete", verifyToken, deleteStatementById);
 
-//?DELETE PHOTO TO STATEMENTS ANND PHOTO TABLE
+//?DELETE PHOTO TO STATEMENTS AND PHOTO TABLE
 statements.put("/deleteImage", verifyToken, deleteImage);

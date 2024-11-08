@@ -141,11 +141,13 @@ export const deleteImage = async (req, res) => {
     if ( req.data ) {
         let conn;
         try {
+            let photoId;
             conn = await pool.getConnection();
-            let rows = await conn.query(`
-                UPDATE answers SET photo_id = NULL WHERE id = <answer_id>;
-                DELETE FROM photos WHERE id = <photo_id>;
-            `);
+            photoId = await conn.query(`select photo_id from answers where id = ${req.body.id};`);
+            photoId = photoId[0].photo_id;
+            console.log(photoId);
+            await conn.query(`UPDATE answers SET photo_id = NULL WHERE id = ${req.body.id};`);
+            conn.query(`DELETE FROM photos WHERE id = ${photoId};`);
             res.json(200);
         } catch (error) {
             console.log(error);
