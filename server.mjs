@@ -15,6 +15,7 @@ import { users } from "./routes/users/users.routes.mjs";
 import { answers } from "./routes/answers/answers.routes.mjs";
 import { photo } from "./routes/photo/photo.routes.mjs";
 import { types } from "./routes/questions_type/questions_type.routes.mjs";
+import { skills_unions } from "./routes/skills_unions/skills_unions.routes.mjs";
 
 const app = express();
 
@@ -37,7 +38,7 @@ app.use("/api/alumnos", alumnos);
 app.use("/api/exams", exams);
 
 //SKILLS
-app.use("/api/skills", skills)
+app.use("/api/skills", skills);
 
 //LEVELS
 app.use("/api/levels", levels);
@@ -49,7 +50,7 @@ app.use("/api/teachers", teachers);
 app.use("/api/questions", questions);
 
 //STATEMENTS
-app.use("/api/statements", statements)
+app.use("/api/statements", statements);
 
 //CLASSES
 app.use("/api/classes", classes);
@@ -68,5 +69,8 @@ app.use("/api/photo", photo);
 
 //QUESTIONS TYPES
 app.use("/api/types", types);
+
+//SKILLS UNIONS
+app.use("/api/skills_unions", skills_unions)
 
 export default app;
