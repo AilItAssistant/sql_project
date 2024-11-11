@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-11-2024 a las 15:49:28
+-- Tiempo de generación: 11-11-2024 a las 15:30:01
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -322,26 +322,26 @@ CREATE TABLE `blocks` (
 --
 
 INSERT INTO `blocks` (`id`, `name`, `skill_id`, `status`, `is_selected`, `max_score`, `question_type_id`) VALUES
-(48, 'Estar o hay', 2, 'active', 1, NULL, NULL),
-(49, 'Tener y haber', 2, 'active', 1, NULL, NULL),
-(50, 'Gustar y similares', 2, 'active', 1, NULL, NULL),
-(51, 'Presente irregular', 2, 'active', 1, NULL, NULL),
-(52, 'Descripción física', 1, 'active', 1, NULL, NULL),
-(53, 'Género y número', 2, 'active', 1, NULL, NULL),
-(54, 'Cantidad', 1, 'active', 1, NULL, NULL),
-(55, 'Reflexivos', 2, 'active', 1, NULL, NULL),
-(56, 'Ropa', 1, 'active', 1, NULL, NULL),
-(57, 'Tiempo atmosférico', 1, 'active', 1, NULL, NULL),
-(58, 'Pretérito perfecto', 2, 'active', 1, NULL, NULL),
-(59, 'Pronombres OD y OI gustar', 2, 'active', 1, NULL, NULL),
-(60, 'Preposiciones', 2, 'active', 1, NULL, NULL),
-(61, 'Vocabulario', 1, 'active', 1, NULL, NULL),
-(62, 'Variadas gramatica', 2, 'active', 1, NULL, NULL),
-(63, 'Preguntas con frases', 26, 'active', 1, NULL, NULL),
-(64, 'Preguntas con imágenes', 26, 'active', 1, NULL, NULL),
-(66, 'General redacción', 24, 'active', 1, NULL, NULL),
-(67, 'General oral', 27, 'active', 1, NULL, NULL),
-(68, 'General comprensión lectora', 25, 'active', 1, NULL, NULL),
+(48, 'Estar o hay', 2, 'active', 1, 2, 1),
+(49, 'Tener y haber', 2, 'active', 1, 2, 1),
+(50, 'Gustar y similares', 2, 'active', 1, 2, 1),
+(51, 'Presente irregular', 2, 'active', 1, 2, 1),
+(52, 'Descripción física', 1, 'active', 1, 2, 1),
+(53, 'Género y número', 2, 'active', 1, 2, 1),
+(54, 'Cantidad', 1, 'active', 1, 2, 1),
+(55, 'Reflexivos', 2, 'active', 1, 2, 1),
+(56, 'Ropa', 1, 'active', 1, 2, 1),
+(57, 'Tiempo atmosférico', 1, 'active', 1, 2, 1),
+(58, 'Pretérito perfecto', 2, 'active', 1, 2, 1),
+(59, 'Pronombres OD y OI gustar', 2, 'active', 1, 2, 1),
+(60, 'Preposiciones', 2, 'active', 1, 2, 1),
+(61, 'Vocabulario', 1, 'active', 1, 2, 1),
+(62, 'Variadas gramatica', 2, 'active', 1, 2, 1),
+(63, 'Preguntas con frases', 26, 'active', 1, 5, 4),
+(64, 'Preguntas con imágenes', 26, 'active', 1, 5, 5),
+(66, 'General redacción', 24, 'active', 1, 20, 2),
+(67, 'General oral', 27, 'active', 1, 25, 6),
+(68, 'General comprensión lectora', 25, 'active', 1, 15, 3),
 (74, 'test', 348, 'active', 1, 2, NULL);
 
 -- --------------------------------------------------------
@@ -684,11 +684,11 @@ INSERT INTO `questions` (`id`, `content`, `block_id`, `skill_id`, `level_id`, `s
 CREATE TABLE `question_types` (
   `id` bigint(20) NOT NULL,
   `name` text NOT NULL,
-  `statement` text DEFAULT NULL,
-  `photo` text DEFAULT NULL,
-  `text` text DEFAULT NULL,
-  `question` text DEFAULT NULL,
-  `answer` int(11) DEFAULT NULL,
+  `statement` tinyint(1) NOT NULL,
+  `photo` tinyint(1) DEFAULT NULL,
+  `text` tinyint(1) DEFAULT NULL,
+  `question` tinyint(1) DEFAULT NULL,
+  `answer` tinyint(1) DEFAULT NULL,
   `space` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -697,7 +697,12 @@ CREATE TABLE `question_types` (
 --
 
 INSERT INTO `question_types` (`id`, `name`, `statement`, `photo`, `text`, `question`, `answer`, `space`) VALUES
-(1, 'prueba de lexico y gramatica', 'statement', 'photo', 'text', 'question', 0, 0);
+(1, 'Preguntas a granel', 0, 0, 0, 1, 3, 0),
+(2, 'Redactar', 1, 1, 0, 0, 0, 1),
+(3, 'Compresión lectora', 1, 0, 1, 2, 4, 2),
+(4, 'Audio con frases', 1, 0, 0, 5, 0, 1),
+(5, 'Audio con fotos', 1, 9, 0, 9, 0, 1),
+(6, 'Oral', 1, 1, 0, 0, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -748,7 +753,8 @@ CREATE TABLE `skills_unions` (
 --
 
 INSERT INTO `skills_unions` (`id`, `name`, `statement`, `skill_id_1`, `skill_id_2`, `status`, `level_id`) VALUES
-(1, 'test', 'test test test test test test test test test test test test test test test ', 1, 2, 'active', 27);
+(1, 'test 1', 'test test test test test test test test test test test test test test test ', 1, 2, 'active', 27),
+(3, 'prueba', 'qwerty qwerty qwerty qwerty qwerty qwerty qwerty qwerty qwerty qwerty qwerty qwerty qwerty qwerty qwerty ', 348, 348, 'active', 27);
 
 -- --------------------------------------------------------
 
@@ -1133,7 +1139,7 @@ ALTER TABLE `exam_requests`
 -- AUTO_INCREMENT de la tabla `levels`
 --
 ALTER TABLE `levels`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT de la tabla `photos`
@@ -1151,7 +1157,7 @@ ALTER TABLE `questions`
 -- AUTO_INCREMENT de la tabla `question_types`
 --
 ALTER TABLE `question_types`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `skills`
@@ -1163,7 +1169,7 @@ ALTER TABLE `skills`
 -- AUTO_INCREMENT de la tabla `skills_unions`
 --
 ALTER TABLE `skills_unions`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `statements`
