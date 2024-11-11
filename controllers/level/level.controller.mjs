@@ -152,9 +152,10 @@ export const getActiveLevelsSkillsBlocks = async (req, res) => {
                     blocks.forEach( element => {
                         element.id = element.id.toString();
                         if (element.skill_id) { element.skill_id = element.skill_id.toString(); };
+                        if (element.question_type_id) { element.question_type_id = element.question_type_id.toString(); };
                     });
                     levels[i].skills[x].blocks = blocks;
-                }
+                };
             };
             res.json(levels);
         } catch (error) {
