@@ -113,7 +113,6 @@ export const levelSkillBlockStatements = async (req, res) => {
                     AND
                     b.id = ${req.body.block_id};
             `);
-            console.log(rows)
             rows.forEach((element) => {
                 if (element.id) {
                     element.id = element.id.toString();
@@ -279,7 +278,7 @@ export const editStatements = async (req, res) => {
                     console.log(photo_id.insertId.toString());
                     photoId = photo_id.insertId.toString();
             };
-            let rows = await conn.query(`
+            await conn.query(`
                 UPDATE
                     statements
                 SET
@@ -307,7 +306,7 @@ export const statusStatementById = async (req, res) => {
         try {
             conn = await pool.getConnection();
             if(req.body.status === 'active'){
-                let statement = await conn.query(`
+                await conn.query(`
                     UPDATE
                         statements
                     SET
@@ -316,7 +315,7 @@ export const statusStatementById = async (req, res) => {
                         id = ${req.body.id};
                 `);
             } else if (req.body.status === 'inactive') {
-                let statement = await conn.query(`
+                await conn.query(`
                     UPDATE
                         statements
                     SET
@@ -340,7 +339,7 @@ export const deleteStatementById = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            let statement = await conn.query(`
+            await conn.query(`
                 DELETE FROM
                     statements
                 WHERE
@@ -364,8 +363,8 @@ export const deleteImage = async (req, res) => {
             photoId = await conn.query(`select photo_id from statements where id = ${req.body.id};`);
             photoId = photoId[0].photo_id;
             console.log(photoId);
-            let update = await conn.query(`UPDATE statements SET photo_id = NULL WHERE id = ${req.body.id};`);
-            let deleteImage = conn.query(`DELETE FROM photos WHERE id = ${photoId};`);
+            await conn.query(`UPDATE statements SET photo_id = NULL WHERE id = ${req.body.id};`);
+            conn.query(`DELETE FROM photos WHERE id = ${photoId};`);
             res.json(200);
         } catch (error) {
             console.log(error);

@@ -107,7 +107,6 @@ export const addSkillsUnions = async (req, res) => {
                     ('${req.body.name}', '${req.body.statement}', ${req.body.skill_id_1},
                     ${req.body.skill_id_2}, ${req.body.level_id});
             `);
-            console.log(row)
             res.json(200);
         } catch (error) {
             console.log(error);

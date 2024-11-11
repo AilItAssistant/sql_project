@@ -11,7 +11,7 @@ export const getQuestionTypes = async (req, res) => {
                 SELECT *
                 FROM question_types
                 ORDER BY id;
-                `);
+            `);
             rows.forEach(element => {
                 element.id = element.id.toString();
             });

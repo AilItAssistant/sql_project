@@ -3,7 +3,6 @@ import { pool } from "../../index.mjs"
 
 //?ADD QUESTION
 export const addQuestion = async (req, res) => {
-    //console.log(req.body)
     if ( req.data ) {
         let conn;
         let question_id;
@@ -73,7 +72,7 @@ export const addQuestion = async (req, res) => {
                 };
             } else if ( req.body.typeAnswers === "phrase" ) {
                 for(let i = 0; req.body.responses.length > i; i++){
-                    let responses = await conn.query(`
+                    await conn.query(`
                         INSERT INTO
                             answers (question_id, content, is_correct, letter)
                         VALUES (
@@ -89,7 +88,7 @@ export const addQuestion = async (req, res) => {
                         VALUES ( '${req.body.responses[i].photo}' );
                     `);
                     let id = photoAnswer.insertId.toString();
-                    let responses = await conn.query(`
+                    await conn.query(`
                         INSERT INTO
                             answers ( question_id, content, letter, photo_id, response)
                         VALUES (
@@ -115,7 +114,7 @@ export const getQuestionById = async (req, res) => {
                 SELECT
                     q.*,
                 GROUP_CONCAT( a.id ORDER BY a.id )
-                    AS 
+                    AS
                     answers_ids,
                     p.base64_data AS photo_base64
                 FROM
@@ -177,7 +176,6 @@ export const getQuestionsAnswers = async (req, res) => {
                 WHERE
                     q.statement_id = ${req.body.statement_id};
             `);
-            console.log(questions)
             for (const question of questions) {
                 question.id = question.id.toString();
                 if (question.photo_id) question.photo_id = question.photo_id.toString();
@@ -212,7 +210,6 @@ export const getQuestionsAnswers = async (req, res) => {
                     };
                 };
             };
-            console.log(questions)
             res.json(questions);
         } catch (error) {
             console.log(error);
@@ -240,8 +237,7 @@ export const editQuestions = async (req, res) => {
                     );`);
                     photoId = photo_id.insertId.toString();
             };
-            console.log(photoId)
-            let rows = await conn.query(`
+            await conn.query(`
                 UPDATE
                     questions
                 SET
@@ -268,7 +264,7 @@ export const statusQuestionById = async (req, res) => {
         try {
             conn = await pool.getConnection();
             if(req.body.status === 'active'){
-                let question = await conn.query(`
+                await conn.query(`
                     UPDATE
                         questions
                     SET
@@ -277,7 +273,7 @@ export const statusQuestionById = async (req, res) => {
                         id = ${req.body.id};
                 `);
             } else if (req.body.status === 'inactive') {
-                let question = await conn.query(`
+                await conn.query(`
                     UPDATE
                         questions
                     SET
@@ -300,7 +296,7 @@ export const deleteQuestionById = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            let question = await conn.query(`
+            await conn.query(`
                 DELETE FROM
                     questions
                 WHERE

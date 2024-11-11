@@ -48,23 +48,7 @@ export const editAnswers = async (req, res) => {
                     );`);
                     photoId = photo_id.insertId.toString();
             };
-            /*if(req.body.is_correct && req.body.is_correct === 1){
-                let question_id = await conn.query(`
-                    SELECT question_id FROM answers WHERE id = ${req.body.id};
-                `);
-                question_id = question_id[0].question_id.toString();
-                let answers_ids = await conn.query(`
-                    SELECT id
-                    FROM answers WHERE question_id = ${question_id};
-                `);
-                answers_ids.forEach((id) => {
-                    let solutions = conn.query(`
-                        UPDATE answers
-                        SET is_correct = 0 WHERE id = ${id.id.toString()};
-                    `);
-                });
-            };*/
-            let rows = await conn.query(`
+            await conn.query(`
                 UPDATE
                     answers
                 SET
@@ -90,7 +74,7 @@ export const statusAnswerById = async (req, res) => {
         try {
             conn = await pool.getConnection();
             if(req.body.status === 'active'){
-                let answer = await conn.query(`
+                await conn.query(`
                     UPDATE
                         answers
                     SET
@@ -99,7 +83,7 @@ export const statusAnswerById = async (req, res) => {
                         id = ${req.body.id};
                 `);
             } else if (req.body.status === 'inactive') {
-                let answer = await conn.query(`
+                await conn.query(`
                     UPDATE
                         answers
                     SET
@@ -122,7 +106,7 @@ export const deleteAnswerById = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            let answer = await conn.query(`
+            await conn.query(`
                 DELETE FROM
                     answers
                 WHERE

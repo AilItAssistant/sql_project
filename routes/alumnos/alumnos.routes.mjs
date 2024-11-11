@@ -20,7 +20,7 @@ export const alumnos = Router();
 //?GET ALL ALUMNOS
 alumnos.get("/", verifyToken, getAlumnos);
 
-//??GET ALUMNOS 
+//??GET ALUMNOS
 alumnos.put("/filter", verifyToken, filterAlumnos);
 
 //?MODIFY STATUS TO ALUMNOS
@@ -41,10 +41,10 @@ alumnos.put("/addClass", verifyToken, addClass);
 //?DELETE CLASS TO ALUMNO
 alumnos.put("/deleteClass", verifyToken, deleteClass);
 
-//?STUDENTS BY CLASSID       
+//?STUDENTS BY CLASSID
 alumnos.put("/alumnosByClassId", verifyToken, alumnoByClassId);
 
-//?ADD STUDENT TO CLASS  
+//?ADD STUDENT TO CLASS
 alumnos.put("/addStudentToClass", verifyToken, addAlumnoToClass);
 
 //?DELETE STUDENT TO CLASS

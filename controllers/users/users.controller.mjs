@@ -10,21 +10,21 @@ export const getUsers = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            let rows = await conn.query(
-                `SELECT 
-                    id, 
-                    username, 
-                    email, 
-                    created_at, 
-                    name, 
-                    last_name, 
-                    phone_number, 
-                    city, 
-                    permissions, 
-                    status 
-                from 
+            let rows = await conn.query(`
+                SELECT
+                    id,
+                    username,
+                    email,
+                    created_at,
+                    name,
+                    last_name,
+                    phone_number,
+                    city,
+                    permissions,
+                    status
+                from
                     users;
-                `);
+            `);
             rows.forEach((element) => {
                 element.id = element.id.toString();
                 element.created_at = element.created_at.toLocaleDateString('es-ES', {year: 'numeric', month: 'numeric', day: 'numeric',});
@@ -46,14 +46,13 @@ export const filterUsers = async (req, res) => {
     if ( req.data ) {
         let conn;
         try {
-            console.log(req.body)
             conn = await pool.getConnection();
             let rows = await conn.query(
-                `SELECT 
+                `SELECT
                     id, username, email, role, created_at, name, last_name, phone_number, city, permissions, status 
-                from 
-                    users 
-                WHERE 
+                from
+                    users
+                WHERE
                     (last_name LIKE CONCAT(IFNULL('${req.body.last_name}', ''), '%')) OR
                     (username LIKE CONCAT(IFNULL('${req.body.username}', ''), '%')) OR
                     (phone_number LIKE CONCAT(IFNULL('${req.body.phone_number}', ''), '%')) OR
@@ -62,7 +61,6 @@ export const filterUsers = async (req, res) => {
                     (status LIKE CONCAT(IFNULL('${req.body.status}', ''), '%')) OR
                     (email LIKE CONCAT(IFNULL('${req.body.email}', ''), '%'));`
             );
-            console.log(rows)
             rows.forEach((element) => {
                 element.id = element.id.toString();
                 element.created_at = element.created_at.toLocaleDateString('es-ES', {year: 'numeric', month: 'numeric', day: 'numeric',});
@@ -82,30 +80,30 @@ export const statusUsers = async (req, res) => {
         try {
             conn = await pool.getConnection();
             if( req.body.status === "active" ) {
-                let rows = await conn.query(`
-                    UPDATE 
+                await conn.query(`
+                    UPDATE
                         users
-                    SET 
+                    SET
                         status = 'inactive'
-                    WHERE 
+                    WHERE
                         id = ${req.body.id};
                 `);
             } else if( req.body.status === "inactive" ) {
-                let rows = await conn.query(`
-                    UPDATE 
+                await conn.query(`
+                    UPDATE
                         users
-                    SET 
+                    SET
                         status = 'active'
-                    WHERE 
+                    WHERE
                         id = ${req.body.id};
                 `);
             }else {
-                let rows = await conn.query(`
-                    UPDATE 
+                await conn.query(`
+                    UPDATE
                         users
-                    SET 
+                    SET
                         status = 'active'
-                    WHERE 
+                    WHERE
                         id = ${req.body.id};
                 `);
             };
@@ -123,12 +121,11 @@ export const deleteUsers = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            let rows = await conn.query(`DELETE FROM 
+            let rows = await conn.query(`DELETE FROM
                     users
-                WHERE 
+                WHERE
                     id = ${req.body.id};
             `);
-            
             res.json(200);
         } catch (error) {
             console.log(error);
@@ -145,19 +142,19 @@ export const addUsers = async (req, res) => {
         let hashed_password = await bcrypt.hash(req.body.pass, saltRounds);
         try {
             conn = await pool.getConnection();
-            let rows = await conn.query(`
+            await conn.query(`
                 INSERT INTO users (
-                    username, email, 
-                    password_hash, name, 
-                    last_name,  phone_number, 
+                    username, email,
+                    password_hash, name,
+                    last_name,  phone_number,
                     city, permissions, status
                 ) VALUES (
-                    '${req.body.username}',                 
+                    '${req.body.username}',
                     '${req.body.email}',
                     '${hashed_password}',
                     '${req.body.name}',
                     '${req.body.last_name}',
-                    '${req.body.phone_number}',             
+                    '${req.body.phone_number}',
                     '${req.body.city}',
                     '${req.body.permissions}',
                     '${req.body.status}'
@@ -181,9 +178,9 @@ export const editUsers = async (req, res) => {
         try {
             conn = await pool.getConnection();
             let rows = await conn.query(`
-                UPDATE 
+                UPDATE
                     users
-                SET 
+                SET
                     username = IF('${req.body.username}' != '', '${req.body.username}', username),
                     email = IF('${req.body.email}' != '', '${req.body.email}', email),
                     password_hash = IF('${req.body.password_hash}' != '', '${req.body.password_hash}', password_hash),
@@ -194,7 +191,7 @@ export const editUsers = async (req, res) => {
                     permissions = IF('${req.body.permissions}' != '', '${req.body.permissions}', permissions),
                     password_hash = IF('${hashed_password}' != '', '${hashed_password}', password_hash),
                     status = IF('${req.body.status}' != '', '${req.body.status}', status)
-                WHERE 
+                WHERE
                     id = ${req.body.id};
                 `);
             res.json(200);
@@ -230,7 +227,7 @@ export const login = async ( req, res ) => {
 };
 
 export function verifyToken( req, res, next ){
-    if( !req.headers.authorization ) { 
+    if( !req.headers.authorization ) {
         return res.status(401).json('No autorizado');
     };
     const token = req.headers.authorization;
@@ -252,7 +249,7 @@ export function verifyToken( req, res, next ){
 };
 
 export function verifyTokenHeader( req, res, next ){
-    if( !req.headers.authorization ) { 
+    if( !req.headers.authorization ) {
         return res.status(401).json('No autorizado');
     };
     const token = req.headers.authorization;

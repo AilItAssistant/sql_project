@@ -115,37 +115,37 @@ export const filterAlumnos = async (req, res) => {
             conn = await pool.getConnection();
             let rows = await conn.query(
                 `SELECT
-                    s.id AS student_id, 
-                    s.name AS student_name, 
-                    s.phone_number AS student_phone_number, 
-                    s.last_name AS student_last_name, 
-                    s.email, 
-                    s.city, 
-                    s.identification_document, 
-                    s.status AS student_status, 
-                    COALESCE(c.name, 'No tiene clase') AS class_name, 
-                    COALESCE(c.id, 'No tiene id') AS class_id, 
+                    s.id AS student_id,
+                    s.name AS student_name,
+                    s.phone_number AS student_phone_number,
+                    s.last_name AS student_last_name,
+                    s.email,
+                    s.city,
+                    s.identification_document,
+                    s.status AS student_status,
+                    COALESCE(c.name, 'No tiene clase') AS class_name,
+                    COALESCE(c.id, 'No tiene id') AS class_id,
                     COALESCE(l.name, 'N/A') AS class_level,
-                    COALESCE(t.name, 'N/A') AS teacher_name 
-                FROM 
-                    students s 
-                LEFT JOIN 
-                    student_classes sc ON s.id = sc.student_id 
-                LEFT JOIN 
-                    classes c ON sc.class_id = c.id 
-                LEFT JOIN 
+                    COALESCE(t.name, 'N/A') AS teacher_name
+                FROM
+                    students s
+                LEFT JOIN
+                    student_classes sc ON s.id = sc.student_id
+                LEFT JOIN
+                    classes c ON sc.class_id = c.id
+                LEFT JOIN
                     levels l ON c.level_id = l.id
-                LEFT JOIN 
+                LEFT JOIN
                     class_teachers ct ON c.id = ct.class_id
-                LEFT JOIN 
-                    teachers t ON ct.teacher_id = t.id 
-                WHERE 
+                LEFT JOIN
+                    teachers t ON ct.teacher_id = t.id
+                WHERE
                     (s.last_name LIKE CONCAT(IFNULL('${req.body.last_name}', ''), '%')) OR
                     (s.identification_document LIKE CONCAT(IFNULL('${req.body.identification_number}', ''), '%')) OR
                     (s.phone_number LIKE CONCAT(IFNULL('${req.body.phone_number}', ''), '%')) OR
                     (s.city LIKE CONCAT(IFNULL('${req.body.city}', ''), '%')) OR
                     (s.email LIKE CONCAT(IFNULL('${req.body.email}', ''), '%'))
-                ORDER BY 
+                ORDER BY
                     s.id, c.id;`
                         );
             rows.forEach((element) => {
@@ -158,8 +158,8 @@ export const filterAlumnos = async (req, res) => {
                     x = i - 1;
                 } else {
                     x = 0;
-                }
-    
+                };
+
                 if (i === 0 || rows[i].student_id !== rows[x].student_id) {
                     let add = {
                         student_id: rows[i].student_id,
@@ -210,33 +210,32 @@ export const statusAlumno = async (req, res) => {
             conn = await pool.getConnection();
             if( req.body.status === "active" ) {
                 let rows = await conn.query(`
-                    UPDATE 
+                    UPDATE
                         students
-                    SET 
+                    SET
                         status = 'inactive'
-                    WHERE 
+                    WHERE
                         id = ${req.body.id};
                 `);
             } else if( req.body.status === "inactive" ) {
                 let rows = await conn.query(`
-                    UPDATE 
+                    UPDATE
                         students
-                    SET 
+                    SET
                         status = 'active'
-                    WHERE 
+                    WHERE
                         id = ${req.body.id};
                 `);
             }else {
                 let rows = await conn.query(`
-                    UPDATE 
+                    UPDATE
                         students
-                    SET 
+                    SET
                         status = 'active'
-                    WHERE 
+                    WHERE
                         id = ${req.body.id};
                 `);
             };
-            
             res.json(200);
         } catch (error) {
             console.log(error);
@@ -252,12 +251,11 @@ export const deleteAlumno = async (req, res) => {
         try {
             conn = await pool.getConnection();
             let rows = await conn.query(`
-                DELETE FROM 
+                DELETE FROM
                     students
-                WHERE 
+                WHERE
                     id = ${req.body.id};
-                    `);
-            
+            `);
             res.json(200);
         } catch (error) {
             console.log(error);
@@ -274,34 +272,32 @@ export const addAlumno = async (req, res) => {
         try {
             conn = await pool.getConnection();
             let rows = await conn.query(`
-                    INSERT INTO 
-                        students (
-                            name, 
-                            last_name, 
-                            email, 
-                            date_of_birth, 
-                            enrollment_date, 
-                            phone_number, 
-                            address, 
-                            identification_document, 
-                            city, 
-                            level_id, 
-                            status) 
-                        VALUES (
-                            '${req.body.name}', 
-                            '${req.body.last_name}', 
-                            '${req.body.email}', 
-                            '${req.body.birthday}', 
-                            ${req.body.enrollment_date}, 
-                            '${req.body.phone_number}', 
-                            '${req.body.address}', 
-                            '${req.body.document}', 
-                            '${req.body.city}', 
-                            ${req.body.level}, 
-                            '${req.body.status}'
-                        );
-                `);
-            
+                INSERT INTO students (
+                    name,
+                    last_name,
+                    email,
+                    date_of_birth,
+                    enrollment_date,
+                    phone_number,
+                    address,
+                    identification_document,
+                    city,
+                    level_id,
+                    status)
+                VALUES (
+                    '${req.body.name}',
+                    '${req.body.last_name}',
+                    '${req.body.email}',
+                    '${req.body.birthday}',
+                    ${req.body.enrollment_date},
+                    '${req.body.phone_number}',
+                    '${req.body.address}',
+                    '${req.body.document}',
+                    '${req.body.city}',
+                    ${req.body.level},
+                    '${req.body.status}'
+                );
+            `);
             res.json(200);
         } catch (error) {
             console.log(error);
@@ -317,23 +313,21 @@ export const editAlumno = async (req, res) => {
         try {
             conn = await pool.getConnection();
             let rows = await conn.query(`
-                   UPDATE 
-                    students
-                    SET 
-                        name = IF('${req.body.name}' != '', '${req.body.name}', name),
-                        last_name = IF('${req.body.last_name}' != '', '${req.body.last_name}', last_name),
-                        email = IF('${req.body.email}' != '', '${req.body.email}', email),
-                        enrollment_date = IF('${req.body.enrollment_date}' != '', '${req.body.enrollment_date}', enrollment_date),
-                        phone_number = IF('${req.body.phone_number}' != '', '${req.body.phone_number}', phone_number),
-                        address = IF('${req.body.address}' != '', '${req.body.address}', address),
-                        date_of_birth = IF('${req.body.birthday}' != '', '${req.body.birthday}', date_of_birth),
-                        city = IF('${req.body.city}' != '', '${req.body.city}', city),
-                        level_id = IF('${req.body.level}' != '' AND EXISTS (SELECT 1 FROM levels WHERE id = '${req.body.level}'), '${req.body.level}', level_id),
-                        identification_document = IF('${req.body.document}' != '', '${req.body.document}', identification_document)
-                    WHERE 
-        id = ${req.body.id};
-                `);
-            
+                UPDATE students
+                SET
+                    name = IF('${req.body.name}' != '', '${req.body.name}', name),
+                    last_name = IF('${req.body.last_name}' != '', '${req.body.last_name}', last_name),
+                    email = IF('${req.body.email}' != '', '${req.body.email}', email),
+                    enrollment_date = IF('${req.body.enrollment_date}' != '', '${req.body.enrollment_date}', enrollment_date),
+                    phone_number = IF('${req.body.phone_number}' != '', '${req.body.phone_number}', phone_number),
+                    address = IF('${req.body.address}' != '', '${req.body.address}', address),
+                    date_of_birth = IF('${req.body.birthday}' != '', '${req.body.birthday}', date_of_birth),
+                    city = IF('${req.body.city}' != '', '${req.body.city}', city),
+                    level_id = IF('${req.body.level}' != '' AND EXISTS (SELECT 1 FROM levels WHERE id = '${req.body.level}'), '${req.body.level}', level_id),
+                    identification_document = IF('${req.body.document}' != '', '${req.body.document}', identification_document)
+                WHERE
+                    id = ${req.body.id};
+            `);
             res.json(200);
         } catch (error) {
             console.log(error);
@@ -349,18 +343,17 @@ export const addClass = async (req, res) => {
         try {
             conn = await pool.getConnection();
             let rows = await conn.query(`
-                INSERT INTO 
-                    student_classes (student_id, 
-                    class_id, 
-                    enrollment_date, 
+                INSERT INTO
+                    student_classes (student_id,
+                    class_id,
+                    enrollment_date,
                     status)
-                VALUES 
-                    (${req.body.student_id}, 
-                    ${req.body.class_id}, 
-                    CURRENT_DATE, 
+                VALUES
+                    (${req.body.student_id},
+                    ${req.body.class_id},
+                    CURRENT_DATE,
                     'active');
             `);
-           
             res.json(200);
         } catch (error) {
             console.log(error);
@@ -376,14 +369,13 @@ export const deleteClass = async (req, res) => {
         try {
             conn = await pool.getConnection();
             let rows = await conn.query(`
-                DELETE FROM 
+                DELETE FROM
                     student_classes
-                WHERE 
-                    student_id = ${req.body.student_id} 
-                AND 
+                WHERE
+                    student_id = ${req.body.student_id}
+                AND
                     class_id = ${req.body.class_id};
             `);
-           
             res.json(200);
         } catch (error) {
             console.log(error);
@@ -405,16 +397,15 @@ export const alumnoByClassId = async (req, res) => {
                     s.last_name AS student_last_name,
                     COALESCE(sl.name, 'N/A') AS student_level,
                     s.city AS student_city
-                FROM 
+                FROM
                     student_classes sc
-                JOIN 
+                JOIN
                     students s ON sc.student_id = s.id
-                LEFT JOIN 
+                LEFT JOIN
                     levels sl ON s.level_id = sl.id
-                WHERE 
+                WHERE
                     sc.class_id = ${req.body.id};
             `);
-    
             rows.forEach((element) => {
                 element.student_id = element.student_id.toString();
             });
@@ -433,16 +424,16 @@ export const addAlumnoToClass = async (req, res) => {
         try {
             conn = await pool.getConnection();
             let rows = await conn.query(`
-                INSERT INTO 
+                INSERT INTO
                     student_classes (
-                        student_id, 
-                        class_id, 
-                        enrollment_date, 
+                        student_id,
+                        class_id,
+                        enrollment_date,
                         status)
                 VALUES (
-                    ${req.body.class_id}, 
-                    ${req.body.student_id}, 
-                    CURDATE(), 
+                    ${req.body.class_id},
+                    ${req.body.student_id},
+                    CURDATE(),
                     'active');
             `);
             res.json(200);
@@ -460,11 +451,11 @@ export const deleteAlumnoToClass = async (req, res) => {
         try {
             conn = await pool.getConnection();
             let rows = await conn.query(`
-                DELETE FROM 
+                DELETE FROM
                     student_classes
-                WHERE 
-                    class_id = ${req.body.class_id} 
-                AND 
+                WHERE
+                    class_id = ${req.body.class_id}
+                AND
                     student_id = ${req.body.student_id};
             `);
             res.json(200);

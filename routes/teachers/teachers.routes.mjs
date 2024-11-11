@@ -41,10 +41,10 @@ teachers.put("/addClass", verifyToken, addClass);
 //?DELETE CLASS TO TEACHER
 teachers.put("/deleteClass", verifyToken, deleteClass);
 
-//?TEACHERS BY CLASSID       
+//?TEACHERS BY CLASSID
 teachers.put("/teachersByClassId", verifyToken, teacherByClassId);
 
-//?ADD TEACHER TO CLASS  
+//?ADD TEACHER TO CLASS
 teachers.put("/addTeacherToClass", verifyToken, addTeacherToClass);
 
 //?DELETE TEACHER TO CLASS
