@@ -24,4 +24,4 @@ skills_unions.put("/status", verifyToken, desactivateSkillsUnions);
 skills_unions.put("/edit", verifyToken, editSkillsUnions);
 
 //?ADD SKILL_UNION
-skills_unions.put("/add", verifyToken, addSkillsUnions);
+skills_unions.post("/add", verifyToken, addSkillsUnions);

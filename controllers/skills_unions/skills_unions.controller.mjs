@@ -8,7 +8,8 @@ export const getSkillsUnions = async (req, res) => {
         try {
             conn = await pool.getConnection();
             let response = await conn.query(`
-                SELECT su.id, su.name, su.statement, s1.name AS skill_name_1, s2.name AS skill_name_2, l.name AS level_name, su.status
+                SELECT su.id, su.name, su.statement, s1.name AS skill_name_1, s2.name AS skill_name_2, l.name AS level_name,
+                l.id as level_id, s1.id as skill_id_1, s2.id as skill_id_2, su.status
                 from skills_unions su
                 JOIN skills s1 ON su.skill_id_1 = s1.id
                 JOIN skills s2 ON su.skill_id_2 = s2.id
@@ -98,7 +99,7 @@ export const addSkillsUnions = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            await conn.query(`
+            let row = await conn.query(`
                 INSERT INTO skills_unions (
                     name, statement, skill_id_1, skill_id_2, level_id
                 )
@@ -106,6 +107,7 @@ export const addSkillsUnions = async (req, res) => {
                     ('${req.body.name}', '${req.body.statement}', ${req.body.skill_id_1},
                     ${req.body.skill_id_2}, ${req.body.level_id});
             `);
+            console.log(row)
             res.json(200);
         } catch (error) {
             console.log(error);
