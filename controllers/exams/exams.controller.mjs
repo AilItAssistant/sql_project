@@ -83,6 +83,8 @@ export const generateExamByLevel = async (req, res) => {
                         skill_union[u].questions.push(question)
                     };
                 };
+
+                //*ADD TO EXAM
                 exam.push(skill_union[u])
             };
 
@@ -96,36 +98,87 @@ export const generateExamByLevel = async (req, res) => {
 
             for(let s = 0; skillsWithoutUnions.length > s; s++){
                 let blocks = await conn.query(`select id, question_type_id, skill_id, individual_score, max_score from blocks where status = "active" and is_selected = 1 and skill_id = ${skillsWithoutUnions[s].id}`);
+
                 for(let b = 0; blocks.length > b; b++){
                     //console.log(blocks[b])
                     let type = await conn.query(`select * from question_types where id = ${blocks[b].question_type_id}`);
-                    //console.log(type[0])
+                    console.log(type[0].statement)
                     blocks[b].type = [];
                     blocks[b].type.push(type);
                     //WITH STATEMENT
                     if(type[0].statement === 1){
-                        let stataments_ids = await conn.query(`select id from statements where skill_id = ${blocks[b].skill_id}`);
+                        let stataments_ids = await conn.query(`select id from statements where skill_id = ${blocks[b].skill_id} and status = "active"`);
 
-                        let question_id = [];
+                        let statement_id = [];
                         for(let rep = 0; blocks[b].max_score / blocks[b].individual_score > rep; rep++ ){
                             let id = stataments_ids[Math.floor( Math.random() * stataments_ids.length )];
                             stataments_ids = stataments_ids.filter(q => q != id);
+                            statement_id.push(id);
+                        };
+
+                        for(let st = 0; statement_id.length > st; st++){
+                            console.log(statement_id[st].id)
+                            let statement = await conn.query(`select * from statements where id = ${statement_id[st].id};`);
+                            /*console.log("enunciado")
+                            console.log(statement)
+                            console.log("tipo")
+                            console.log(type);*/
+                        };
+
+                    //WITHOUT STATEMENT
+                    } else if (type[0].question >= 1){
+                        let questions_ids = await conn.query(`select id from questions where block_id = ${blocks[b].id}`);
+
+                        let question_id = [];
+                        for(let rep = 0; blocks[b].max_score / blocks[b].individual_score > rep; rep++ ){
+                            let id = questions_ids[Math.floor( Math.random() * questions_ids.length )];
+                            questions_ids = questions_ids.filter(q => q != id);
                             question_id.push(id);
                         };
 
                         for(let st = 0; question_id.length > st; st++){
-                            console.log(question_id[st])
-                            //let statement = await conn.query(`select * from statements where id = ${question_id[st].id};`);
+                            console.log(question_id[st].id)
+                            let question = await conn.query(`select * from questions where id = ${question_id[st].id};`);
+                            let answers = await conn.query(`select * from answers where status = "active" and question_id = ${question[0].id}`);
+                            /*if(type[0].photo >= 1){
+                                for(let a = 0; answers.length > a; a++){
+                                    let photo = await conn.query(`select base64_data from photos where status = "active" and id = ${answers[a].photo_id}`);
+                                    answers[a].photo = photo[0].base64_data;
+                                };
+                            };*/
 
-                        }
-                        //WITHOUT STATEMENT
-                    } else if (type.question >= 1){
-                        let question = await conn.query(`select id from question where block_id = ${blocks[b].id}`);
-                        console.log("question")
-                        console.log(question);
+                            type[0].id.toString();
+                            question = question.map( element => {
+                                element.id = element.id.toString();
+                                if (element.block_id) element.block_id = element.block_id.toString();
+                                if (element.skill_id) element.skill_id = element.skill_id.toString();
+                                if (element.level_id) element.level_id = element.level_id.toString();
+                                return element;
+                            })[0];
+                            answers = answers.map( element => {
+                                element.id = element.id.toString();
+                                if (element.question_id) element.question_id = element.question_id.toString();
+                                if (element.photo_id && element.photo_id !== null) element.skill_id = element.skill_id.toString();
+                                return element;
+                            });
+                            //console.log(question)
+                            console.log(answers)
+                            let result = question;
+                            result.answers = answers;
+                            result.type = type;
+                            //console.log(result)
+                            exam.push(result)
+                        };
                     };
                 };
             };
+
+
+
+
+
+
+
 
             // //*Writting
             // examIds.writting = await conn.query(`
