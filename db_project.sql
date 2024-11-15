@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 11-11-2024 a las 15:30:01
+-- Tiempo de generación: 15-11-2024 a las 15:51:51
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -314,35 +314,36 @@ CREATE TABLE `blocks` (
   `status` varchar(255) DEFAULT 'active',
   `is_selected` tinyint(4) DEFAULT 0,
   `max_score` int(11) DEFAULT NULL,
-  `question_type_id` bigint(20) DEFAULT NULL
+  `question_type_id` bigint(20) DEFAULT NULL,
+  `individual_score` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `blocks`
 --
 
-INSERT INTO `blocks` (`id`, `name`, `skill_id`, `status`, `is_selected`, `max_score`, `question_type_id`) VALUES
-(48, 'Estar o hay', 2, 'active', 1, 2, 1),
-(49, 'Tener y haber', 2, 'active', 1, 2, 1),
-(50, 'Gustar y similares', 2, 'active', 1, 2, 1),
-(51, 'Presente irregular', 2, 'active', 1, 2, 1),
-(52, 'Descripción física', 1, 'active', 1, 2, 1),
-(53, 'Género y número', 2, 'active', 1, 2, 1),
-(54, 'Cantidad', 1, 'active', 1, 2, 1),
-(55, 'Reflexivos', 2, 'active', 1, 2, 1),
-(56, 'Ropa', 1, 'active', 1, 2, 1),
-(57, 'Tiempo atmosférico', 1, 'active', 1, 2, 1),
-(58, 'Pretérito perfecto', 2, 'active', 1, 2, 1),
-(59, 'Pronombres OD y OI gustar', 2, 'active', 1, 2, 1),
-(60, 'Preposiciones', 2, 'active', 1, 2, 1),
-(61, 'Vocabulario', 1, 'active', 1, 2, 1),
-(62, 'Variadas gramatica', 2, 'active', 1, 2, 1),
-(63, 'Preguntas con frases', 26, 'active', 1, 5, 4),
-(64, 'Preguntas con imágenes', 26, 'active', 1, 5, 5),
-(66, 'General redacción', 24, 'active', 1, 20, 2),
-(67, 'General oral', 27, 'active', 1, 25, 6),
-(68, 'General comprensión lectora', 25, 'active', 1, 15, 3),
-(74, 'test', 348, 'active', 1, 2, NULL);
+INSERT INTO `blocks` (`id`, `name`, `skill_id`, `status`, `is_selected`, `max_score`, `question_type_id`, `individual_score`) VALUES
+(48, 'Estar o hay', 2, 'active', 1, 2, 1, 1),
+(49, 'Tener y haber', 2, 'active', 1, 2, 1, 1),
+(50, 'Gustar y similares', 2, 'active', 1, 2, 1, 1),
+(51, 'Presente irregular', 2, 'active', 1, 2, 1, 1),
+(52, 'Descripción física', 1, 'active', 1, 2, 1, 1),
+(53, 'Género y número', 2, 'active', 1, 2, 1, 1),
+(54, 'Cantidad', 1, 'active', 1, 2, 1, 1),
+(55, 'Reflexivos', 2, 'active', 1, 2, 1, 1),
+(56, 'Ropa', 1, 'active', 1, 2, 1, 1),
+(57, 'Tiempo atmosférico', 1, 'active', 1, 2, 1, 1),
+(58, 'Pretérito perfecto', 2, 'active', 1, 2, 1, 1),
+(59, 'Pronombres OD y OI gustar', 2, 'active', 1, 2, 1, 1),
+(60, 'Preposiciones', 2, 'active', 1, 2, 1, 1),
+(61, 'Vocabulario', 1, 'active', 1, 2, 1, 1),
+(62, 'Variadas gramatica', 2, 'active', 1, 2, 1, 1),
+(63, 'Preguntas con frases', 26, 'active', 1, 5, 4, 5),
+(64, 'Preguntas con imágenes', 26, 'active', 1, 5, 5, 5),
+(66, 'General redacción', 24, 'active', 1, 20, 2, 20),
+(67, 'General oral', 27, 'active', 1, 25, 6, 25),
+(68, 'General comprensión lectora', 25, 'active', 1, 15, 3, 15),
+(74, 'test', 348, 'active', 1, 2, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -591,14 +592,14 @@ CREATE TABLE `questions` (
   `statement_id` bigint(20) DEFAULT NULL,
   `status` varchar(255) DEFAULT 'active',
   `photo_id` bigint(20) DEFAULT NULL,
-  `puntuation` char(20) DEFAULT NULL
+  `score` char(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `questions`
 --
 
-INSERT INTO `questions` (`id`, `content`, `block_id`, `skill_id`, `level_id`, `statement_id`, `status`, `photo_id`, `puntuation`) VALUES
+INSERT INTO `questions` (`id`, `content`, `block_id`, `skill_id`, `level_id`, `statement_id`, `status`, `photo_id`, `score`) VALUES
 (75, '¿Dónde ______ una papelera? Necesito tirar este papel.', 48, 2, 27, NULL, 'active', NULL, '1'),
 (76, 'Disculpe, ¿puede decirme dónde _____ la estación de metro más cercana?', 48, 2, 27, NULL, 'active', NULL, '1'),
 (77, 'En la esquina de la avenida ______ tres bancos.', 48, 2, 27, NULL, 'active', NULL, '1'),
@@ -697,11 +698,11 @@ CREATE TABLE `question_types` (
 --
 
 INSERT INTO `question_types` (`id`, `name`, `statement`, `photo`, `text`, `question`, `answer`, `space`) VALUES
-(1, 'Preguntas a granel', 0, 0, 0, 1, 3, 0),
+(1, 'Preguntas a granel', 0, 0, 0, 30, 3, 0),
 (2, 'Redactar', 1, 1, 0, 0, 0, 1),
 (3, 'Compresión lectora', 1, 0, 1, 2, 4, 2),
-(4, 'Audio con frases', 1, 0, 0, 5, 0, 1),
-(5, 'Audio con fotos', 1, 9, 0, 9, 0, 1),
+(4, 'Audio con frases', 0, 0, 0, 5, 0, 1),
+(5, 'Audio con fotos', 0, 9, 0, 1, 9, 1),
 (6, 'Oral', 1, 1, 0, 0, 0, 1);
 
 -- --------------------------------------------------------
@@ -745,16 +746,17 @@ CREATE TABLE `skills_unions` (
   `skill_id_1` bigint(20) NOT NULL,
   `skill_id_2` bigint(20) NOT NULL,
   `status` varchar(10) NOT NULL DEFAULT 'active',
-  `level_id` bigint(11) NOT NULL
+  `level_id` bigint(11) NOT NULL,
+  `max_puntuation` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `skills_unions`
 --
 
-INSERT INTO `skills_unions` (`id`, `name`, `statement`, `skill_id_1`, `skill_id_2`, `status`, `level_id`) VALUES
-(1, 'test 1', 'test test test test test test test test test test test test test test test ', 1, 2, 'active', 27),
-(3, 'prueba', 'qwerty qwerty qwerty qwerty qwerty qwerty qwerty qwerty qwerty qwerty qwerty qwerty qwerty qwerty qwerty ', 348, 348, 'active', 27);
+INSERT INTO `skills_unions` (`id`, `name`, `statement`, `skill_id_1`, `skill_id_2`, `status`, `level_id`, `max_puntuation`) VALUES
+(1, 'Léxico y gramatica', 'Tests de gramática y léxico', 1, 2, 'active', 27, 30),
+(3, 'prueba', 'qwerty qwerty qwerty qwerty qwerty qwerty qwerty qwerty qwerty qwerty qwerty qwerty qwerty qwerty qwerty ', 348, 348, 'active', 35, 0);
 
 -- --------------------------------------------------------
 
