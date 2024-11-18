@@ -153,7 +153,7 @@ export const generateExamByLevel = async (req, res) => {
                                     if (element.skill_id) element.skill_id = element.skill_id.toString();
                                     if (element.level_id) element.level_id = element.level_id.toString();
                                     return element;
-                                })[0];
+                                });
                                 if(type.answer >= 1){
                                     for(let q = 0; questions.length > q; q++){
                                         let answers = await conn.query(`select * from answers where status = "active" and question_id = ${questions[q].id}`);
@@ -162,8 +162,8 @@ export const generateExamByLevel = async (req, res) => {
                                             if (element.question_id) element.question_id = element.question_id.toString();
                                             if (element.photo_id && element.photo_id !== null) element.photo_id = element.photo_id.toString();
                                             return element;
-                                        })[0];
-                                        questions.answers = answers;
+                                        });
+                                        questions[q].answers = answers;
                                     };
                                 };
                                 statement.questions = questions;
