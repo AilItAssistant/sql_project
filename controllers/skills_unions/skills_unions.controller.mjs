@@ -9,7 +9,7 @@ export const getSkillsUnions = async (req, res) => {
             conn = await pool.getConnection();
             let response = await conn.query(`
                 SELECT su.id, su.name, su.statement, s1.name AS skill_name_1, s2.name AS skill_name_2, l.name AS level_name,
-                l.id as level_id, s1.id as skill_id_1, s2.id as skill_id_2, su.status
+                l.id as level_id, s1.id as skill_id_1, s2.id as skill_id_2, su.status, su.max_puntuation
                 from skills_unions su
                 JOIN skills s1 ON su.skill_id_1 = s1.id
                 JOIN skills s2 ON su.skill_id_2 = s2.id
@@ -80,6 +80,7 @@ export const editSkillsUnions = async (req, res) => {
                 SET
                     name = CASE WHEN '${req.body.name}' IS NOT NULL AND '${req.body.name}' != 'null' THEN '${req.body.name}' ELSE name END,
                     statement = CASE WHEN '${req.body.statement}' IS NOT NULL AND '${req.body.statement}' != 'null' THEN '${req.body.statement}' ELSE statement END,
+                    max_puntuation = CASE WHEN '${req.body.max_puntuation}' IS NOT NULL AND '${req.body.max_puntuation}' != 'null' THEN '${req.body.max_puntuation}' ELSE max_puntuation END,
                     skill_id_1 = COALESCE(${req.body.skill_id_1}, skill_id_1),
                     skill_id_2 = COALESCE(${req.body.skill_id_2}, skill_id_2),
                     level_id = COALESCE(${req.body.level_id}, level_id)

@@ -17,7 +17,8 @@ export const getBlocks = async (req, res) => {
                     b.is_selected,
                     b.max_score,
                     qt.name AS question_type_name,
-                    qt.id AS question_type_id
+                    qt.id AS question_type_id,
+                    b.individual_score
                 FROM
                     blocks b
                 LEFT JOIN skills s ON b.skill_id = s.id
@@ -105,7 +106,8 @@ export const editBlock = async (req, res) => {
                     name = CASE WHEN '${req.body.name}' IS NOT NULL AND '${req.body.name}' != 'null' THEN '${req.body.name}' ELSE name END,
                     status = COALESCE(${req.body.status}, status),
                     question_type_id = COALESCE(${req.body.type}, question_type_id),
-                    max_score = COALESCE(${req.body.score}, max_score)
+                    max_score = COALESCE(${req.body.score}, max_score),
+                    individual_score = COALESCE(${req.body.individual_score}, individual_score)
                 WHERE id = ${req.body.id};
             `);
             res.json(200);
