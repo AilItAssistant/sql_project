@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 15-11-2024 a las 15:51:51
+-- Tiempo de generación: 19-11-2024 a las 10:12:46
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -639,10 +639,10 @@ INSERT INTO `questions` (`id`, `content`, `block_id`, `skill_id`, `level_id`, `s
 (111, 'En junio no _______ frío, no necesitas abrigo.', 57, 1, 27, NULL, 'active', NULL, '1'),
 (112, 'Hoy hace un día malo, _______ nublado.', 57, 1, 27, NULL, 'active', NULL, '1'),
 (113, 'En invierno ______ mucho.', 57, 1, 27, NULL, 'active', NULL, '1'),
-(114, 'Mi estación favorita es el ______, porque los árboles están amarillos y\nrojos.', 57, 1, 27, NULL, 'active', NULL, '1'),
+(114, 'Mi estación favorita es el ______, porque los árboles están amarillos y rojos.', 57, 1, 27, NULL, 'active', NULL, '1'),
 (115, 'Esta mañana mis amigos y yo _____ un vídeo.', 58, 2, 27, NULL, 'active', NULL, '1'),
 (116, '¿Todavía no ______ la película?', 58, 2, 27, NULL, 'active', NULL, '1'),
-(117, '43.El niño ______ el juguete hoy.', 58, 2, 27, NULL, 'active', NULL, '1'),
+(117, 'El niño ______ el juguete hoy.', 58, 2, 27, NULL, 'active', NULL, '1'),
 (118, '¿Alguna vez tú ______ un mensaje en español?', 58, 2, 27, NULL, 'active', NULL, '1'),
 (119, 'La verdura, ¿cómo _____ preparas?', 59, 2, 27, NULL, 'active', NULL, '1'),
 (120, 'A Martín _____ encanta este blog de viajes.', 59, 2, 27, NULL, 'active', NULL, '1'),
@@ -690,20 +690,21 @@ CREATE TABLE `question_types` (
   `text` tinyint(1) DEFAULT NULL,
   `question` tinyint(1) DEFAULT NULL,
   `answer` tinyint(1) DEFAULT NULL,
-  `space` int(11) DEFAULT NULL
+  `space` int(11) DEFAULT NULL,
+  `test_type` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `question_types`
 --
 
-INSERT INTO `question_types` (`id`, `name`, `statement`, `photo`, `text`, `question`, `answer`, `space`) VALUES
-(1, 'Preguntas a granel', 0, 0, 0, 30, 3, 0),
-(2, 'Redactar', 1, 1, 0, 0, 0, 1),
-(3, 'Compresión lectora', 1, 0, 1, 2, 4, 2),
-(4, 'Audio con frases', 0, 0, 0, 5, 0, 1),
-(5, 'Audio con fotos', 0, 9, 0, 1, 9, 1),
-(6, 'Oral', 1, 1, 0, 0, 0, 1);
+INSERT INTO `question_types` (`id`, `name`, `statement`, `photo`, `text`, `question`, `answer`, `space`, `test_type`) VALUES
+(1, 'Preguntas a granel', 0, 0, 0, 30, 3, 4, 1),
+(2, 'Redactar', 1, 1, 0, 0, 0, 2, 0),
+(3, 'Compresión lectora', 1, 0, 1, 2, 4, 2, 1),
+(4, 'Audio con frases', 0, 0, 0, 5, 5, 1, 0),
+(5, 'Audio con fotos', 0, 9, 0, 1, 9, 2, 0),
+(6, 'Oral', 1, 1, 0, 0, 0, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -782,7 +783,7 @@ CREATE TABLE `statements` (
 
 INSERT INTO `statements` (`id`, `exam_id`, `content`, `skill_id`, `text`, `score`, `level_id`, `status`, `photo_id`) VALUES
 (16, NULL, 'Un amigo le escribe para saber cómo es su vida en Madrid. Escríbale un\ncorreo con esta información. En él debe saludar, describir su rutina y sus actividades de tiempo libre y despedirse. ', 24, 'El numero de palabras debe de ser  entre 20 y 30 palabras.', 20, 27, 'active', 171),
-(17, NULL, 'Lea este mensaje de correo electrónico. A continuación, responda a cinco\npreguntas sobre el texto. Elija la respuesta correcta (a, b, c, d):', 25, '      ¡Hola familia!:\n\n¿Cómo estáis? Yo estoy muy contento porque el martes que viene empiezo a trabajar.\nVoy a trabajar en la biblioteca de mi universidad. Mis tareas son organizar los archivos\ny colocar los libros en las estanterías. Algunas veces también tengo que hablar con los\nestudiantes sobre los libros, pero no tengo que hacer fotocopias.\nTengo un horario muy bueno: todas las tardes de 16:00 a 20:00, así que puedo\nestudiar por las mañanas. Una vez al mes tengo que trabajar los sábados.\nLas clases en la universidad son muy interesantes. Tengo clase todos los días,\nexcepto los miércoles por la mañana, porque tengo prácticas en el laboratorio. Los\nfines de semana estudio con mis compañeros en la biblioteca de la universidad porque\ntenemos muchos exámenes. Por ejemplo, tengo un examen de lengua española el\njueves.\nBueno, ya sabéis las buenas noticias. Nos vemos el próximo mes porque en abril\ntenemos cuatro días de vacaciones.\nOs quiero mucho,\n\n      Francisco', 15, 27, 'active', NULL),
+(17, NULL, 'Lea este mensaje de correo electrónico. A continuación, responda a cinco preguntas sobre el texto. Elija la respuesta correcta (a, b, c, d):', 25, '      ¡Hola familia!:\n\n¿Cómo estáis? Yo estoy muy contento porque el martes que viene empiezo a trabajar.\nVoy a trabajar en la biblioteca de mi universidad. Mis tareas son organizar los archivos\ny colocar los libros en las estanterías. Algunas veces también tengo que hablar con los\nestudiantes sobre los libros, pero no tengo que hacer fotocopias.\nTengo un horario muy bueno: todas las tardes de 16:00 a 20:00, así que puedo\nestudiar por las mañanas. Una vez al mes tengo que trabajar los sábados.\nLas clases en la universidad son muy interesantes. Tengo clase todos los días,\nexcepto los miércoles por la mañana, porque tengo prácticas en el laboratorio. Los\nfines de semana estudio con mis compañeros en la biblioteca de la universidad porque\ntenemos muchos exámenes. Por ejemplo, tengo un examen de lengua española el\njueves.\nBueno, ya sabéis las buenas noticias. Nos vemos el próximo mes porque en abril\ntenemos cuatro días de vacaciones.\nOs quiero mucho,\n\n      Francisco', 15, 27, 'active', NULL),
 (73, NULL, 'Tienes una migo que quiere vivir en tu barrio. Escribe un correo electrónico a tu amigo para darle la siguiente información de tu barrio. En él debes: saludar, describir tu barrio y despedirte. ', 24, 'Número de palabara: entre 20 y 30.', 20, 27, 'active', 279),
 (74, NULL, 'Preséntese. Debe dar información personal como el nombre, la nacionalidad y la edad, y puede hablar de su trabajo o estudios, por qué estudia español, etc. Seleccione tres de las cinco opciones para hablar durante 2 o 3 minutos.', 27, '', 25, 27, 'active', 282),
 (75, NULL, 'Preséntese. Debe dar información personal como el nombre, la nacionalidad y la edad, y puede hablar de su trabajo o estudios, por qué estudia español, etc.\nSeleccione tres de las cinco opciones para hablar durante 2 o 3 minutos', 27, '', 25, 27, 'active', 283),
