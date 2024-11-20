@@ -16,6 +16,9 @@ import { answers } from "./routes/answers/answers.routes.mjs";
 import { photo } from "./routes/photo/photo.routes.mjs";
 import { types } from "./routes/questions_type/questions_type.routes.mjs";
 import { skills_unions } from "./routes/skills_unions/skills_unions.routes.mjs";
+import { cities } from "./routes/cities/cities.routes.mjs";
+import { permissions } from "./routes/permissions/permissions.routes.mjs";
+import { status } from "./routes/status/status.routes.mjs";
 
 const app = express();
 
@@ -72,5 +75,14 @@ app.use("/api/types", types);
 
 //SKILLS UNIONS
 app.use("/api/skills_unions", skills_unions)
+
+//CITIES
+app.use("/api/cities", cities)
+
+//STATUS
+app.use("/api/status", status)
+
+//PERMISSIONS
+app.use("/api/permissions", permissions)
 
 export default app;

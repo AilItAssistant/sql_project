@@ -1,6 +1,32 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 20-11-2024 a las 15:48:30
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Base de datos: `test`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `answers`
+--
+
 CREATE TABLE `answers` (
   `id` bigint(20) NOT NULL,
   `question_id` bigint(20) DEFAULT NULL,
@@ -11,6 +37,13 @@ CREATE TABLE `answers` (
   `photo_id` bigint(20) DEFAULT NULL,
   `response` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `blocks`
+--
+
 CREATE TABLE `blocks` (
   `id` bigint(20) NOT NULL,
   `name` text NOT NULL,
@@ -20,10 +53,35 @@ CREATE TABLE `blocks` (
   `question_type_id` bigint(20) DEFAULT NULL,
   `individual_score` int(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `cities`
+--
+
 CREATE TABLE `cities` (
   `id` bigint(20) NOT NULL,
-  `name` text NOT NULL
+  `name` text NOT NULL,
+  `status_id` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `cities`
+--
+
+INSERT INTO `cities` (`id`, `name`, `status_id`) VALUES
+(1, 'Madrid', 1),
+(2, 'Barcelona', 1),
+(3, 'Málaga', 1),
+(4, 'Valencia', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `classes`
+--
+
 CREATE TABLE `classes` (
   `id` bigint(20) NOT NULL,
   `name` text NOT NULL,
@@ -32,14 +90,35 @@ CREATE TABLE `classes` (
   `level_id` bigint(20) DEFAULT NULL,
   `status_id` bigint(20) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `class_teachers`
+--
+
 CREATE TABLE `class_teachers` (
   `class_id` bigint(20) NOT NULL,
   `teacher_id` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `departments`
+--
+
 CREATE TABLE `departments` (
   `id` bigint(20) NOT NULL,
   `name` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `exams`
+--
+
 CREATE TABLE `exams` (
   `id` bigint(20) NOT NULL,
   `student_id` bigint(20) DEFAULT NULL,
@@ -52,6 +131,13 @@ CREATE TABLE `exams` (
   `level_id` bigint(20) DEFAULT NULL,
   `status` varchar(255) DEFAULT 'active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `exam_questions`
+--
+
 CREATE TABLE `exam_questions` (
   `exam_id` bigint(20) DEFAULT NULL,
   `question_id` bigint(20) DEFAULT NULL,
@@ -59,6 +145,13 @@ CREATE TABLE `exam_questions` (
   `is_correct` tinyint(1) DEFAULT NULL,
   `status` varchar(255) DEFAULT 'active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `exam_requests`
+--
+
 CREATE TABLE `exam_requests` (
   `id` bigint(20) NOT NULL,
   `teacher_id` bigint(20) DEFAULT NULL,
@@ -67,41 +160,103 @@ CREATE TABLE `exam_requests` (
   `resultado` text DEFAULT NULL,
   `status` varchar(255) DEFAULT 'activo'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `exam_statements`
+--
+
 CREATE TABLE `exam_statements` (
   `exam_id` bigint(20) NOT NULL,
   `statement_id` bigint(20) NOT NULL,
   `status` varchar(255) DEFAULT 'active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `levels`
+--
+
 CREATE TABLE `levels` (
   `id` bigint(20) NOT NULL,
   `name` text NOT NULL,
   `level_status` bigint(20) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `levels_blocks`
+--
+
 CREATE TABLE `levels_blocks` (
   `level_id` bigint(20) NOT NULL,
   `block_id` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `levels_skils`
+--
+
 CREATE TABLE `levels_skils` (
   `level_id` bigint(20) NOT NULL,
   `skill_id` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `levels_unions`
+--
+
 CREATE TABLE `levels_unions` (
   `level_id` bigint(20) NOT NULL,
   `union_id` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `permissions`
+--
+
 CREATE TABLE `permissions` (
   `id` bigint(20) NOT NULL,
-  `name` text NOT NULL
+  `name` text NOT NULL,
+  `status_id` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-INSERT INTO `permissions` (`id`, `name`) VALUES
-(1, 'admin'),
-(2, 'employee'),
-(3, 'student');
+
+--
+-- Volcado de datos para la tabla `permissions`
+--
+
+INSERT INTO `permissions` (`id`, `name`, `status_id`) VALUES
+(1, 'admin', 1),
+(2, 'employee', 1),
+(3, 'student', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `photos`
+--
+
 CREATE TABLE `photos` (
   `id` bigint(20) NOT NULL,
   `base64_data` longtext NOT NULL,
   `photo_status` bigint(20) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `questions`
+--
+
 CREATE TABLE `questions` (
   `id` bigint(20) NOT NULL,
   `content` text DEFAULT NULL,
@@ -113,6 +268,13 @@ CREATE TABLE `questions` (
   `score` int(3) DEFAULT NULL,
   `status_id` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `question_types`
+--
+
 CREATE TABLE `question_types` (
   `id` bigint(20) NOT NULL,
   `name` text NOT NULL,
@@ -124,6 +286,13 @@ CREATE TABLE `question_types` (
   `space` int(11) DEFAULT NULL,
   `test_type` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `skills`
+--
+
 CREATE TABLE `skills` (
   `id` bigint(20) NOT NULL,
   `name` text NOT NULL,
@@ -131,10 +300,24 @@ CREATE TABLE `skills` (
   `status_id` bigint(20) NOT NULL DEFAULT 1,
   `statement` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `skills_blocks`
+--
+
 CREATE TABLE `skills_blocks` (
   `skill_id` bigint(20) NOT NULL,
   `block_id` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `skills_unions`
+--
+
 CREATE TABLE `skills_unions` (
   `id` bigint(20) NOT NULL,
   `name` text NOT NULL,
@@ -144,6 +327,13 @@ CREATE TABLE `skills_unions` (
   `status_id` bigint(20) NOT NULL DEFAULT 1,
   `max_score` int(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `statements`
+--
+
 CREATE TABLE `statements` (
   `id` bigint(20) NOT NULL,
   `exam_id` bigint(20) DEFAULT NULL,
@@ -155,13 +345,32 @@ CREATE TABLE `statements` (
   `status_id` bigint(20) DEFAULT 1,
   `photo_id` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `status`
+--
+
 CREATE TABLE `status` (
   `id` bigint(20) NOT NULL,
-  `status` text NOT NULL DEFAULT 'active'
+  `name` text NOT NULL DEFAULT '\'active\''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-INSERT INTO `status` (`id`, `status`) VALUES
+
+--
+-- Volcado de datos para la tabla `status`
+--
+
+INSERT INTO `status` (`id`, `name`) VALUES
 (0, 'inactive'),
 (1, 'active');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `students`
+--
+
 CREATE TABLE `students` (
   `id` bigint(20) NOT NULL,
   `name` text NOT NULL,
@@ -176,12 +385,26 @@ CREATE TABLE `students` (
   `level_id` bigint(20) DEFAULT NULL,
   `status_id` bigint(20) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `student_classes`
+--
+
 CREATE TABLE `student_classes` (
   `student_id` bigint(20) NOT NULL,
   `class_id` bigint(20) NOT NULL,
   `enrollment_date` date DEFAULT curdate(),
   `status_id` bigint(20) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `teachers`
+--
+
 CREATE TABLE `teachers` (
   `id` bigint(20) NOT NULL,
   `name` text NOT NULL,
@@ -193,6 +416,13 @@ CREATE TABLE `teachers` (
   `last_name` text DEFAULT NULL,
   `status_id` bigint(20) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `triggers`
+--
+
 CREATE TABLE `triggers` (
   `id` bigint(20) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -201,6 +431,13 @@ CREATE TABLE `triggers` (
   `action` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `users`
+--
+
 CREATE TABLE `users` (
   `id` bigint(20) NOT NULL,
   `username` text NOT NULL,
@@ -214,13 +451,27 @@ CREATE TABLE `users` (
   `permission_id` bigint(20) DEFAULT NULL,
   `status_id` bigint(20) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `users`
+--
+
 INSERT INTO `users` (`id`, `username`, `email`, `password_hash`, `created_at`, `name`, `last_name`, `phone_number`, `city_id`, `permission_id`, `status_id`) VALUES
-(1, 'admin_user', 'admin@example.com', '$2b$11$T/Pjr7e5oVv4RsGHi1irtuOhhFTMz7lkh5VfyBUxff96F1fNkoDTO', '2024-08-22 09:44:43', 'Fernando', 'Fernandez Gimenez', '714258369', NULL, 1, 1),
-(2, 'pepete', 'qwerty@qmail.com', 'undefined', '2024-08-22 09:44:43', 'pepete', 'fernandez', '854631279', NULL, 2, 1),
-(3, 'viewer_john', 'john.smith@example.com', 'undefined', '2024-08-22 09:44:43', 'john', 'john', '7428536774', NULL, 2, 1),
-(4, 'editor_mary', 'mary.jones@example.com', 'undefined', '2024-08-22 09:44:43', 'mary', 'mary', '987654321', NULL, 3, 1),
-(11, 'PEPE', 'pepe@gmail.com', '$2b$11$tMoN8Db8wR7tIhhaAjpujOTZPbJgQwUFselQzcp8x8.XFVfeOpBrG', '2024-10-03 13:57:25', 'Pepito', 'Jimenez Alvarez', '7896542123', NULL, 3, 1),
-(19, 'qw', 'pepee@gmail.com', '$2b$11$/99cNAaLh5WruxCZFGq/Q.MeWC0ZmvT1s0MXBxSZUgQvh7EoratLy', '2024-10-04 07:22:02', 'qw', 'qw', '7896542123', NULL, 1, 1);
+(1, 'admin_user', 'admin@example.com', '$2b$11$T/Pjr7e5oVv4RsGHi1irtuOhhFTMz7lkh5VfyBUxff96F1fNkoDTO', '2024-08-22 09:44:43', 'Fernando', 'Fernandez Gimenez', '714258369', 1, 1, 1),
+(2, 'pepete', 'qwerty@qmail.com', 'undefined', '2024-08-22 09:44:43', 'pepete', 'fernandez', '854631279', 2, 2, 1),
+(3, 'viewer_john', 'john.smith@example.com', 'undefined', '2024-08-22 09:44:43', 'john', 'john', '7428536774', 3, 2, 1),
+(4, 'editor_mary', 'mary.jones@example.com', 'undefined', '2024-08-22 09:44:43', 'mary', 'mary', '987654321', 4, 3, 1),
+(11, 'PEPE', 'pepe@gmail.com', '$2b$11$tMoN8Db8wR7tIhhaAjpujOTZPbJgQwUFselQzcp8x8.XFVfeOpBrG', '2024-10-03 13:57:25', 'Pepito', 'Jimenez Alvarez', '7896542123', 2, 2, 1),
+(19, 'qw', 'pepee@gmail.com', '$2b$11$/99cNAaLh5WruxCZFGq/Q.MeWC0ZmvT1s0MXBxSZUgQvh7EoratLy', '2024-10-04 07:22:02', 'qw', 'qw', '7896542123', 3, 2, 1),
+(23, 'website', 'website@ailmadrid.com', '$2b$11$eNeb504b1EK4LBUpvVUG4OajNNnsUwpE3Qm2Nlakr5ITBMer9sXh2', '2024-11-20 13:22:19', 'otro', '', '852136479', 1, 1, 1),
+(24, 'asdw', 'madkkfweo@sfisaifk.com', '$2b$11$rUGUhdfWUt9cAwdUyxCsr.xp9gL/L0xlMNBh7q9gjLnEA.ZLet8ni', '2024-11-20 13:56:39', 'prueba', 'lopez', '234190657756', 1, 3, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `user_actions`
+--
+
 CREATE TABLE `user_actions` (
   `id` bigint(20) NOT NULL,
   `user_id` bigint(20) NOT NULL,
@@ -229,58 +480,128 @@ CREATE TABLE `user_actions` (
   `data_before` text DEFAULT NULL,
   `data_after` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `answers`
+--
 ALTER TABLE `answers`
   ADD PRIMARY KEY (`id`),
   ADD KEY `question_id` (`question_id`),
   ADD KEY `fk_answers_photos` (`photo_id`),
   ADD KEY `answer_status` (`status_id`);
+
+--
+-- Indices de la tabla `blocks`
+--
 ALTER TABLE `blocks`
   ADD PRIMARY KEY (`id`),
   ADD KEY `question_type_id` (`question_type_id`),
   ADD KEY `block_status` (`status_id`);
+
+--
+-- Indices de la tabla `cities`
+--
 ALTER TABLE `cities`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `city_status` (`status_id`);
+
+--
+-- Indices de la tabla `classes`
+--
 ALTER TABLE `classes`
   ADD PRIMARY KEY (`id`),
   ADD KEY `level_id` (`level_id`),
   ADD KEY `claases_status` (`status_id`);
+
+--
+-- Indices de la tabla `class_teachers`
+--
 ALTER TABLE `class_teachers`
   ADD PRIMARY KEY (`class_id`,`teacher_id`),
   ADD KEY `teacher_id` (`teacher_id`);
+
+--
+-- Indices de la tabla `departments`
+--
 ALTER TABLE `departments`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `exams`
+--
 ALTER TABLE `exams`
   ADD PRIMARY KEY (`id`),
   ADD KEY `student_id` (`student_id`),
   ADD KEY `teacher_id` (`teacher_id`),
   ADD KEY `skill_id` (`skill_id`),
   ADD KEY `level_id` (`level_id`);
+
+--
+-- Indices de la tabla `exam_questions`
+--
 ALTER TABLE `exam_questions`
   ADD KEY `exam_id` (`exam_id`),
   ADD KEY `question_id` (`question_id`),
   ADD KEY `chosen_answer_id` (`chosen_answer_id`);
+
+--
+-- Indices de la tabla `exam_requests`
+--
 ALTER TABLE `exam_requests`
   ADD PRIMARY KEY (`id`),
   ADD KEY `teacher_id` (`teacher_id`),
   ADD KEY `skill_id` (`skill_id`);
+
+--
+-- Indices de la tabla `exam_statements`
+--
 ALTER TABLE `exam_statements`
   ADD PRIMARY KEY (`exam_id`,`statement_id`),
   ADD KEY `statement_id` (`statement_id`);
+
+--
+-- Indices de la tabla `levels`
+--
 ALTER TABLE `levels`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`) USING HASH,
   ADD KEY `level_status` (`level_status`);
+
+--
+-- Indices de la tabla `levels_blocks`
+--
 ALTER TABLE `levels_blocks`
   ADD KEY `level_blocks` (`level_id`),
   ADD KEY `block_levels` (`block_id`);
+
+--
+-- Indices de la tabla `levels_skils`
+--
 ALTER TABLE `levels_skils`
   ADD KEY `level_skills` (`level_id`),
   ADD KEY `skill_levels` (`skill_id`);
+
+--
+-- Indices de la tabla `permissions`
+--
 ALTER TABLE `permissions`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `permission_status` (`status_id`);
+
+--
+-- Indices de la tabla `photos`
+--
 ALTER TABLE `photos`
   ADD PRIMARY KEY (`id`),
   ADD KEY `photo_status` (`photo_status`);
+
+--
+-- Indices de la tabla `questions`
+--
 ALTER TABLE `questions`
   ADD PRIMARY KEY (`id`),
   ADD KEY `block_id` (`block_id`),
@@ -289,19 +610,39 @@ ALTER TABLE `questions`
   ADD KEY `fk_questions_photos` (`photo_id`),
   ADD KEY `statements_ibfk4` (`statement_id`),
   ADD KEY `question_status` (`status_id`);
+
+--
+-- Indices de la tabla `question_types`
+--
 ALTER TABLE `question_types`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `skills`
+--
 ALTER TABLE `skills`
   ADD PRIMARY KEY (`id`),
   ADD KEY `skill_status` (`status_id`);
+
+--
+-- Indices de la tabla `skills_blocks`
+--
 ALTER TABLE `skills_blocks`
   ADD KEY `skill_blocks` (`skill_id`),
   ADD KEY `block_skills` (`block_id`);
+
+--
+-- Indices de la tabla `skills_unions`
+--
 ALTER TABLE `skills_unions`
   ADD PRIMARY KEY (`id`),
   ADD KEY `skill_id_1` (`skill_id_1`),
   ADD KEY `skill_id_2` (`skill_id_2`),
   ADD KEY `union_status` (`status_id`);
+
+--
+-- Indices de la tabla `statements`
+--
 ALTER TABLE `statements`
   ADD PRIMARY KEY (`id`),
   ADD KEY `skill_id` (`skill_id`),
@@ -309,8 +650,16 @@ ALTER TABLE `statements`
   ADD KEY `fk_statements_photos` (`photo_id`),
   ADD KEY `statements_ibfk_1` (`exam_id`),
   ADD KEY `statement_status` (`status_id`);
+
+--
+-- Indices de la tabla `status`
+--
 ALTER TABLE `status`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `students`
+--
 ALTER TABLE `students`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `email` (`email`) USING HASH,
@@ -318,17 +667,33 @@ ALTER TABLE `students`
   ADD KEY `level_id` (`level_id`),
   ADD KEY `student_status` (`status_id`),
   ADD KEY `student_city` (`city_id`);
+
+--
+-- Indices de la tabla `student_classes`
+--
 ALTER TABLE `student_classes`
   ADD PRIMARY KEY (`student_id`,`class_id`),
   ADD KEY `class_id` (`class_id`),
   ADD KEY `student_class_status` (`status_id`);
+
+--
+-- Indices de la tabla `teachers`
+--
 ALTER TABLE `teachers`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `email` (`email`) USING HASH,
   ADD KEY `teacher_status` (`status_id`),
   ADD KEY `teacher_department` (`department_id`);
+
+--
+-- Indices de la tabla `triggers`
+--
 ALTER TABLE `triggers`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `users`
+--
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `username` (`username`) USING HASH,
@@ -336,88 +701,248 @@ ALTER TABLE `users`
   ADD KEY `user_status` (`status_id`),
   ADD KEY `user_permission` (`permission_id`),
   ADD KEY `user_city` (`city_id`);
+
+--
+-- Indices de la tabla `user_actions`
+--
 ALTER TABLE `user_actions`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `answers`
+--
 ALTER TABLE `answers`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=542;
+
+--
+-- AUTO_INCREMENT de la tabla `blocks`
+--
 ALTER TABLE `blocks`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+
+--
+-- AUTO_INCREMENT de la tabla `cities`
+--
 ALTER TABLE `cities`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `classes`
+--
 ALTER TABLE `classes`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+
+--
+-- AUTO_INCREMENT de la tabla `departments`
+--
 ALTER TABLE `departments`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `exams`
+--
 ALTER TABLE `exams`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `exam_requests`
+--
 ALTER TABLE `exam_requests`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `levels`
+--
 ALTER TABLE `levels`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+
+--
+-- AUTO_INCREMENT de la tabla `permissions`
+--
 ALTER TABLE `permissions`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `photos`
+--
 ALTER TABLE `photos`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=292;
+
+--
+-- AUTO_INCREMENT de la tabla `questions`
+--
 ALTER TABLE `questions`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=179;
+
+--
+-- AUTO_INCREMENT de la tabla `question_types`
+--
 ALTER TABLE `question_types`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT de la tabla `skills`
+--
 ALTER TABLE `skills`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=349;
+
+--
+-- AUTO_INCREMENT de la tabla `skills_unions`
+--
 ALTER TABLE `skills_unions`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `statements`
+--
 ALTER TABLE `statements`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
+
+--
+-- AUTO_INCREMENT de la tabla `status`
+--
 ALTER TABLE `status`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `students`
+--
 ALTER TABLE `students`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT de la tabla `teachers`
+--
 ALTER TABLE `teachers`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT de la tabla `triggers`
+--
 ALTER TABLE `triggers`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `users`
+--
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+
+--
+-- AUTO_INCREMENT de la tabla `user_actions`
+--
 ALTER TABLE `user_actions`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `answers`
+--
 ALTER TABLE `answers`
   ADD CONSTRAINT `answer_status` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`),
   ADD CONSTRAINT `answers_ibfk_1` FOREIGN KEY (`question_id`) REFERENCES `questions` (`id`),
   ADD CONSTRAINT `answers_ibfk_2` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`);
+
+--
+-- Filtros para la tabla `blocks`
+--
 ALTER TABLE `blocks`
   ADD CONSTRAINT `block_status` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`),
   ADD CONSTRAINT `blocks_ibfk_3` FOREIGN KEY (`question_type_id`) REFERENCES `question_types` (`id`);
+
+--
+-- Filtros para la tabla `cities`
+--
+ALTER TABLE `cities`
+  ADD CONSTRAINT `city_status` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`);
+
+--
+-- Filtros para la tabla `classes`
+--
 ALTER TABLE `classes`
   ADD CONSTRAINT `claases_status` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`),
   ADD CONSTRAINT `classes_ibfk_2` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`);
+
+--
+-- Filtros para la tabla `class_teachers`
+--
 ALTER TABLE `class_teachers`
   ADD CONSTRAINT `class_teachers_ibfk_1` FOREIGN KEY (`class_id`) REFERENCES `classes` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `class_teachers_ibfk_2` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `exams`
+--
 ALTER TABLE `exams`
   ADD CONSTRAINT `exams_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`),
   ADD CONSTRAINT `exams_ibfk_2` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`id`),
   ADD CONSTRAINT `exams_ibfk_3` FOREIGN KEY (`skill_id`) REFERENCES `skills` (`id`),
   ADD CONSTRAINT `exams_ibfk_4` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`);
+
+--
+-- Filtros para la tabla `exam_questions`
+--
 ALTER TABLE `exam_questions`
   ADD CONSTRAINT `exam_questions_ibfk_1` FOREIGN KEY (`exam_id`) REFERENCES `exams` (`id`),
   ADD CONSTRAINT `exam_questions_ibfk_2` FOREIGN KEY (`question_id`) REFERENCES `questions` (`id`);
+
+--
+-- Filtros para la tabla `exam_requests`
+--
 ALTER TABLE `exam_requests`
   ADD CONSTRAINT `exam_requests_ibfk_1` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`id`),
   ADD CONSTRAINT `exam_requests_ibfk_2` FOREIGN KEY (`skill_id`) REFERENCES `skills` (`id`);
+
+--
+-- Filtros para la tabla `exam_statements`
+--
 ALTER TABLE `exam_statements`
   ADD CONSTRAINT `exam_statements_ibfk_1` FOREIGN KEY (`exam_id`) REFERENCES `exams` (`id`),
   ADD CONSTRAINT `exam_statements_ibfk_2` FOREIGN KEY (`statement_id`) REFERENCES `statements` (`id`);
+
+--
+-- Filtros para la tabla `levels`
+--
 ALTER TABLE `levels`
   ADD CONSTRAINT `level_status` FOREIGN KEY (`level_status`) REFERENCES `status` (`id`);
+
+--
+-- Filtros para la tabla `levels_blocks`
+--
 ALTER TABLE `levels_blocks`
   ADD CONSTRAINT `block_levels` FOREIGN KEY (`block_id`) REFERENCES `blocks` (`id`),
   ADD CONSTRAINT `level_blocks` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`);
+
+--
+-- Filtros para la tabla `levels_skils`
+--
 ALTER TABLE `levels_skils`
   ADD CONSTRAINT `level_skills` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`),
   ADD CONSTRAINT `skill_levels` FOREIGN KEY (`skill_id`) REFERENCES `skills` (`id`);
+
+--
+-- Filtros para la tabla `permissions`
+--
+ALTER TABLE `permissions`
+  ADD CONSTRAINT `permission_status` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`);
+
+--
+-- Filtros para la tabla `photos`
+--
 ALTER TABLE `photos`
   ADD CONSTRAINT `photo_status` FOREIGN KEY (`photo_status`) REFERENCES `status` (`id`);
+
+--
+-- Filtros para la tabla `questions`
+--
 ALTER TABLE `questions`
   ADD CONSTRAINT `question_status` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`),
   ADD CONSTRAINT `questions_ibfk_1` FOREIGN KEY (`block_id`) REFERENCES `blocks` (`id`),
@@ -425,34 +950,70 @@ ALTER TABLE `questions`
   ADD CONSTRAINT `questions_ibfk_3` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`),
   ADD CONSTRAINT `questions_ibfk_4` FOREIGN KEY (`skill_id`) REFERENCES `skills` (`id`),
   ADD CONSTRAINT `questions_ibfk_5` FOREIGN KEY (`statement_id`) REFERENCES `statements` (`id`);
+
+--
+-- Filtros para la tabla `skills`
+--
 ALTER TABLE `skills`
   ADD CONSTRAINT `skill_status` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`);
+
+--
+-- Filtros para la tabla `skills_blocks`
+--
 ALTER TABLE `skills_blocks`
   ADD CONSTRAINT `block_skills` FOREIGN KEY (`block_id`) REFERENCES `blocks` (`id`),
   ADD CONSTRAINT `skill_blocks` FOREIGN KEY (`skill_id`) REFERENCES `skills` (`id`);
+
+--
+-- Filtros para la tabla `skills_unions`
+--
 ALTER TABLE `skills_unions`
   ADD CONSTRAINT `skills_unions_ibfk_1` FOREIGN KEY (`skill_id_1`) REFERENCES `skills` (`id`),
   ADD CONSTRAINT `skills_unions_ibfk_2` FOREIGN KEY (`skill_id_2`) REFERENCES `skills` (`id`),
   ADD CONSTRAINT `union_status` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`);
+
+--
+-- Filtros para la tabla `statements`
+--
 ALTER TABLE `statements`
   ADD CONSTRAINT `statement_status` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`),
   ADD CONSTRAINT `statements_ibfk_1` FOREIGN KEY (`exam_id`) REFERENCES `exams` (`id`),
   ADD CONSTRAINT `statements_ibfk_2` FOREIGN KEY (`skill_id`) REFERENCES `skills` (`id`),
   ADD CONSTRAINT `statements_ibfk_3` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`),
   ADD CONSTRAINT `statements_ibfk_4` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`);
+
+--
+-- Filtros para la tabla `students`
+--
 ALTER TABLE `students`
   ADD CONSTRAINT `student_city` FOREIGN KEY (`city_id`) REFERENCES `cities` (`id`),
   ADD CONSTRAINT `student_ibfk_1` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`),
   ADD CONSTRAINT `student_status` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`);
+
+--
+-- Filtros para la tabla `student_classes`
+--
 ALTER TABLE `student_classes`
   ADD CONSTRAINT `student_class_status` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`),
   ADD CONSTRAINT `student_classes_ibfk_1` FOREIGN KEY (`class_id`) REFERENCES `classes` (`id`),
   ADD CONSTRAINT `student_classes_ibfk_2` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`);
+
+--
+-- Filtros para la tabla `teachers`
+--
 ALTER TABLE `teachers`
   ADD CONSTRAINT `teacher_department` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`),
   ADD CONSTRAINT `teacher_status` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`);
+
+--
+-- Filtros para la tabla `users`
+--
 ALTER TABLE `users`
   ADD CONSTRAINT `user_city` FOREIGN KEY (`city_id`) REFERENCES `cities` (`id`),
   ADD CONSTRAINT `user_permission` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`),
   ADD CONSTRAINT `user_status` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`);
 COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

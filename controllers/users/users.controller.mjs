@@ -12,22 +12,29 @@ export const getUsers = async (req, res) => {
             conn = await pool.getConnection();
             let rows = await conn.query(`
                 SELECT
-                    id,
-                    username,
-                    email,
-                    created_at,
-                    name,
-                    last_name,
-                    phone_number,
-                    city,
-                    permissions,
-                    status
+                    u.id,
+                    u.username,
+                    u.email,
+                    u.created_at,
+                    u.name,
+                    u.last_name,
+                    u.phone_number,
+                    c.name as city,
+                    c.id as city_id,
+                    p.name as permission,
+                    p.id as permission_id,
+                    s.name as status
                 from
-                    users;
+                    users u
+                left join permissions p on u.permission_id = p.id
+                left join cities c on u.city_id = c.id
+                left join status s on u.status_id = s.id;
             `);
             rows.forEach((element) => {
                 element.id = element.id.toString();
                 element.created_at = element.created_at.toLocaleDateString('es-ES', {year: 'numeric', month: 'numeric', day: 'numeric',});
+                if(element.permission_id){element.permission_id = element.permission_id.toString()};
+                if(element.city_id){element.city_id = element.city_id.toString()};
             });
             let response = {
                 users: rows,
@@ -43,27 +50,44 @@ export const getUsers = async (req, res) => {
 };
 
 export const filterUsers = async (req, res) => {
+    console.log(req.body)
     if ( req.data ) {
         let conn;
         try {
             conn = await pool.getConnection();
-            let rows = await conn.query(
-                `SELECT
-                    id, username, email, role, created_at, name, last_name, phone_number, city, permissions, status 
+            let rows = await conn.query(`
+                SELECT
+                    u.id,
+                    u.username,
+                    u.email,
+                    u.created_at,
+                    u.name,
+                    u.last_name,
+                    u.phone_number,
+                    c.name as city,
+                    c.id as city_id,
+                    p.name as permission,
+                    p.id as permission_id,
+                    s.name as status
                 from
-                    users
+                    users u
+                left join permissions p on u.permission_id = p.id
+                left join cities c on u.city_id = c.id
+                left join status s on u.status_id = s.id
                 WHERE
-                    (last_name LIKE CONCAT(IFNULL('${req.body.last_name}', ''), '%')) OR
-                    (username LIKE CONCAT(IFNULL('${req.body.username}', ''), '%')) OR
-                    (phone_number LIKE CONCAT(IFNULL('${req.body.phone_number}', ''), '%')) OR
-                    (city LIKE CONCAT(IFNULL('${req.body.city}', ''), '%')) OR
-                    (permissions LIKE CONCAT(IFNULL('${req.body.permissions}', ''), '%')) OR
-                    (status LIKE CONCAT(IFNULL('${req.body.status}', ''), '%')) OR
-                    (email LIKE CONCAT(IFNULL('${req.body.email}', ''), '%'));`
-            );
+                    (u.last_name LIKE CONCAT(IFNULL('${req.body.last_name}', ''), '%')) OR
+                    (u.username LIKE CONCAT(IFNULL('${req.body.username}', ''), '%')) OR
+                    (u.phone_number LIKE CONCAT(IFNULL('${req.body.phone_number}', ''), '%')) OR
+                    (u.city_id LIKE CONCAT(IFNULL('${req.body.city}', ''), '%')) OR
+                    (u.permission_id LIKE CONCAT(IFNULL('${req.body.permission}', ''), '%')) OR
+                    (u.status_id LIKE CONCAT(IFNULL('${req.body.status}', ''), '%')) OR
+                    (u.email LIKE CONCAT(IFNULL('${req.body.email}', ''), '%'));
+            `);
             rows.forEach((element) => {
                 element.id = element.id.toString();
                 element.created_at = element.created_at.toLocaleDateString('es-ES', {year: 'numeric', month: 'numeric', day: 'numeric',});
+                if(element.permission_id){element.permission_id = element.permission_id.toString()};
+                if(element.city_id){element.city_id = element.city_id.toString()};
             });
             res.json(rows);
         } catch (error) {
@@ -84,7 +108,7 @@ export const statusUsers = async (req, res) => {
                     UPDATE
                         users
                     SET
-                        status = 'inactive'
+                        status_id = 0
                     WHERE
                         id = ${req.body.id};
                 `);
@@ -93,7 +117,7 @@ export const statusUsers = async (req, res) => {
                     UPDATE
                         users
                     SET
-                        status = 'active'
+                        status_id = 1
                     WHERE
                         id = ${req.body.id};
                 `);
@@ -102,7 +126,7 @@ export const statusUsers = async (req, res) => {
                     UPDATE
                         users
                     SET
-                        status = 'active'
+                        status = 1
                     WHERE
                         id = ${req.body.id};
                 `);
@@ -146,8 +170,8 @@ export const addUsers = async (req, res) => {
                 INSERT INTO users (
                     username, email,
                     password_hash, name,
-                    last_name,  phone_number,
-                    city, permissions, status
+                    last_name, phone_number,
+                    city_id, permission_id, status_id
                 ) VALUES (
                     '${req.body.username}',
                     '${req.body.email}',
@@ -157,7 +181,7 @@ export const addUsers = async (req, res) => {
                     '${req.body.phone_number}',
                     '${req.body.city}',
                     '${req.body.permissions}',
-                    '${req.body.status}'
+                    1
                 );`);
             res.json(200);
         } catch (error) {
@@ -173,24 +197,23 @@ export const editUsers = async (req, res) => {
     if ( req.data ) {
         let conn;
         let saltRounds = 11;
-        let hashed_password;
+        let hashed_password = "";
         if ( req.body.pass ) { hashed_password = await bcrypt.hash(req.body.pass, saltRounds); }
         try {
             conn = await pool.getConnection();
-            let rows = await conn.query(`
+            console.log(req.body)
+            await conn.query(`
                 UPDATE
                     users
                 SET
                     username = IF('${req.body.username}' != '', '${req.body.username}', username),
                     email = IF('${req.body.email}' != '', '${req.body.email}', email),
-                    password_hash = IF('${req.body.password_hash}' != '', '${req.body.password_hash}', password_hash),
                     name = IF('${req.body.name}' != '', '${req.body.name}', name),
                     last_name = IF('${req.body.last_name}' != '', '${req.body.last_name}', last_name),
                     phone_number = IF('${req.body.phone_number}' != '', '${req.body.phone_number}', phone_number),
-                    city = IF('${req.body.city}' != '', '${req.body.city}', city),
-                    permissions = IF('${req.body.permissions}' != '', '${req.body.permissions}', permissions),
-                    password_hash = IF('${hashed_password}' != '', '${hashed_password}', password_hash),
-                    status = IF('${req.body.status}' != '', '${req.body.status}', status)
+                    city_id = IF(${req.body.city} != '', ${req.body.city}, city_id),
+                    permission_id = IF(${req.body.permission} != '', ${req.body.permission}, permission_id),
+                    password_hash = IF('${hashed_password}' != '', '${hashed_password}', password_hash)
                 WHERE
                     id = ${req.body.id};
                 `);
@@ -208,19 +231,30 @@ export const login = async ( req, res ) => {
     let correct;
     try {
         conn = await pool.getConnection();
-        let hash = await conn.query(`select username, permissions, name, last_name, password_hash from users where username = '${req.body.user}';`);
-        bcrypt.compare(req.body.pass, hash[0].password_hash, function(err, result) {
-            correct = result;
-            if( correct ){
-                let data = JSON.stringify(hash[0]);
-                const token = jwt.sign(data, 'stil');
-                res.json({token})
-            } else {
-                res.json('Usuario o clave incorrecto');
-            };
-        });
+        let hash = await conn.query(`
+            select
+                u.username, p.name as permissions, u.name, u.last_name, u.password_hash
+            from users u
+            left join permissions p on u.permission_id = p.id
+            where username = '${req.body.user}';
+        `);
+        console.log(hash)
+        if(hash.length === 0){
+            res.json('Usuario o clave incorrecto');
+        } else {
+            bcrypt.compare(req.body.pass, hash[0].password_hash, function(err, result) {
+                correct = result;
+                if( correct ){
+                    let data = JSON.stringify(hash[0]);
+                    const token = jwt.sign(data, 'stil');
+                    res.json({token})
+                } else {
+                    res.json('Usuario o clave incorrecto');
+                };
+            });
+        };
     } catch ( error ) {
-        console.log(error);
+        console.log("Usuario o clave incorrecto");
     } finally {
         if (conn) return conn.end();
     };
