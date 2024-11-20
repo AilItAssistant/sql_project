@@ -5,7 +5,6 @@ import { statements } from "../../routes/stataments/statements.routes.mjs";
 //?GET ALL EXAMS exams.get("/", getExamsA1);
 
 export const generateExamByLevel = async (req, res) => {
-    //console.log(req.body);
     if ( req.data ) {
         let conn;
         let exam = [];
