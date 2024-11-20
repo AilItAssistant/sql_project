@@ -4,44 +4,44 @@ import { pool } from "../../index.mjs"
 //?GET ALL CLASSES classes.get("/", getClasses);
 
 export const getClasses = async (req, res) => {
-    if ( req.data ) { 
+    if ( req.data ) {
         let conn;
         try {
             conn = await pool.getConnection();
             let rows = await conn.query(`
-               SELECT 
-                    c.id AS class_id, 
-                    c.name AS class_name, 
-                    COALESCE(l.name, 'N/A') AS class_level, 
-                    c.schedule, 
+                SELECT
+                    c.id AS class_id,
+                    c.name AS class_name,
+                    COALESCE(l.name, 'N/A') AS class_level,
+                    c.schedule,
                     c.level_id,
-                    c.room_number, 
-                    c.status AS class_status, 
-                    t.name AS teacher_name, 
-                    t.last_name AS teacher_last_name, 
-                    t.status AS teacher_status, 
-                    COALESCE(s.name, 'No tiene alumnos') AS student_name, 
-                    COALESCE(s.last_name, '') AS student_last_name, 
-                    COALESCE(s.phone_number, '') AS student_phone, 
+                    c.room_number,
+                    c.status AS class_status,
+                    t.name AS teacher_name,
+                    t.last_name AS teacher_last_name,
+                    t.status AS teacher_status,
+                    COALESCE(s.name, 'No tiene alumnos') AS student_name,
+                    COALESCE(s.last_name, '') AS student_last_name,
+                    COALESCE(s.phone_number, '') AS student_phone,
                     COALESCE(s.enrollment_date, '') AS enrollment_date,
-                    COALESCE(s.city, '') AS student_city, 
-                    COALESCE(s.id, '') AS student_id, 
-                    COALESCE(s.email, '') AS student_email, 
-                    COALESCE(s.status, 'N/A') AS student_status 
-                FROM 
-                    classes c 
-                LEFT JOIN 
+                    COALESCE(s.city, '') AS student_city,
+                    COALESCE(s.id, '') AS student_id,
+                    COALESCE(s.email, '') AS student_email,
+                    COALESCE(s.status, 'N/A') AS student_status
+                FROM
+                    classes c
+                LEFT JOIN
                     class_teachers ct ON c.id = ct.class_id
-                LEFT JOIN 
-                    teachers t ON ct.teacher_id = t.id 
-                LEFT JOIN 
-                    student_classes sc ON c.id = sc.class_id 
-                LEFT JOIN 
+                LEFT JOIN
+                    teachers t ON ct.teacher_id = t.id
+                LEFT JOIN
+                    student_classes sc ON c.id = sc.class_id
+                LEFT JOIN
                     students s ON sc.student_id = s.id
-                LEFT JOIN 
+                LEFT JOIN
                     levels l ON c.level_id = l.id
-                ORDER BY 
-                    c.id, 
+                ORDER BY
+                    c.id,
                     s.id;
             `);
             rows.forEach(element => {
@@ -54,14 +54,13 @@ export const getClasses = async (req, res) => {
                 let x;
                 if(i >= 1) {x = i - 1;} else {x = 0;}
                 if(i === 0 || rows[i].class_id !== rows[x].class_id){
-                    
                     let add = {
                         class_id: rows[i].class_id,
-                        class_name: rows[i].class_name, 
-                        class_level: rows[i].class_level, 
+                        class_name: rows[i].class_name,
+                        class_level: rows[i].class_level,
                         level_id: rows[i].level_id,
                         schedule: rows[i].schedule,
-                        room_number: rows[i].room_number, 
+                        room_number: rows[i].room_number,
                         class_level: rows[i].class_level,
                         teacher_name: rows[i].teacher_name,
                         teacher_id: rows[i].teacher_id,
@@ -80,7 +79,7 @@ export const getClasses = async (req, res) => {
                             enrollment_day: rows[i].enrollment_day,
                             student_city: rows[i].student_city
                         };
-                        add.students.push(addClass); 
+                        add.students.push(addClass);
                     }
                 } else {
                     let add = {
@@ -98,8 +97,7 @@ export const getClasses = async (req, res) => {
             let resp = {
                 classes: response,
                 dataLogin: req.data
-            }
-            
+            };
             res.json(resp);
         } catch (error) {
             console.log(error);
