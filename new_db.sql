@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-11-2024 a las 15:48:30
+-- Tiempo de generación: 21-11-2024 a las 15:53:06
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -182,8 +182,15 @@ CREATE TABLE `exam_statements` (
 CREATE TABLE `levels` (
   `id` bigint(20) NOT NULL,
   `name` text NOT NULL,
-  `level_status` bigint(20) NOT NULL DEFAULT 1
+  `status_id` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `levels`
+--
+
+INSERT INTO `levels` (`id`, `name`, `status_id`) VALUES
+(41, 'A1', 1);
 
 -- --------------------------------------------------------
 
@@ -386,6 +393,15 @@ CREATE TABLE `students` (
   `status_id` bigint(20) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `students`
+--
+
+INSERT INTO `students` (`id`, `name`, `email`, `date_of_birth`, `enrollment_date`, `phone_number`, `address`, `last_name`, `identification_document`, `city_id`, `level_id`, `status_id`) VALUES
+(8, 'Manolo', 'pepe@gmail.com', '2024-11-21', '0000-00-00', '7896542123', 'calle barbara de braganza, 155 alcala de hernares, comunidada de madrid', 'Gonzalez Fernandez', '8512136974E', 4, 41, 1),
+(9, 'Francisco', 'pepee@gmail.com', '2024-11-07', '0000-00-00', '852146397', 'calle barbara de braganza, 155 alcala de hernares, comunidada de madird', 'Férnandez López', '8612136974E', 3, 41, 1),
+(10, 'Pepe', 'paco.jones@gmail.es', '2024-11-20', '0000-00-00', '7896542123', 'calle barbara de braganza, 155 alcala de hernares, comunidada de madrid', 'Jimenez Alvarez', '8712138974E', 1, 41, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -568,8 +584,7 @@ ALTER TABLE `exam_statements`
 --
 ALTER TABLE `levels`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name` (`name`) USING HASH,
-  ADD KEY `level_status` (`level_status`);
+  ADD KEY `level_status` (`status_id`);
 
 --
 -- Indices de la tabla `levels_blocks`
@@ -759,7 +774,7 @@ ALTER TABLE `exam_requests`
 -- AUTO_INCREMENT de la tabla `levels`
 --
 ALTER TABLE `levels`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT de la tabla `permissions`
@@ -813,7 +828,7 @@ ALTER TABLE `status`
 -- AUTO_INCREMENT de la tabla `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `teachers`
@@ -912,7 +927,7 @@ ALTER TABLE `exam_statements`
 -- Filtros para la tabla `levels`
 --
 ALTER TABLE `levels`
-  ADD CONSTRAINT `level_status` FOREIGN KEY (`level_status`) REFERENCES `status` (`id`);
+  ADD CONSTRAINT `level_status` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`);
 
 --
 -- Filtros para la tabla `levels_blocks`

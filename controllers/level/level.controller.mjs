@@ -30,9 +30,10 @@ export const getActiveLevels = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            let rows = await conn.query("select * from levels where status = 'active';");
+            let rows = await conn.query("select * from levels where status_id = 1;");
             rows.forEach(element => {
                 element.id = element.id.toString();
+                if(element.status_id){element.status_id = element.status_id.toString();};
             });
             res.json(rows);
         } catch (error) {
