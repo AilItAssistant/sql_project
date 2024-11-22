@@ -17,19 +17,20 @@ export const getTeachers = async (req, res) => {
                     t.email,
                     t.hire_date,
                     t.address,
-                    t.department,
-                    t.status AS teacher_status,
+                    d.name as department,
+                    d.id as department_id,
+                    s.name AS teacher_status,
+                    s.id AS teacher_status_id,
                     COALESCE(c.id, 'N/A') AS class_id,
                     COALESCE(c.name, 'No tiene clase') AS class_name,
                     COALESCE(l.name, 'N/A') AS class_level
                 FROM
                     teachers t
-                LEFT JOIN
-                    class_teachers ct ON t.id = ct.teacher_id
-                LEFT JOIN
-                    classes c ON ct.class_id = c.id
-                LEFT JOIN
-                    levels l ON c.level_id = l.id
+                LEFT JOIN class_teachers ct ON t.id = ct.teacher_id
+                LEFT JOIN classes c ON ct.class_id = c.id
+                LEFT JOIN levels l ON c.level_id = l.id
+                left join status s on t.status_id = t.id
+                left join departments d on t.department_id = d.id
                 ORDER BY
                     t.id,
                     c.id;
@@ -37,6 +38,8 @@ export const getTeachers = async (req, res) => {
             rows.forEach(element => {
                 element.teacher_id = element.teacher_id.toString();
                 if(element.hire_date){element.hire_date = element.hire_date.toLocaleDateString('es-ES', {year: 'numeric', month: 'numeric', day: 'numeric',});}
+                if(element.teacher_status_id){element.teacher_status_id = element.teacher_status_id.toString();};
+                if(element.department_id){element.department_id = element.department_id.toString();};
             });
             let response = [];
 
@@ -44,7 +47,7 @@ export const getTeachers = async (req, res) => {
                 let x;
                 if(i >= 1) {x = i - 1;} else {x = 0;}
 
-                if(i === 0 || rows[i].teacher_id !== rows[x].teacher_id){
+                if(i === 0 || rows[i].teacher_status_id !== rows[x].teacher_id){
                     let add = {
                         teacher_id: rows[i].teacher_id,
                         email: rows[i].email,
@@ -54,7 +57,9 @@ export const getTeachers = async (req, res) => {
                         hire_date: rows[i].hire_date,
                         name: rows[i].teacher_name,
                         department: rows[i].department,
+                        department_id: rows[i].department_id,
                         teacher_status: rows[i].teacher_status,
+                        teacher_status_id: rows[i].teacher_status_id,
                         classes: []
                     };
                     response.push(add);
@@ -102,19 +107,19 @@ export const filterTeachers = async (req, res) => {
                     t.last_name AS teacher_last_name,
                     t.phone_number AS teacher_phone_number,
                     t.email,
-                    t.department,
-                    t.status AS teacher_status,
+                    d.name as department,
+                    d.id as department_id,
+                    s.name AS teacher_status,
+                    s.is AS teacher_status_id,
                     COALESCE(c.id, 'N/A') AS class_id,
                     COALESCE(c.name, 'No tiene clase') AS class_name,
                     COALESCE(l.name, 'N/A') AS class_level
                 FROM
                     teachers t
-                LEFT JOIN
-                    class_teachers ct ON t.id = ct.teacher_id
-                LEFT JOIN
-                    classes c ON ct.class_id = c.id
-                LEFT JOIN
-                    levels l ON c.level_id = l.id  -- Obtiene el nombre del nivel
+                LEFT JOIN class_teachers ct ON t.id = ct.teacher_id
+                LEFT JOIN classes c ON ct.class_id = c.id
+                LEFT JOIN levels l ON c.level_id = l.id
+                    left join status s on t.status_id = t.id
                 WHERE
                     (t.last_name LIKE CONCAT(IFNULL('${req.body.last_name}', ''), '%')) OR
                     (t.department LIKE CONCAT(IFNULL('${req.body.department}', ''), '%')) OR
@@ -126,6 +131,8 @@ export const filterTeachers = async (req, res) => {
                 `);
             rows.forEach(element => {
                 element.teacher_id = element.teacher_id.toString();
+                if(element.teacher_status_id){element.teacher_status_id = element.teacher_status_id.toString();};
+                if(element.department_id){element.department_id = element.department_id.toString();};
             });
             let response = [];
 
@@ -140,7 +147,9 @@ export const filterTeachers = async (req, res) => {
                         last_name: rows[i].teacher_last_name,
                         name: rows[i].teacher_name,
                         department: rows[i].department,
+                        department_id: rows[i].department_id,
                         teacher_status: rows[i].teacher_status,
+                        teacher_status_id: rows[i].teacher_status_id,
                         classes: []
                     };
                     response.push(add);
@@ -202,7 +211,7 @@ export const statusTeacher = async (req, res) => {
                     UPDATE
                         teachers
                     SET
-                        status = 'inactive'
+                        status_id = 0
                     WHERE
                         id = ${req.body.id};
                 `);
@@ -211,7 +220,7 @@ export const statusTeacher = async (req, res) => {
                     UPDATE
                         teachers
                     SET
-                        status = 'active'
+                        status_id = 1
                     WHERE
                         id = ${req.body.id};
                 `);
@@ -220,7 +229,7 @@ export const statusTeacher = async (req, res) => {
                     UPDATE
                         teachers
                     SET
-                        status = 'active'
+                        status_id = 1
                     WHERE
                         id = ${req.body.id};
                 `);
@@ -241,11 +250,11 @@ export const addTeacher = async (req, res) => {
             conn = await pool.getConnection();
                 let rows = await conn.query(`
                     INSERT INTO
-                        teachers (name, last_name, email, hire_date, phone_number, address, department, status)
+                        teachers (name, last_name, email, hire_date, phone_number, address, department_id, status_id)
                     VALUES
                         ('${req.body.name}', '${req.body.last_name}', '${req.body.email}',
                         '${req.body.hire_date}', '${req.body.phone_number}', '${req.body.address}',
-                        '${req.body.department}', '${req.body.status}');
+                        ${req.body.department}, 1);
                 `);
             res.json(200);
         } catch (error) {
@@ -271,8 +280,7 @@ export const editTeacher = async (req, res) => {
                         hire_date = CASE WHEN '${req.body.hire_date}' != '' THEN '${req.body.hire_date}' ELSE hire_date END,
                         phone_number = CASE WHEN '${req.body.phone_number}' != '' THEN '${req.body.phone_number}' ELSE phone_number END,
                         address = CASE WHEN '${req.body.address}' != '' THEN '${req.body.address}' ELSE address END,
-                        department = CASE WHEN '${req.body.department}' != '' THEN '${req.body.department}' ELSE department END,
-                        status = CASE WHEN '${req.body.status}' != '' THEN '${req.body.status}' ELSE status END
+                        department = CASE WHEN ${req.body.department} != '' THEN ${req.body.department} ELSE department END
                     WHERE
                         id = ${req.body.id};
                 `);
@@ -290,7 +298,7 @@ export const addClass = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            let rows = await conn.query(`
+            await conn.query(`
                 INSERT INTO
                     class_teachers (
                     teacher_id,
@@ -313,7 +321,7 @@ export const deleteClass = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            let rows = await conn.query(`
+            await conn.query(`
                 DELETE FROM
                     class_teachers
                 WHERE
@@ -352,53 +360,6 @@ export const teacherByClassId = async (req, res) => {
                 element.teacher_id = element.teacher_id.toString();
             });
             res.json(rows);
-        } catch (error) {
-            console.log(error);
-        } finally {
-            if (conn) return conn.end();
-        };
-    };
-};
-
-export const addTeacherToClass = async (req, res) => {
-    if ( req.data ) {
-        let conn;
-        try {
-            conn = await pool.getConnection();
-            await conn.query(`
-                INSERT INTO
-                    class_teachers (
-                        class_id,
-                        teacher_id
-                        )
-                VALUES (
-                    ${req.body.class_id},
-                    ${req.body.teacher_id}
-                );
-            `);
-            res.json(200);
-        } catch (error) {
-            console.log(error);
-        } finally {
-            if (conn) return conn.end();
-        };
-    };
-};
-
-export const deleteTeacherToClass = async (req, res) => {
-    if ( req.data ) {
-        let conn;
-        try {
-            conn = await pool.getConnection();
-            await conn.query(`
-                DELETE FROM
-                    class_teachers
-                WHERE
-                    class_id = ${req.body.class_id}
-                AND
-                    teacher_id = ${req.body.teacher_id};
-            `);
-            res.json(200);
         } catch (error) {
             console.log(error);
         } finally {

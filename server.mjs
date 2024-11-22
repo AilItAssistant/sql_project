@@ -19,6 +19,7 @@ import { skills_unions } from "./routes/skills_unions/skills_unions.routes.mjs";
 import { cities } from "./routes/cities/cities.routes.mjs";
 import { permissions } from "./routes/permissions/permissions.routes.mjs";
 import { status } from "./routes/status/status.routes.mjs";
+import { departments } from "./routes/departments/departments.routes.mjs";
 
 const app = express();
 
@@ -74,15 +75,18 @@ app.use("/api/photo", photo);
 app.use("/api/types", types);
 
 //SKILLS UNIONS
-app.use("/api/skills_unions", skills_unions)
+app.use("/api/skills_unions", skills_unions);
 
 //CITIES
-app.use("/api/cities", cities)
+app.use("/api/cities", cities);
 
 //STATUS
-app.use("/api/status", status)
+app.use("/api/status", status);
 
 //PERMISSIONS
-app.use("/api/permissions", permissions)
+app.use("/api/permissions", permissions);
+
+//DEPARTMENTS
+app.use("/api/departments", departments);
 
 export default app;
