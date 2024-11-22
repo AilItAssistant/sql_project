@@ -116,8 +116,8 @@ export const filterAlumnos = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            let rows = await conn.query(
-                `SELECT
+            let rows = await conn.query(`
+                SELECT
                     s.id AS student_id,
                     s.name AS student_name,
                     s.phone_number AS student_phone_number,
@@ -133,16 +133,11 @@ export const filterAlumnos = async (req, res) => {
                     COALESCE(t.name, 'N/A') AS teacher_name
                 FROM
                     students s
-                LEFT JOIN
-                    student_classes sc ON s.id = sc.student_id
-                LEFT JOIN
-                    classes c ON sc.class_id = c.id
-                LEFT JOIN
-                    levels l ON c.level_id = l.id
-                LEFT JOIN
-                    class_teachers ct ON c.id = ct.class_id
-                LEFT JOIN
-                    teachers t ON ct.teacher_id = t.id
+                LEFT JOIN student_classes sc ON s.id = sc.student_id
+                LEFT JOIN classes c ON sc.class_id = c.id
+                LEFT JOIN levels l ON c.level_id = l.id
+                LEFT JOIN class_teachers ct ON c.id = ct.class_id
+                LEFT JOIN teachers t ON ct.teacher_id = t.id
                 left join cities cty on s.city_id = cty.id
                 left join status st on s.status_id = st.id
                 WHERE
@@ -152,8 +147,8 @@ export const filterAlumnos = async (req, res) => {
                     (s.city_id LIKE CONCAT(IFNULL('${req.body.city}', ''), '%')) OR
                     (s.email LIKE CONCAT(IFNULL('${req.body.email}', ''), '%'))
                 ORDER BY
-                    s.id, c.id;`
-                        );
+                    s.id, c.id;
+            `);
             rows.forEach((element) => {
                 element.student_id = element.student_id.toString();
             });
@@ -348,17 +343,11 @@ export const addClass = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            let rows = await conn.query(`
+            await conn.query(`
                 INSERT INTO
-                    student_classes (student_id,
-                    class_id,
-                    enrollment_date,
-                    status)
+                    student_classes (student_id, class_id, enrollment_date)
                 VALUES
-                    (${req.body.student_id},
-                    ${req.body.class_id},
-                    CURRENT_DATE,
-                    1);
+                    (${req.body.student_id}, ${req.body.class_id}, CURRENT_DATE);
             `);
             res.json(200);
         } catch (error) {
@@ -374,7 +363,7 @@ export const deleteClass = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            let rows = await conn.query(`
+            await conn.query(`
                 DELETE FROM
                     student_classes
                 WHERE
@@ -402,69 +391,21 @@ export const alumnoByClassId = async (req, res) => {
                     s.name AS student_name,
                     s.last_name AS student_last_name,
                     COALESCE(sl.name, 'N/A') AS student_level,
-                    c.name AS student_city
+                    c.name AS student_city,
+                    c.id AS student_city_id
                 FROM
                     student_classes sc
-                JOIN
-                    students s ON sc.student_id = s.id
+                JOIN students s ON sc.student_id = s.id
                 LEFT JOIN levels sl ON s.level_id = sl.id
-                left join cities c on u.city_id = c.id
+                left join cities c on s.city_id = c.id
                 WHERE
                     sc.class_id = ${req.body.id};
             `);
             rows.forEach((element) => {
                 element.student_id = element.student_id.toString();
+                if(element.student_city_id){element.student_city_id = element.student_city_id.toString();};
             });
             res.json(rows);
-        } catch (error) {
-            console.log(error);
-        } finally {
-            if (conn) return conn.end();
-        };
-    };
-};
-
-export const addAlumnoToClass = async (req, res) => {
-    if ( req.data ) {
-        let conn;
-        try {
-            conn = await pool.getConnection();
-            let rows = await conn.query(`
-                INSERT INTO
-                    student_classes (
-                        student_id,
-                        class_id,
-                        enrollment_date,
-                        status)
-                VALUES (
-                    ${req.body.class_id},
-                    ${req.body.student_id},
-                    CURDATE(),
-                    1);
-            `);
-            res.json(200);
-        } catch (error) {
-            console.log(error);
-        } finally {
-            if (conn) return conn.end();
-        };
-    };
-};
-
-export const deleteAlumnoToClass = async (req, res) => {
-    if ( req.data ) {
-        let conn;
-        try {
-            conn = await pool.getConnection();
-            let rows = await conn.query(`
-                DELETE FROM
-                    student_classes
-                WHERE
-                    class_id = ${req.body.class_id}
-                AND
-                    student_id = ${req.body.student_id};
-            `);
-            res.json(200);
         } catch (error) {
             console.log(error);
         } finally {

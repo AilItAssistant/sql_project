@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-11-2024 a las 15:53:06
+-- Tiempo de generación: 22-11-2024 a las 09:49:18
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -54,6 +54,13 @@ CREATE TABLE `blocks` (
   `individual_score` int(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `blocks`
+--
+
+INSERT INTO `blocks` (`id`, `name`, `status_id`, `is_selected`, `max_score`, `question_type_id`, `individual_score`) VALUES
+(75, 'Estar o hay', 1, 1, 2, 7, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -91,6 +98,13 @@ CREATE TABLE `classes` (
   `status_id` bigint(20) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `classes`
+--
+
+INSERT INTO `classes` (`id`, `name`, `schedule`, `room_number`, `level_id`, `status_id`) VALUES
+(30, 'Español básico', '22/11/2024', 'Atocha', 41, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -112,6 +126,13 @@ CREATE TABLE `departments` (
   `id` bigint(20) NOT NULL,
   `name` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `departments`
+--
+
+INSERT INTO `departments` (`id`, `name`) VALUES
+(1, 'Gramática');
 
 -- --------------------------------------------------------
 
@@ -203,6 +224,13 @@ CREATE TABLE `levels_blocks` (
   `block_id` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `levels_blocks`
+--
+
+INSERT INTO `levels_blocks` (`level_id`, `block_id`) VALUES
+(41, 75);
+
 -- --------------------------------------------------------
 
 --
@@ -213,6 +241,13 @@ CREATE TABLE `levels_skils` (
   `level_id` bigint(20) NOT NULL,
   `skill_id` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `levels_skils`
+--
+
+INSERT INTO `levels_skils` (`level_id`, `skill_id`) VALUES
+(41, 349);
 
 -- --------------------------------------------------------
 
@@ -294,6 +329,13 @@ CREATE TABLE `question_types` (
   `test_type` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `question_types`
+--
+
+INSERT INTO `question_types` (`id`, `name`, `statement`, `photo`, `text`, `question`, `answer`, `space`, `test_type`) VALUES
+(7, 'Granel', 1, 0, 0, 30, 3, 4, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -303,10 +345,15 @@ CREATE TABLE `question_types` (
 CREATE TABLE `skills` (
   `id` bigint(20) NOT NULL,
   `name` text NOT NULL,
-  `description` text DEFAULT NULL,
-  `status_id` bigint(20) NOT NULL DEFAULT 1,
-  `statement` text DEFAULT NULL
+  `status_id` bigint(20) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `skills`
+--
+
+INSERT INTO `skills` (`id`, `name`, `status_id`) VALUES
+(349, 'Léxico', 1);
 
 -- --------------------------------------------------------
 
@@ -318,6 +365,13 @@ CREATE TABLE `skills_blocks` (
   `skill_id` bigint(20) NOT NULL,
   `block_id` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `skills_blocks`
+--
+
+INSERT INTO `skills_blocks` (`skill_id`, `block_id`) VALUES
+(349, 75);
 
 -- --------------------------------------------------------
 
@@ -411,9 +465,15 @@ INSERT INTO `students` (`id`, `name`, `email`, `date_of_birth`, `enrollment_date
 CREATE TABLE `student_classes` (
   `student_id` bigint(20) NOT NULL,
   `class_id` bigint(20) NOT NULL,
-  `enrollment_date` date DEFAULT curdate(),
-  `status_id` bigint(20) DEFAULT 1
+  `enrollment_date` date DEFAULT curdate()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `student_classes`
+--
+
+INSERT INTO `student_classes` (`student_id`, `class_id`, `enrollment_date`) VALUES
+(8, 30, '2024-11-22');
 
 -- --------------------------------------------------------
 
@@ -432,6 +492,13 @@ CREATE TABLE `teachers` (
   `last_name` text DEFAULT NULL,
   `status_id` bigint(20) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `teachers`
+--
+
+INSERT INTO `teachers` (`id`, `name`, `email`, `hire_date`, `phone_number`, `address`, `department_id`, `last_name`, `status_id`) VALUES
+(10, 'María', 'maria@gmail.com', '0000-00-00', '987521364', 'su casa nº3, su ciudad 852641', 1, 'Fernández', 1);
 
 -- --------------------------------------------------------
 
@@ -688,8 +755,7 @@ ALTER TABLE `students`
 --
 ALTER TABLE `student_classes`
   ADD PRIMARY KEY (`student_id`,`class_id`),
-  ADD KEY `class_id` (`class_id`),
-  ADD KEY `student_class_status` (`status_id`);
+  ADD KEY `class_id` (`class_id`);
 
 --
 -- Indices de la tabla `teachers`
@@ -738,7 +804,7 @@ ALTER TABLE `answers`
 -- AUTO_INCREMENT de la tabla `blocks`
 --
 ALTER TABLE `blocks`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 
 --
 -- AUTO_INCREMENT de la tabla `cities`
@@ -750,13 +816,13 @@ ALTER TABLE `cities`
 -- AUTO_INCREMENT de la tabla `classes`
 --
 ALTER TABLE `classes`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT de la tabla `departments`
 --
 ALTER TABLE `departments`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `exams`
@@ -798,13 +864,13 @@ ALTER TABLE `questions`
 -- AUTO_INCREMENT de la tabla `question_types`
 --
 ALTER TABLE `question_types`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `skills`
 --
 ALTER TABLE `skills`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=349;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=350;
 
 --
 -- AUTO_INCREMENT de la tabla `skills_unions`
@@ -828,13 +894,13 @@ ALTER TABLE `status`
 -- AUTO_INCREMENT de la tabla `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `teachers`
 --
 ALTER TABLE `teachers`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `triggers`
@@ -1009,7 +1075,6 @@ ALTER TABLE `students`
 -- Filtros para la tabla `student_classes`
 --
 ALTER TABLE `student_classes`
-  ADD CONSTRAINT `student_class_status` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`),
   ADD CONSTRAINT `student_classes_ibfk_1` FOREIGN KEY (`class_id`) REFERENCES `classes` (`id`),
   ADD CONSTRAINT `student_classes_ibfk_2` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`);
 

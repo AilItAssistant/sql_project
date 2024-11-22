@@ -16,30 +16,33 @@ export const getClasses = async (req, res) => {
                     c.schedule,
                     c.level_id,
                     c.room_number,
-                    c.status AS class_status,
+                    stc.name AS class_status,
+                    stc.id AS class_status_id,
                     t.name AS teacher_name,
                     t.last_name AS teacher_last_name,
-                    t.status AS teacher_status,
+                    stt.name AS teacher_status,
+                    stt.id AS teacher_status_id,
                     COALESCE(s.name, 'No tiene alumnos') AS student_name,
                     COALESCE(s.last_name, '') AS student_last_name,
                     COALESCE(s.phone_number, '') AS student_phone,
                     COALESCE(s.enrollment_date, '') AS enrollment_date,
-                    COALESCE(s.city, '') AS student_city,
+                    COALESCE(cty.name, '') AS student_city,
+                    COALESCE(cty.id, '') AS student_city_id,
                     COALESCE(s.id, '') AS student_id,
                     COALESCE(s.email, '') AS student_email,
-                    COALESCE(s.status, 'N/A') AS student_status
+                    COALESCE(sts.name, 'N/A') AS student_status,
+                    COALESCE(sts.id, 'N/A') AS student_status_id
                 FROM
                     classes c
-                LEFT JOIN
-                    class_teachers ct ON c.id = ct.class_id
-                LEFT JOIN
-                    teachers t ON ct.teacher_id = t.id
-                LEFT JOIN
-                    student_classes sc ON c.id = sc.class_id
-                LEFT JOIN
-                    students s ON sc.student_id = s.id
-                LEFT JOIN
-                    levels l ON c.level_id = l.id
+                LEFT JOIN class_teachers ct ON c.id = ct.class_id
+                LEFT JOIN teachers t ON ct.teacher_id = t.id
+                LEFT JOIN student_classes sc ON c.id = sc.class_id
+                LEFT JOIN students s ON sc.student_id = s.id
+                LEFT JOIN levels l ON c.level_id = l.id
+                left join status stc on c.id = stc.id
+                left join status stt on t.id = stt.id
+                left join status sts on s.id = sts.id
+                left join cities cty on s.id = cty.id
                 ORDER BY
                     c.id,
                     s.id;
@@ -48,6 +51,10 @@ export const getClasses = async (req, res) => {
                 element.class_id = element.class_id.toString();
                 if(element.teacher_id){element.teacher_id = element.teacher_id.toString();}
                 if(element.level_id){element.level_id = element.level_id.toString();}
+                if(element.student_city_id){element.student_city_id = element.student_city_id.toString();}
+                if(element.class_status_id){element.class_status_id = element.class_status_id.toString();}
+                if(element.teacher_status_id){element.teacher_status_id = element.teacher_status_id.toString();}
+                if(element.student_status_id){element.student_status_id = element.student_status_id.toString();}
             });
             let response = [];
             for(let i = 0; rows.length > i; i++) {
@@ -66,6 +73,7 @@ export const getClasses = async (req, res) => {
                         teacher_id: rows[i].teacher_id,
                         teacher_last_name: rows[i].teacher_last_name,
                         class_status: rows[i].class_status,
+                        class_status_id: rows[i].class_status_id,
                         students: []
                     }
                     response.push(add);
@@ -77,7 +85,8 @@ export const getClasses = async (req, res) => {
                             student_email: rows[i].student_email,
                             student_phone:  rows[i].student_phone,
                             enrollment_day: rows[i].enrollment_day,
-                            student_city: rows[i].student_city
+                            student_city: rows[i].student_city,
+                            student_city_id: rows[i].student_city_id
                         };
                         add.students.push(addClass);
                     }
@@ -89,7 +98,8 @@ export const getClasses = async (req, res) => {
                         student_last_name: rows[i].student_last_name,
                         student_phone:  rows[i].student_phone,
                         enrollment_day: rows[i].enrollment_day,
-                        student_city: rows[i].student_city
+                        student_city: rows[i].student_city,
+                        student_city_id: rows[i].student_city_id
                     };
                     response[response.length -1].students.push(add);
                 };
