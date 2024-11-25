@@ -8,7 +8,7 @@ import {
     statusClass,
     deleteClass,
     editClass,
-    addClass, 
+    addClass,
     getClassesByStudentId,
     getClassesByTeacherId
 } from "../../controllers/classes/classes.controller.mjs";

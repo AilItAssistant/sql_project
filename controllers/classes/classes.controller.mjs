@@ -55,6 +55,7 @@ export const getClasses = async (req, res) => {
                 if(element.class_status_id){element.class_status_id = element.class_status_id.toString();}
                 if(element.teacher_status_id){element.teacher_status_id = element.teacher_status_id.toString();}
                 if(element.student_status_id){element.student_status_id = element.student_status_id.toString();}
+                if(element.student_id){element.student_id = element.student_id.toString();}
             });
             let response = [];
             for(let i = 0; rows.length > i; i++) {
@@ -230,7 +231,7 @@ export const statusClass = async (req, res) => {
                     UPDATE
                         classes
                     SET
-                        status = 'inactive'
+                        status_id = 1
                     WHERE
                         id = ${req.body.id};
                 `);
@@ -239,7 +240,7 @@ export const statusClass = async (req, res) => {
                     UPDATE
                         classes
                     SET
-                        status = 'active'
+                        status_id = 0
                     WHERE
                         id = ${req.body.id};
                 `);
@@ -248,7 +249,7 @@ export const statusClass = async (req, res) => {
                     UPDATE
                         classes
                     SET
-                        status = 'active'
+                        status_id = 1
                     WHERE
                         id = ${req.body.id};
                 `);
