@@ -29,17 +29,18 @@ export const getTeachers = async (req, res) => {
                 LEFT JOIN class_teachers ct ON t.id = ct.teacher_id
                 LEFT JOIN classes c ON ct.class_id = c.id
                 LEFT JOIN levels l ON c.level_id = l.id
-                left join status s on t.status_id = t.id
+                left join status s on t.status_id = s.id
                 left join departments d on t.department_id = d.id
                 ORDER BY
                     t.id,
                     c.id;
-                `);
+            `);
             rows.forEach(element => {
                 element.teacher_id = element.teacher_id.toString();
                 if(element.hire_date){element.hire_date = element.hire_date.toLocaleDateString('es-ES', {year: 'numeric', month: 'numeric', day: 'numeric',});}
-                if(element.teacher_status_id){element.teacher_status_id = element.teacher_status_id.toString();};
+                if(element.teacher_status_id || element.teacher_status_id === 0n){element.teacher_status_id = element.teacher_status_id.toString();};
                 if(element.department_id){element.department_id = element.department_id.toString();};
+                if(element.class_id){element.class_id = element.class_id.toString();};
             });
             let response = [];
 
@@ -96,6 +97,7 @@ export const getTeachers = async (req, res) => {
 };
 
 export const filterTeachers = async (req, res) => {
+    console.log(req.body)
     if ( req.data ) {
         let conn;
         try {
@@ -107,10 +109,12 @@ export const filterTeachers = async (req, res) => {
                     t.last_name AS teacher_last_name,
                     t.phone_number AS teacher_phone_number,
                     t.email,
+                    t.hire_date,
+                    t.address,
                     d.name as department,
                     d.id as department_id,
                     s.name AS teacher_status,
-                    s.is AS teacher_status_id,
+                    s.id AS teacher_status_id,
                     COALESCE(c.id, 'N/A') AS class_id,
                     COALESCE(c.name, 'No tiene clase') AS class_name,
                     COALESCE(l.name, 'N/A') AS class_level
@@ -119,10 +123,11 @@ export const filterTeachers = async (req, res) => {
                 LEFT JOIN class_teachers ct ON t.id = ct.teacher_id
                 LEFT JOIN classes c ON ct.class_id = c.id
                 LEFT JOIN levels l ON c.level_id = l.id
-                    left join status s on t.status_id = t.id
+                left join status s on t.status_id = s.id
+                left join departments d on t.department_id = d.id
                 WHERE
                     (t.last_name LIKE CONCAT(IFNULL('${req.body.last_name}', ''), '%')) OR
-                    (t.department LIKE CONCAT(IFNULL('${req.body.department}', ''), '%')) OR
+                    (d.id LIKE CONCAT(IFNULL(${req.body.department}, ''), '%')) OR
                     (t.phone_number LIKE CONCAT(IFNULL('${req.body.phone_number}', ''), '%')) OR
                     (t.email LIKE CONCAT(IFNULL('${req.body.email}', ''), '%'))
                 ORDER BY
@@ -131,20 +136,25 @@ export const filterTeachers = async (req, res) => {
                 `);
             rows.forEach(element => {
                 element.teacher_id = element.teacher_id.toString();
+                if(element.hire_date){element.hire_date = element.hire_date.toLocaleDateString('es-ES', {year: 'numeric', month: 'numeric', day: 'numeric',});}
                 if(element.teacher_status_id){element.teacher_status_id = element.teacher_status_id.toString();};
                 if(element.department_id){element.department_id = element.department_id.toString();};
+                if(element.class_id){element.class_id = element.class_id.toString();};
             });
             let response = [];
 
             for(let i = 0; rows.length > i; i++) {
                 let x;
                 if(i >= 1) {x = i - 1;} else {x = 0;}
-                if(i === 0 || rows[i].teacher_id !== rows[x].teacher_id){
+
+                if(i === 0 || rows[i].teacher_status_id !== rows[x].teacher_id){
                     let add = {
                         teacher_id: rows[i].teacher_id,
                         email: rows[i].email,
                         phone_number: rows[i].teacher_phone_number,
                         last_name: rows[i].teacher_last_name,
+                        address: rows[i].address,
+                        hire_date: rows[i].hire_date,
                         name: rows[i].teacher_name,
                         department: rows[i].department,
                         department_id: rows[i].department_id,
@@ -280,7 +290,7 @@ export const editTeacher = async (req, res) => {
                         hire_date = CASE WHEN '${req.body.hire_date}' != '' THEN '${req.body.hire_date}' ELSE hire_date END,
                         phone_number = CASE WHEN '${req.body.phone_number}' != '' THEN '${req.body.phone_number}' ELSE phone_number END,
                         address = CASE WHEN '${req.body.address}' != '' THEN '${req.body.address}' ELSE address END,
-                        department = CASE WHEN ${req.body.department} != '' THEN ${req.body.department} ELSE department END
+                        department_id = CASE WHEN ${req.body.department} != '' THEN ${req.body.department} ELSE department_id END
                     WHERE
                         id = ${req.body.id};
                 `);
@@ -294,6 +304,7 @@ export const editTeacher = async (req, res) => {
 };
 
 export const addClass = async (req, res) => {
+    console.log(req.body)
     if ( req.data ) {
         let conn;
         try {
@@ -304,8 +315,8 @@ export const addClass = async (req, res) => {
                     teacher_id,
                     class_id)
                 VALUES (
-                '${req.body.teacher_id}',
-                '${req.body.class_id}');
+                ${req.body.teacher_id},
+                ${req.body.class_id});
             `);
             res.json(200);
         } catch (error) {
@@ -348,13 +359,13 @@ export const teacherByClassId = async (req, res) => {
                     t.id AS teacher_id,
                     t.name AS teacher_name,
                     t.last_name AS teacher_last_name,
-                    t.department AS teacher_department
+                    d.name AS teacher_department
+                    d.id AS teacher_department_id
                 FROM
                     class_teachers ct
-                JOIN
-                    teachers t ON ct.teacher_id = t.id
-                WHERE
-                    ct.class_id = ${req.body.id};
+                JOIN teachers t ON ct.teacher_id = t.id
+                join departments d on t.department_id = d.id
+                WHERE ct.class_id = ${req.body.id};
             `);
             rows.forEach((element) => {
                 element.teacher_id = element.teacher_id.toString();

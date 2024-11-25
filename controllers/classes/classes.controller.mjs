@@ -404,25 +404,26 @@ export const getClassesByTeacherId = async (req, res) => {
                     COALESCE(l.name, 'N/A') AS level_name,
                     c.level_id,
                     c.room_number,
-                    c.status AS class_status,
+                    st.name AS class_status,
+                    st.id AS class_status_id,
                     t.name AS teacher_name,
                     t.last_name AS teacher_last_name,
-                    t.status AS teacher_status
-                FROM
-                    classes c
-                JOIN
-                    class_teachers ct ON c.id = ct.class_id
-                JOIN
-                    teachers t ON ct.teacher_id = t.id
-                LEFT JOIN
-                    levels l ON c.level_id = l.id
-                WHERE
-                    t.id = ${req.body.id};
+                    sc.name AS teacher_status,
+                    sc.id AS teacher_status_id
+                FROM classes c
+                JOIN class_teachers ct ON c.id = ct.class_id
+                JOIN teachers t ON ct.teacher_id = t.id
+                LEFT JOIN levels l ON c.level_id = l.id
+                left join status st on t.status_id = st.id
+                left join status sc on c.status_id = sc.id
+                WHERE t.id = ${req.body.id};
             `);
             rows.forEach(element => {
                 element.class_id = element.class_id.toString();
                 if(element.teacher_id){element.teacher_id = element.teacher_id.toString();}
                 if(element.level_id){element.level_id = element.level_id.toString();}
+                if(element.class_status_id){element.class_status_id = element.class_status_id.toString();}
+                if(element.teacher_status_id){element.teacher_status_id = element.teacher_status_id.toString();}
             });
             res.json(rows);
         } catch (error) {
