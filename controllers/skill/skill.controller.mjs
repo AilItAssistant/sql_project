@@ -9,14 +9,22 @@ export const getSkills = async (req, res) => {
             conn = await pool.getConnection();
             let rows = await conn.query(`
                 select
-                    s.id as id, s.name as name, s.status as status, s.level_id as level_id, l.name as level_name
+                    s.id as id,
+                    s.name as name,
+                    st.name as status_name,
+                    st.id as status_id,
+                    l.id as level_id,
+                    l.name as level_name
                 from skills s
-                left join levels l on s.level_id = l.id
+                left join levels_skills ls on s.id = ls.skill_id
+                left join levels l on ls.level_id = l.id
+                left join status st on s.status_id = st.id
                 order by s.id;
             `);
             rows.forEach(element => {
                 element.id = element.id.toString();
                 if(element.level_id){element.level_id = element.level_id.toString();}
+                element.status_id = element.status_id.toString();
             });
             let response = {
                 skills: rows,
@@ -37,10 +45,25 @@ export const getActiveSkills = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            let rows = await conn.query("select s.id as id, s.name as name, s.status as status, s.level_id as level_id, l.name as level_name from skills s left join levels l on s.level_id = l.id where s.status = 'active' order by s.id; ");
+            let rows = await conn.query(`
+                select
+                    s.id as id,
+                    s.name as name,
+                    st.name as status_name,
+                    st.id as status_id,
+                    l.id as level_id,
+                    l.name as level_name
+                from skills s
+                left join levels_skills ls on s.id = ls.skill_id
+                left join levels l on ls.level_id = l.id
+                left join status st on s.status_id = st.id
+                where s.status = 1
+                order by s.id;
+            `);
             rows.forEach(element => {
                 element.id = element.id.toString();
                 if(element.level_id){element.level_id = element.level_id.toString();}
+                element.status_id = element.status_id.toString();
             });
             res.json(rows);
         } catch (error) {
@@ -57,7 +80,20 @@ export const skillsId = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            let rows = await conn.query(`select * from skills where level_id = ${req.body.level_id} and status = 'active';`);
+            let rows = await conn.query(`
+                select
+                    s.id as id,
+                    s.name as name,
+                    st.name as status_name,
+                    st.id as status_id,
+                    l.id as level_id,
+                    l.name as level_name
+                from skills s
+                left join levels_skills ls on s.id = ls.skill_id
+                left join levels l on ls.level_id = l.id
+                left join status st on s.status_id = st.id
+                where level_id = ${req.body.level_id} and status_id = 1;
+            `);
             rows.forEach(element => {
                 element.id = element.id.toString();
                 if(element.level_id){element.level_id = element.level_id.toString();}
@@ -81,7 +117,6 @@ export const editSkill = async (req, res) => {
                     UPDATE skills
                     SET
                         name = CASE WHEN '${req.body.name}' IS NOT NULL AND '${req.body.name}' != 'null' THEN '${req.body.name}' ELSE name END,
-                        status = COALESCE(${req.body.status}, status),
                         level_id = COALESCE(${req.body.secondId}, level_id)
                     WHERE id = ${req.body.id};
                 `);
@@ -99,7 +134,7 @@ export const statusSkill = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            await conn.query(`UPDATE skills SET status = '${req.body.status}' WHERE id = ${req.body.id};`);
+            await conn.query(`UPDATE skills SET status_id = ${req.body.status} WHERE id = ${req.body.id};`);
             res.json(200);
         } catch (error) {
             console.log(error);
