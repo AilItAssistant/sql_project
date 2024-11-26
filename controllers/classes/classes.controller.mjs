@@ -19,9 +19,8 @@ export const getClasses = async (req, res) => {
                     stc.name AS class_status,
                     stc.id AS class_status_id,
                     t.name AS teacher_name,
+                    t.id as teacher_id,
                     t.last_name AS teacher_last_name,
-                    stt.name AS teacher_status,
-                    stt.id AS teacher_status_id,
                     COALESCE(s.name, 'No tiene alumnos') AS student_name,
                     COALESCE(s.last_name, '') AS student_last_name,
                     COALESCE(s.phone_number, '') AS student_phone,
@@ -39,10 +38,9 @@ export const getClasses = async (req, res) => {
                 LEFT JOIN student_classes sc ON c.id = sc.class_id
                 LEFT JOIN students s ON sc.student_id = s.id
                 LEFT JOIN levels l ON c.level_id = l.id
-                left join status stc on c.id = stc.id
-                left join status stt on t.id = stt.id
-                left join status sts on s.id = sts.id
-                left join cities cty on s.id = cty.id
+                left join status stc on c.status_id = stc.id
+                left join status sts on s.status_id = sts.id
+                left join cities cty on s.city_id = cty.id
                 ORDER BY
                     c.id,
                     s.id;
@@ -52,7 +50,7 @@ export const getClasses = async (req, res) => {
                 if(element.teacher_id){element.teacher_id = element.teacher_id.toString();}
                 if(element.level_id){element.level_id = element.level_id.toString();}
                 if(element.student_city_id){element.student_city_id = element.student_city_id.toString();}
-                if(element.class_status_id){element.class_status_id = element.class_status_id.toString();}
+                element.class_status_id = element.class_status_id.toString();
                 if(element.teacher_status_id){element.teacher_status_id = element.teacher_status_id.toString();}
                 if(element.student_status_id){element.student_status_id = element.student_status_id.toString();}
                 if(element.student_id){element.student_id = element.student_id.toString();}
@@ -105,6 +103,7 @@ export const getClasses = async (req, res) => {
                     response[response.length -1].students.push(add);
                 };
             };
+            console.log(response)
             let resp = {
                 classes: response,
                 dataLogin: req.data
@@ -119,7 +118,6 @@ export const getClasses = async (req, res) => {
 };
 
 export const filterClasses = async (req, res) => {
-    console.log(req.body)
     if ( req.data ) {
         let conn;
         try {
@@ -132,34 +130,35 @@ export const filterClasses = async (req, res) => {
                     c.schedule,
                     c.level_id,
                     c.room_number,
-                    c.status AS class_status,
+                    stc.name AS class_status,
+                    stc.id AS class_status_id,
                     t.name AS teacher_name,
                     t.last_name AS teacher_last_name,
-                    t.status AS teacher_status,
+                    t.id as teacher_id,
                     COALESCE(s.name, 'No tiene alumnos') AS student_name,
                     COALESCE(s.last_name, '') AS student_last_name,
                     COALESCE(s.phone_number, '') AS student_phone,
                     COALESCE(s.enrollment_date, '') AS enrollment_date,
-                    COALESCE(s.city, '') AS student_city,
+                    COALESCE(cty.name, '') AS student_city,
+                    COALESCE(cty.id, '') AS student_city_id,
                     COALESCE(s.id, '') AS student_id,
                     COALESCE(s.email, '') AS student_email,
-                    COALESCE(s.status, 'N/A') AS student_status
+                    COALESCE(sts.name, 'N/A') AS student_status,
+                    COALESCE(sts.id, 'N/A') AS student_status_id
                 FROM
                     classes c
-                LEFT JOIN
-                    class_teachers ct ON c.id = ct.class_id
-                LEFT JOIN
-                    teachers t ON ct.teacher_id = t.id
-                LEFT JOIN
-                    student_classes sc ON c.id = sc.class_id
-                LEFT JOIN
-                    students s ON sc.student_id = s.id
-                LEFT JOIN
-                    levels l ON c.level_id = l.id
+                LEFT JOIN class_teachers ct ON c.id = ct.class_id
+                LEFT JOIN teachers t ON ct.teacher_id = t.id
+                LEFT JOIN student_classes sc ON c.id = sc.class_id
+                LEFT JOIN students s ON sc.student_id = s.id
+                LEFT JOIN levels l ON c.level_id = l.id
+                left join status stc on c.status_id = stc.id
+                left join status sts on s.status_id = sts.id
+                left join cities cty on s.city_id = cty.id
                 WHERE
                     (t.last_name LIKE CONCAT(IFNULL('${req.body.last_name}', ''), '%')) OR
                     (c.room_number LIKE CONCAT(IFNULL('${req.body.class}', ''), '%')) OR
-                    (l.name LIKE CONCAT(IFNULL('${req.body.level}', ''), '%')) OR
+                    (l.id LIKE CONCAT(IFNULL('${req.body.level}', ''), '%')) OR
                     (c.name LIKE CONCAT(IFNULL('${req.body.class_name}', ''), '%'))
                 ORDER BY
                     c.id,
@@ -167,6 +166,13 @@ export const filterClasses = async (req, res) => {
             `);
             rows.forEach(element => {
                 element.class_id = element.class_id.toString();
+                if(element.teacher_id){element.teacher_id = element.teacher_id.toString();}
+                if(element.level_id){element.level_id = element.level_id.toString();}
+                if(element.student_city_id){element.student_city_id = element.student_city_id.toString();}
+                element.class_status_id = element.class_status_id.toString();
+                if(element.teacher_status_id){element.teacher_status_id = element.teacher_status_id.toString();}
+                if(element.student_status_id){element.student_status_id = element.student_status_id.toString();}
+                if(element.student_id){element.student_id = element.student_id.toString();}
             });
             let response = [];
             for(let i = 0; rows.length > i; i++) {
@@ -178,12 +184,15 @@ export const filterClasses = async (req, res) => {
                         class_id: rows[i].class_id,
                         class_name: rows[i].class_name,
                         class_level: rows[i].class_level,
+                        level_id: rows[i].level_id,
                         schedule: rows[i].schedule,
                         room_number: rows[i].room_number,
                         class_level: rows[i].class_level,
                         teacher_name: rows[i].teacher_name,
+                        teacher_id: rows[i].teacher_id,
                         teacher_last_name: rows[i].teacher_last_name,
                         class_status: rows[i].class_status,
+                        class_status_id: rows[i].class_status_id,
                         students: []
                     }
                     response.push(add);
@@ -195,7 +204,8 @@ export const filterClasses = async (req, res) => {
                             student_email: rows[i].student_email,
                             student_phone:  rows[i].student_phone,
                             enrollment_day: rows[i].enrollment_day,
-                            student_city: rows[i].student_city
+                            student_city: rows[i].student_city,
+                            student_city_id: rows[i].student_city_id
                         };
                         add.students.push(addClass);
                     }
@@ -207,7 +217,8 @@ export const filterClasses = async (req, res) => {
                         student_last_name: rows[i].student_last_name,
                         student_phone:  rows[i].student_phone,
                         enrollment_day: rows[i].enrollment_day,
-                        student_city: rows[i].student_city
+                        student_city: rows[i].student_city,
+                        student_city_id: rows[i].student_city_id
                     };
                     response[response.length -1].students.push(add);
                 };
@@ -222,6 +233,7 @@ export const filterClasses = async (req, res) => {
 };
 
 export const statusClass = async (req, res) => {
+    console.log(req.body)
     if ( req.data ) {
         let conn;
         try {
@@ -231,7 +243,7 @@ export const statusClass = async (req, res) => {
                     UPDATE
                         classes
                     SET
-                        status_id = 1
+                        status_id = 0
                     WHERE
                         id = ${req.body.id};
                 `);
@@ -240,7 +252,7 @@ export const statusClass = async (req, res) => {
                     UPDATE
                         classes
                     SET
-                        status_id = 0
+                        status_id = 1
                     WHERE
                         id = ${req.body.id};
                 `);
@@ -284,6 +296,7 @@ export const deleteClass = async (req, res) => {
 };
 
 export const addClass = async (req, res) => {
+    console.log(req.body)
     if ( req.data ) {
         let conn;
         try {
@@ -294,13 +307,13 @@ export const addClass = async (req, res) => {
                     schedule,
                     room_number,
                     level_id,
-                    status
+                    status_id
                 ) VALUES (
                     '${req.body.name}',
                     '${req.body.schedule}',
                     '${req.body.class}',
                     ${req.body.level},
-                    '${req.body.status}'
+                    1
                 );
             `);
             let class_id = await conn.query(
@@ -336,8 +349,7 @@ export const editClass = async (req, res) => {
                         name = IF('${req.body.name}' != '', '${req.body.name}', name),
                         schedule = IF('${req.body.schedule}' != '', '${req.body.schedule}', schedule),
                         room_number = IF('${req.body.class}' != '', '${req.body.class}', room_number),
-                        level_id = IF('${req.body.level}' != '' AND EXISTS (SELECT 1 FROM levels WHERE id = '${req.body.level}'), '${req.body.level}', level_id),
-                        status = IF('${req.body.status}' != '', '${req.body.status}', status)
+                        level_id = IF('${req.body.level}' != '' AND EXISTS (SELECT 1 FROM levels WHERE id = '${req.body.level}'), '${req.body.level}', level_id)
                     WHERE
                         id = ${req.body.id};
                 `);
@@ -363,20 +375,13 @@ export const getClassesByStudentId = async (req, res) => {
                     COALESCE(l.name, 'N/A') AS class_level,
                     t.name AS teacher_name,
                     t.last_name AS teacher_last_name
-                FROM
-                    students s
-                JOIN
-                    student_classes sc ON s.id = sc.student_id
-                JOIN
-                    classes c ON sc.class_id = c.id
-                LEFT JOIN
-                    levels l ON c.level_id = l.id
-                LEFT JOIN
-                    class_teachers ct ON c.id = ct.class_id
-                LEFT JOIN
-                    teachers t ON ct.teacher_id = t.id
-                WHERE
-                    s.id = ${req.body.id};
+                FROM students s
+                JOIN student_classes sc ON s.id = sc.student_id
+                JOIN classes c ON sc.class_id = c.id
+                LEFT JOIN levels l ON c.level_id = l.id
+                LEFT JOIN class_teachers ct ON c.id = ct.class_id
+                LEFT JOIN teachers t ON ct.teacher_id = t.id
+                WHERE s.id = ${req.body.id};
             `);
             rows.forEach(element => {
                 element.class_id = element.class_id.toString();

@@ -10,7 +10,9 @@ export const getLevels = async (req, res) => {
             let rows = await conn.query("select * from levels; ");
             rows.forEach(element => {
                 element.id = element.id.toString();
+                if(element.status_id){element.status_id = element.status_id.toString();};
             });
+
             let response = {
                 levels: rows,
                 dataLogin: req.data
@@ -34,6 +36,7 @@ export const getActiveLevels = async (req, res) => {
             rows.forEach(element => {
                 element.id = element.id.toString();
                 if(element.status_id){element.status_id = element.status_id.toString();};
+                console.log(rows)
             });
             res.json(rows);
         } catch (error) {

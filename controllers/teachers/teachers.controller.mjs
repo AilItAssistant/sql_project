@@ -24,16 +24,13 @@ export const getTeachers = async (req, res) => {
                     COALESCE(c.id, 'N/A') AS class_id,
                     COALESCE(c.name, 'No tiene clase') AS class_name,
                     COALESCE(l.name, 'N/A') AS class_level
-                FROM
-                    teachers t
+                FROM teachers t
                 LEFT JOIN class_teachers ct ON t.id = ct.teacher_id
                 LEFT JOIN classes c ON ct.class_id = c.id
                 LEFT JOIN levels l ON c.level_id = l.id
                 left join status s on t.status_id = s.id
                 left join departments d on t.department_id = d.id
-                ORDER BY
-                    t.id,
-                    c.id;
+                ORDER BY t.id, c.id;
             `);
             rows.forEach(element => {
                 element.teacher_id = element.teacher_id.toString();
@@ -43,7 +40,6 @@ export const getTeachers = async (req, res) => {
                 if(element.class_id){element.class_id = element.class_id.toString();};
             });
             let response = [];
-
             for(let i = 0; rows.length > i; i++) {
                 let x;
                 if(i >= 1) {x = i - 1;} else {x = 0;}
@@ -83,6 +79,7 @@ export const getTeachers = async (req, res) => {
                     response[response.length -1].classes.push(add);
                 };
             };
+            console.log(response)
             let resp = {
                 teachers: response,
                 dataLogin: req.data
@@ -97,7 +94,6 @@ export const getTeachers = async (req, res) => {
 };
 
 export const filterTeachers = async (req, res) => {
-    console.log(req.body)
     if ( req.data ) {
         let conn;
         try {
@@ -350,6 +346,7 @@ export const deleteClass = async (req, res) => {
 };
 
 export const teacherByClassId = async (req, res) => {
+    console.log(req.body)
     if ( req.data ) {
         let conn;
         try {
@@ -358,13 +355,10 @@ export const teacherByClassId = async (req, res) => {
                 SELECT
                     t.id AS teacher_id,
                     t.name AS teacher_name,
-                    t.last_name AS teacher_last_name,
-                    d.name AS teacher_department
-                    d.id AS teacher_department_id
+                    t.last_name AS teacher_last_name
                 FROM
                     class_teachers ct
                 JOIN teachers t ON ct.teacher_id = t.id
-                join departments d on t.department_id = d.id
                 WHERE ct.class_id = ${req.body.id};
             `);
             rows.forEach((element) => {
