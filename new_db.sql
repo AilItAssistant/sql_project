@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-11-2024 a las 09:49:18
+-- Tiempo de generación: 26-11-2024 a las 12:07:42
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -103,7 +103,8 @@ CREATE TABLE `classes` (
 --
 
 INSERT INTO `classes` (`id`, `name`, `schedule`, `room_number`, `level_id`, `status_id`) VALUES
-(30, 'Español básico', '22/11/2024', 'Atocha', 41, 1);
+(30, 'Español básico', '22/11/2024', 'Atocha', 41, 1),
+(32, 'Español Medio', 'Lunes', 'Sol', 41, 1);
 
 -- --------------------------------------------------------
 
@@ -115,6 +116,14 @@ CREATE TABLE `class_teachers` (
   `class_id` bigint(20) NOT NULL,
   `teacher_id` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `class_teachers`
+--
+
+INSERT INTO `class_teachers` (`class_id`, `teacher_id`) VALUES
+(30, 10),
+(32, 11);
 
 -- --------------------------------------------------------
 
@@ -468,13 +477,6 @@ CREATE TABLE `student_classes` (
   `enrollment_date` date DEFAULT curdate()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `student_classes`
---
-
-INSERT INTO `student_classes` (`student_id`, `class_id`, `enrollment_date`) VALUES
-(8, 30, '2024-11-22');
-
 -- --------------------------------------------------------
 
 --
@@ -498,7 +500,8 @@ CREATE TABLE `teachers` (
 --
 
 INSERT INTO `teachers` (`id`, `name`, `email`, `hire_date`, `phone_number`, `address`, `department_id`, `last_name`, `status_id`) VALUES
-(10, 'María', 'maria@gmail.com', '0000-00-00', '987521364', 'su casa nº3, su ciudad 852641', 1, 'Fernández', 1);
+(10, 'María', 'maria@gmail.com', '2024-01-20', '987521364', 'su casa nº3, su ciudad 852641', 1, 'Fernández', 1),
+(11, 'Francisco', 'pepe@gmail.com', '2024-11-07', '789654212', 'calle barbara de braganza, 155 alcala de hernares, comunidada de madrid', 1, 'Jiménez Alvarez', 1);
 
 -- --------------------------------------------------------
 
@@ -816,7 +819,7 @@ ALTER TABLE `cities`
 -- AUTO_INCREMENT de la tabla `classes`
 --
 ALTER TABLE `classes`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT de la tabla `departments`
@@ -900,7 +903,7 @@ ALTER TABLE `students`
 -- AUTO_INCREMENT de la tabla `teachers`
 --
 ALTER TABLE `teachers`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `triggers`
