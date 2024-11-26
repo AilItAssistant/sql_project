@@ -7,12 +7,19 @@ export const getLevels = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            let rows = await conn.query("select * from levels; ");
+            let rows = await conn.query(`
+                select
+                    l.id,
+                    l.name,
+                    s.id as status_id,
+                    s.name as status_name
+                from levels l
+                left join status s on l.status_id = s.id;
+            `);
             rows.forEach(element => {
                 element.id = element.id.toString();
-                if(element.status_id){element.status_id = element.status_id.toString();};
+                element.status_id = element.status_id.toString();
             });
-
             let response = {
                 levels: rows,
                 dataLogin: req.data
@@ -32,7 +39,16 @@ export const getActiveLevels = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            let rows = await conn.query("select * from levels where status_id = 1;");
+            let rows = await conn.query(`
+                select
+                    l.id,
+                    l.name,
+                    s.id as status_id,
+                    s.name as status_name
+                from levels l
+                left join status s on l.status_id = s.id
+                where status_id = 1;
+            `);
             rows.forEach(element => {
                 element.id = element.id.toString();
                 if(element.status_id){element.status_id = element.status_id.toString();};
@@ -54,8 +70,7 @@ export const editLevel = async (req, res) => {
             conn = await pool.getConnection();
             await conn.query(`
                 UPDATE
-                    levels SET name = '${req.body.name}',
-                    status = '${req.body.status}'
+                    levels SET name = '${req.body.name}'
                 WHERE
                     id = ${req.body.id};
             `);
@@ -73,7 +88,11 @@ export const statusLevel = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            await conn.query(`UPDATE levels SET status = '${req.body.status}' WHERE id = ${req.body.id};`);
+            await conn.query(`
+                UPDATE levels
+                SET status_id = ${req.body.status}
+                WHERE id = ${req.body.id};
+            `);
             res.json(200);
         } catch (error) {
             console.log(error);
@@ -88,7 +107,8 @@ export const addLevel = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            await conn.query(`INSERT INTO levels (name, status) VALUES ('${req.body.name}', '${req.body.status}');`);
+            await conn.query(`
+                INSERT INTO levels (name, status_id) VALUES ('${req.body.name}', 1);`);
             res.json(200);
         } catch (error) {
             console.log(error);
@@ -119,9 +139,19 @@ export const searchLevel = async (req, res) => {
         try {
             console.log(req.body.name)
             conn = await pool.getConnection();
-            let rows = await conn.query(`SELECT * FROM levels WHERE name LIKE '${req.body.name}%';`);
+            let rows = await conn.query(`
+                select
+                    l.id,
+                    l.name,
+                    s.id as status_id,
+                    s.name as status_name
+                from levels l
+                left join status s on l.status_id = s.id
+                WHERE l.name LIKE '${req.body.name}%';
+            `);
             rows.forEach(element => {
                 element.id = element.id.toString();
+                element.status_id = element.status_id.toString();
             });
             console.log(rows)
             res.json(rows);
