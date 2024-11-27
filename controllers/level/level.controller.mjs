@@ -52,7 +52,6 @@ export const getActiveLevels = async (req, res) => {
             rows.forEach(element => {
                 element.id = element.id.toString();
                 if(element.status_id){element.status_id = element.status_id.toString();};
-                console.log(rows)
             });
             res.json(rows);
         } catch (error) {

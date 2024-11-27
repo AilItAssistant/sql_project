@@ -18,7 +18,6 @@ export const getSkills = async (req, res) => {
                 order by s.id;
             `);
             for(let i = 0; rows.length > i; i++){
-                rows[i].levels = [];
                 let levels = await conn.query(`
                     select
                         l.name as level,
@@ -54,35 +53,15 @@ export const getActiveSkills = async (req, res) => {
             conn = await pool.getConnection();
             let rows = await conn.query(`
                 select
-                    s.id as id,
-                    s.name as name,
-                    st.name as status_name,
-                    st.id as status_id
-                from skills s
-                left join status st on s.status_id = st.id
-                where s.status = 1
-                order by s.id;
+                    id,
+                    name
+                from skills
+                where status_id = 1
+                order by id;
             `);
             rows.forEach(element => {
                 element.id = element.id.toString();
-                if(element.level_id){element.level_id = element.level_id.toString();}
-                element.status_id = element.status_id.toString();
             });
-            for(let i = 0; rows.length > i; i++){
-                rows[i].levels = [];
-                let levels = await conn.query(`
-                    select
-                        l.name as level,
-                        l.id as level_id
-                    from levels_skills ls
-                    join levels l on ls.level_id = l.id
-                    where ls.skill_id = ${rows[i].id};
-                `);
-                levels.forEach(element => {
-                    element.level_id = element.level_id.toString();
-                });
-                rows[i].levels = levels;
-            };
             res.json(rows);
         } catch (error) {
             console.log(error);

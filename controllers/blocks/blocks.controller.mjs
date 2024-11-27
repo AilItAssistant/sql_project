@@ -11,25 +11,38 @@ export const getBlocks = async (req, res) => {
                 SELECT
                     b.id AS id,
                     b.name AS name,
-                    b.status AS status,
-                    b.skill_id AS skill_id,
-                    s.name AS skill_name,
+                    st.name AS status,
+                    st.id AS status_id,
                     b.is_selected,
                     b.max_score,
                     qt.name AS question_type_name,
                     qt.id AS question_type_id,
                     b.individual_score
-                FROM
-                    blocks b
-                LEFT JOIN skills s ON b.skill_id = s.id
+                FROM blocks b
                 LEFT JOIN question_types qt ON b.question_type_id = qt.id
+                left join status st on b.status_id = st.id
                 ORDER BY b.id;
             `);
             rows.forEach(element => {
                 element.id = element.id.toString();
                 if(element.skill_id){element.skill_id = element.skill_id.toString();}
                 if(element.question_type_id){element.question_type_id = element.question_type_id.toString();}
+                element.status_id = element.status_id.toString();
             });
+            for(let i = 0; rows.length > i; i++){
+                let skills = await conn.query(`
+                    select
+                        l.name as skill,
+                        l.id as skill_id
+                    from skills_blocks sb
+                    join skills l on sb.skill_id = l.id
+                    where sb.block_id = ${rows[i].id};
+                `);
+                skills.forEach(element => {
+                    element.skill_id = element.skill_id.toString();
+                });
+                rows[i].skills = skills;
+            };
             let response = {
                 blocks: rows,
                 dataLogin: req.data
@@ -49,11 +62,43 @@ export const getActiveBlocks = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            let rows = await conn.query("select b.id as id, b.name as name, b.status as status, b.skill_id as skill_id, s.name as skill_name from blocks b left join skills s on b.skill_id = s.id where b.status = 'active' order by b.id; ");
+            let rows = await conn.query(`
+                SELECT
+                    b.id AS id,
+                    b.name AS name,
+                    st.name AS status,
+                    st.id AS status_id,
+                    b.is_selected,
+                    b.max_score,
+                    qt.name AS question_type_name,
+                    qt.id AS question_type_id,
+                    b.individual_score
+                FROM blocks b
+                LEFT JOIN question_types qt ON b.question_type_id = qt.id
+                left join status st on b.status_id = st.id
+                where b.status = 1
+                order by b.id;
+            `);
             rows.forEach(element => {
                 element.id = element.id.toString();
                 if(element.skill_id){element.skill_id = element.skill_id.toString();}
+                if(element.question_type_id){element.question_type_id = element.question_type_id.toString();}
+                if(element.status_id){element.status_id = element.status_id.toString();}
             });
+            for(let i = 0; rows.length > i; i++){
+                let skills = await conn.query(`
+                    select
+                        l.name as skill,
+                        l.id as skill_id
+                    from skills_blocks sb
+                    join skills l on sb.skill_id = l.id
+                    where sb.block_id = ${rows[i].id};
+                `);
+                skills.forEach(element => {
+                    element.skill_id = element.skill_id.toString();
+                });
+                rows[i].skills = skills;
+            };
             res.json(rows);
         } catch (error) {
             console.log(error);
@@ -70,20 +115,42 @@ export const blocksById = async (req, res) => {
         try {
             conn = await pool.getConnection();
             let rows = await conn.query(`
-                select
-                    b.id as id, b.name as name, b.status as status,
-                    b.skill_id as skill_id, s.name as skill_name from blocks b
-                left join
-                    skills s on b.skill_id = s.id
-                where
-                    b.skill_id = ${req.body.skill_id} and b.status = 'active'
-                order
-                    by b.id;
+                SELECT
+                    b.id AS id,
+                    b.name AS name,
+                    st.name AS status,
+                    st.id AS status_id,
+                    b.is_selected,
+                    b.max_score,
+                    qt.name AS question_type_name,
+                    qt.id AS question_type_id,
+                    b.individual_score
+                FROM blocks b
+                LEFT JOIN question_types qt ON b.question_type_id = qt.id
+                left join status st on b.status_id = st.id
+                where b.skill_id = ${req.body.skill_id} and b.status = 1
+                order by b.id;
             `);
             rows.forEach(element => {
                 element.id = element.id.toString();
                 if(element.skill_id){element.skill_id = element.skill_id.toString();}
+                if(element.question_type_id){element.question_type_id = element.question_type_id.toString();}
+                if(element.status_id){element.status_id = element.status_id.toString();}
             });
+            for(let i = 0; rows.length > i; i++){
+                let skills = await conn.query(`
+                    select
+                        l.name as skill,
+                        l.id as skill_id
+                    from skills_blocks sb
+                    join skills l on sb.skill_id = l.id
+                    where sb.block_id = ${rows[i].id};
+                `);
+                skills.forEach(element => {
+                    element.skill_id = element.skill_id.toString();
+                });
+                rows[i].skills = skills;
+            };
             res.json(rows);
         } catch (error) {
             console.log(error);
@@ -102,12 +169,11 @@ export const editBlock = async (req, res) => {
             await conn.query(`
                 UPDATE blocks
                 SET
-                    skill_id = COALESCE(${req.body.secondId}, skill_id),
-                    name = CASE WHEN '${req.body.name}' IS NOT NULL AND '${req.body.name}' != 'null' THEN '${req.body.name}' ELSE name END,
-                    status = COALESCE(${req.body.status}, status),
+                    name = COALESCE(${req.body.name}, name),
                     question_type_id = COALESCE(${req.body.type}, question_type_id),
                     max_score = COALESCE(${req.body.score}, max_score),
-                    individual_score = COALESCE(${req.body.individual_score}, individual_score)
+                    individual_score = COALESCE(${req.body.individual_score}, individual_score),
+                    is_selected = COALESCE(${req.body.is_selected}, is_selected)
                 WHERE id = ${req.body.id};
             `);
             res.json(200);
@@ -124,7 +190,10 @@ export const statusBlock = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            await conn.query(`UPDATE blocks SET status = '${req.body.status}' WHERE id = ${req.body.id};`);
+            await conn.query(`
+                UPDATE blocks SET status_id = ${req.body.status}
+                WHERE id = ${req.body.id};
+            `);
             res.json(200);
         } catch (error) {
             console.log(error);
@@ -139,17 +208,10 @@ export const addBlock = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            if ( req.body.type === null ) {
-                await conn.query(`
-                    INSERT INTO blocks (name, status, skill_id, max_score, question_type_id)
-                    VALUES ('${req.body.name}', '${req.body.status}', '${req.body.skillId}', ${req.body.score}, ${req.body.type});
-                `);
-            } else {
-                await conn.query(`
-                    INSERT INTO blocks (name, status, skill_id, max_score)
-                    VALUES ('${req.body.name}', '${req.body.status}', '${req.body.skillId}', ${req.body.score});
-                `);
-            };
+            await conn.query(`
+                INSERT INTO blocks (name, status_id, max_score, question_type_id, individual_score)
+                VALUES ('${req.body.name}', 1, ${req.body.score}, ${req.body.type}, ${req.body.puntuation});
+            `);
             res.json(200);
         } catch (error) {
             console.log(error);
@@ -196,15 +258,25 @@ export const searchBlock = async (req, res) => {
                 res.json(rows);
             } else if( req.body.skill === ""  || req.body.skill === null ){
                 let rows = await conn.query(`
-                    select
-                        b.id as id, b.name as name, b.status as status, b.skill_id as skill_id, s.name as skill_name, b.is_selected, b.max_score, qt.name AS question_type_name
-                    from blocks b
+                    SELECT
+                        b.id AS id,
+                        b.name AS name,
+                        st.name AS status,
+                        st.id AS status_id,
+                        b.is_selected,
+                        b.max_score,
+                        qt.name AS question_type_name,
+                        qt.id AS question_type_id,
+                        b.individual_score
+                    FROM blocks b
                     LEFT JOIN question_types qt ON b.question_type_id = qt.id
-                    left join skills s on b.skill_id = s.id
+                    left join status st on b.status_id = st.id
                     WHERE b.name LIKE '${req.body.name}%';`);
                 rows.forEach(element => {
-                element.id = element.id.toString();
-                if(element.skill_id){element.skill_id = element.skill_id.toString();}
+                    element.id = element.id.toString();
+                    if(element.skill_id){element.skill_id = element.skill_id.toString();}
+                    if(element.question_type_id){element.question_type_id = element.question_type_id.toString();}
+                    if(element.status_id){element.status_id = element.status_id.toString();}
             });
                 res.json(rows);
             } else if( req.body.skill !== "" && req.body.name !== "" ){
@@ -218,6 +290,20 @@ export const searchBlock = async (req, res) => {
                 element.id = element.id.toString();
                 if(element.skill_id){element.skill_id = element.skill_id.toString();}
             });
+            for(let i = 0; rows.length > i; i++){
+                let skills = await conn.query(`
+                    select
+                        l.name as skill,
+                        l.id as skill_id
+                    from skills_blocks sb
+                    join skills l on sb.skill_id = l.id
+                    where sb.block_id = ${rows[i].id};
+                `);
+                skills.forEach(element => {
+                    element.skill_id = element.skill_id.toString();
+                });
+                rows[i].skills = skills;
+            };
                 res.json(rows);
             }
         } catch (error) {
@@ -240,6 +326,66 @@ export const selectedChange = async (req, res) => {
                 await conn.query(`UPDATE blocks SET is_selected = 0 WHERE id = ${req.body.id};`);
             };
             res.json(200);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        };
+    };
+};
+
+//?ADD LEVEL TO SKILL
+export const addSkilltoBlock = async (req, res) => {
+    if ( req.data ) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            await conn.query(`
+                INSERT INTO skills_blocks (block_id, skill_id)
+                VALUES (${req.body.block_id}, ${req.body.skill_id});
+            `);
+            let skills = await conn.query(`
+                select
+                    l.name as skill,
+                    l.id as skill_id
+                from skills_blocks sb
+                join skills l on sb.skill_id = l.id
+                where sb.block_id = ${req.body.block_id};
+            `);
+            skills.forEach(element => {
+                element.skill_id = element.skill_id.toString();
+            });
+            res.json(skills);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        };
+    };
+};
+
+//?DELETE LEVEL TO SKILL
+export const deleteSkilltoBlock = async (req, res) => {
+    if ( req.data ) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            await conn.query(`
+                DELETE FROM skills_blocks
+                WHERE skill_id = ${req.body.skill_id} and block_id = ${req.body.block_id};
+            `);
+            let skills = await conn.query(`
+                select
+                    l.name as skill,
+                    l.id as skill_id
+                from skills_blocks sb
+                join skills l on sb.skill_id = l.id
+                where sb.block_id = ${req.body.block_id};
+            `);
+            skills.forEach(element => {
+                element.skill_id = element.skill_id.toString();
+            });
+            res.json(skills);
         } catch (error) {
             console.log(error);
         } finally {

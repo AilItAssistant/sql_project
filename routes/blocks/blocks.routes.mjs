@@ -10,7 +10,9 @@ import {
     searchBlock,
     getActiveBlocks,
     blocksById,
-    selectedChange
+    selectedChange,
+    addSkilltoBlock,
+    deleteSkilltoBlock
 } from "../../controllers/blocks/blocks.controller.mjs";
 
 export const blocks = Router();
@@ -41,3 +43,9 @@ blocks.post("/blocksId", verifyToken, blocksById);
 
 //?BLOCKS CHANGE IS_SELECTED
 blocks.put("/selected", verifyToken, selectedChange);
+
+//?ADD SKILL TO BLOCK
+blocks.post("/addSkilltoBlock", verifyToken, addSkilltoBlock);
+
+//?DELETE SKILL TO BLOCK
+blocks.put("/deleteSkilltoBlock", verifyToken, deleteSkilltoBlock);
