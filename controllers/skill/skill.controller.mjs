@@ -12,25 +12,32 @@ export const getSkills = async (req, res) => {
                     s.id as id,
                     s.name as name,
                     st.name as status_name,
-                    st.id as status_id,
-                    l.id as level_id,
-                    l.name as level_name
+                    st.id as status_id
                 from skills s
-                left join levels_skills ls on s.id = ls.skill_id
-                left join levels l on ls.level_id = l.id
                 left join status st on s.status_id = st.id
                 order by s.id;
             `);
+            for(let i = 0; rows.length > i; i++){
+                rows[i].levels = [];
+                let levels = await conn.query(`
+                    select
+                        l.name as level,
+                        l.id as level_id
+                    from levels_skills ls
+                    join levels l on ls.level_id = l.id
+                    where ls.skill_id = ${rows[i].id};
+                `);
+                levels.forEach(element => {
+                    element.level_id = element.level_id.toString();
+                });
+                rows[i].levels = levels;
+            };
             rows.forEach(element => {
                 element.id = element.id.toString();
                 if(element.level_id){element.level_id = element.level_id.toString();}
                 element.status_id = element.status_id.toString();
             });
-            let response = {
-                skills: rows,
-                dataLogin: req.data
-            };
-            res.json(response);
+            res.json(rows);
         } catch (error) {
             console.log(error);
         } finally {
@@ -50,12 +57,8 @@ export const getActiveSkills = async (req, res) => {
                     s.id as id,
                     s.name as name,
                     st.name as status_name,
-                    st.id as status_id,
-                    l.id as level_id,
-                    l.name as level_name
+                    st.id as status_id
                 from skills s
-                left join levels_skills ls on s.id = ls.skill_id
-                left join levels l on ls.level_id = l.id
                 left join status st on s.status_id = st.id
                 where s.status = 1
                 order by s.id;
@@ -65,6 +68,21 @@ export const getActiveSkills = async (req, res) => {
                 if(element.level_id){element.level_id = element.level_id.toString();}
                 element.status_id = element.status_id.toString();
             });
+            for(let i = 0; rows.length > i; i++){
+                rows[i].levels = [];
+                let levels = await conn.query(`
+                    select
+                        l.name as level,
+                        l.id as level_id
+                    from levels_skills ls
+                    join levels l on ls.level_id = l.id
+                    where ls.skill_id = ${rows[i].id};
+                `);
+                levels.forEach(element => {
+                    element.level_id = element.level_id.toString();
+                });
+                rows[i].levels = levels;
+            };
             res.json(rows);
         } catch (error) {
             console.log(error);
@@ -116,8 +134,7 @@ export const editSkill = async (req, res) => {
                 await conn.query(`
                     UPDATE skills
                     SET
-                        name = CASE WHEN '${req.body.name}' IS NOT NULL AND '${req.body.name}' != 'null' THEN '${req.body.name}' ELSE name END,
-                        level_id = COALESCE(${req.body.secondId}, level_id)
+                        name = CASE WHEN '${req.body.name}' IS NOT NULL AND '${req.body.name}' != 'null' THEN '${req.body.name}' ELSE name END
                     WHERE id = ${req.body.id};
                 `);
             res.json(200);
@@ -134,7 +151,11 @@ export const statusSkill = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            await conn.query(`UPDATE skills SET status_id = ${req.body.status} WHERE id = ${req.body.id};`);
+            await conn.query(`
+                UPDATE skills
+                SET status_id = ${req.body.status}
+                WHERE id = ${req.body.id};
+            `);
             res.json(200);
         } catch (error) {
             console.log(error);
@@ -150,7 +171,10 @@ export const addSkill = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-                await conn.query(`INSERT INTO skills (name, status, level_id) VALUES ('${req.body.name}', '${req.body.status}', '${req.body.levelId}');`);
+                await conn.query(`
+                    INSERT INTO skills (name, status_id)
+                    VALUES ('${req.body.name}', 1);
+                `);
             res.json(200);
         } catch (error) {
             console.log(error);
@@ -166,7 +190,10 @@ export const deleteSkill = async (req, res) => {
         try {
             console.log(req.body)
             conn = await pool.getConnection();
-            await conn.query(`DELETE FROM skills WHERE id = ${req.body.id};`);
+            await conn.query(`
+                DELETE FROM skills
+                WHERE id = ${req.body.id};
+            `);
             res.json(200);
         } catch (error) {
             console.log(error);
@@ -183,26 +210,54 @@ export const searchSkill = async (req, res) => {
             console.log(req.body)
             conn = await pool.getConnection();
             if ( req.body.name === "" || req.body.name === null ){
-                let rows = await conn.query(`select s.id as id, s.name as name, s.status as status, s.level_id as level_id, l.name as level_name from skills s left join levels l on s.level_id = l.id WHERE level_id LIKE ${req.body.level};`);
+                let rows = await conn.query(`
+                    select
+                        s.id as id,
+                        s.name as name,
+                        st.name as status_name,
+                        st.id as status_id
+                    from skills s
+                    left join status st on s.status_id = st.id
+                    WHERE level_id LIKE ${req.body.level};
+                `);
                 rows.forEach(element => {
                     element.id = element.id.toString();
                     if(element.level_id){element.level_id = element.level_id.toString();}
                 });
                 res.json(rows);
             } else if( req.body.level === "" || req.body.level === null ){
-                let rows = await conn.query(`select s.id as id, s.name as name, s.status as status, s.level_id as level_id, l.name as level_name from skills s left join levels l on s.level_id = l.id WHERE s.name LIKE '${req.body.name}%';`);
-                console.log(req.body)
+                let rows = await conn.query(`
+                        select
+                        s.id as id,
+                        s.name as name,
+                        st.name as status_name,
+                        st.id as status_id
+                    from skills s
+                    left join status st on s.status_id = st.id
+                    WHERE s.name LIKE '${req.body.name}%';
+                    `);
+                console.log(rows)
                 rows.forEach(element => {
                     element.id = element.id.toString();
                     if(element.level_id){element.level_id = element.level_id.toString();}
+                    if(element.status_id){element.status_id = element.status_id.toString();}
                 });
                 res.json(rows);
             } else if( req.body.level !== "" && req.body.name !== "" ){
-                let rows = await conn.query(`select s.id as id, s.name as name, s.status as status, s.level_id as level_id, l.name as level_name from skills s left join levels l on s.level_id = l.id WHERE s.name LIKE '${req.body.name}%' AND level_id = ${req.body.level};`);
+                let rows = await conn.query(`
+                    select
+                        s.id as id,
+                        s.name as name,
+                        st.name as status_name,
+                        st.id as status_id
+                    from skills s
+                    left join status st on s.status_id = st.id
+                    WHERE s.name LIKE '${req.body.name}%' AND level_id = ${req.body.level};`);
                 rows.forEach(element => {
                     element.id = element.id.toString();
                     if(element.level_id){element.level_id = element.level_id.toString();}
                 });
+                console.log(rows)
                 res.json(rows);
             }
         } catch (error) {
@@ -230,6 +285,67 @@ export const getSkillsByLevels = async (req, res) => {
                 if(element.level_id){element.level_id = element.level_id.toString();}
             });
             res.json(rows);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        };
+    };
+};
+
+//?ADD LEVEL TO SKILL
+export const addLeveltoSkill = async (req, res) => {
+    if ( req.data ) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            await conn.query(`
+                INSERT INTO levels_skills (level_id, skill_id)
+                VALUES (${req.body.level_id}, ${req.body.skill_id});
+            `);
+            let levels = await conn.query(`
+                select
+                    l.name as level,
+                    l.id as level_id
+                from levels_skills ls
+                join levels l on ls.level_id = l.id
+                where ls.skill_id = ${req.body.skill_id};
+            `);
+            levels.forEach(element => {
+                element.level_id = element.level_id.toString();
+            });
+            res.json(levels);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        };
+    };
+};
+
+//?DELETE LEVEL TO SKILL
+export const deleteLeveltoSkill = async (req, res) => {
+    console.log(req.body)
+    if ( req.data ) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            await conn.query(`
+                DELETE FROM levels_skills
+                WHERE level_id = ${req.body.level_id} and skill_id = ${req.body.skill_id};
+            `);
+            let levels = await conn.query(`
+                select
+                    l.name as level,
+                    l.id as level_id
+                from levels_skills ls
+                join levels l on ls.level_id = l.id
+                where ls.skill_id = ${req.body.skill_id};
+            `);
+            levels.forEach(element => {
+                element.level_id = element.level_id.toString();
+            });
+            res.json(levels);
         } catch (error) {
             console.log(error);
         } finally {
