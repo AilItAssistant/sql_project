@@ -209,8 +209,8 @@ export const addBlock = async (req, res) => {
         try {
             conn = await pool.getConnection();
             await conn.query(`
-                INSERT INTO blocks (name, status_id, max_score, question_type_id, individual_score)
-                VALUES ('${req.body.name}', 1, ${req.body.score}, ${req.body.type}, ${req.body.puntuation});
+                INSERT INTO blocks (name, status_id, max_score, question_type_id, individual_score, is_selected)
+                VALUES ('${req.body.name}', 1, ${req.body.score}, ${req.body.type}, ${req.body.puntuation}, ${req.body.is_selected});
             `);
             res.json(200);
         } catch (error) {
