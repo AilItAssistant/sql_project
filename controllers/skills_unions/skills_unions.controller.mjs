@@ -8,8 +8,12 @@ export const getSkillsUnions = async (req, res) => {
         try {
             conn = await pool.getConnection();
             let response = await conn.query(`
-                SELECT su.id, su.name, su.statement, s1.name AS skill_name_1, s2.name AS skill_name_2, l.name AS level_name,
-                l.id as level_id, s1.id as skill_id_1, s2.id as skill_id_2, su.status, su.max_puntuation
+                SELECT
+                su.id, su.name, su.statement,
+                s1.name AS skill_name_1, s2.name AS skill_name_2,
+                l.name AS level_name,l.id as level_id,
+                s1.id as skill_id_1, s2.id as skill_id_2,
+                su.status, su.max_puntuation
                 from skills_unions su
                 JOIN skills s1 ON su.skill_id_1 = s1.id
                 JOIN skills s2 ON su.skill_id_2 = s2.id
@@ -54,12 +58,16 @@ export const desactivateSkillsUnions = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            let status = await conn.query(`select status from skills_unions where id = ${req.body.id}`);
+            let status = await conn.query(`
+                select status
+                from skills_unions su
+                left join status s on su.status_id = su.id
+                where su.id = ${req.body.id}`);
             status = status[0].status;
             if ( status === "active" ) {
-                await conn.query(`UPDATE skills_unions SET status = 'inactive' WHERE id = ${req.body.id};`);
+                await conn.query(`UPDATE skills_unions SET status_id = 0 WHERE id = ${req.body.id};`);
             } else {
-                await conn.query(`UPDATE skills_unions SET status = 'active' WHERE id = ${req.body.id};`);
+                await conn.query(`UPDATE skills_unions SET status_id = 1 WHERE id = ${req.body.id};`);
             };
             res.json(200);
         } catch (error) {

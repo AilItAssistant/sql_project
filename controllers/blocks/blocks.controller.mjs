@@ -43,6 +43,20 @@ export const getBlocks = async (req, res) => {
                 });
                 rows[i].skills = skills;
             };
+            for(let i = 0; rows.length > i; i++){
+                let levels = await conn.query(`
+                    select
+                        l.name as level,
+                        l.id as level_id
+                    from levels_blocks lb
+                    join levels l on lb.level_id = l.id
+                    where lb.block_id = ${rows[i].id};
+                `);
+                levels.forEach(element => {
+                    element.level_id = element.level_id.toString();
+                });
+                rows[i].levels = levels;
+            };
             let response = {
                 blocks: rows,
                 dataLogin: req.data
@@ -99,6 +113,20 @@ export const getActiveBlocks = async (req, res) => {
                 });
                 rows[i].skills = skills;
             };
+            for(let i = 0; rows.length > i; i++){
+                let levels = await conn.query(`
+                    select
+                        l.name as level,
+                        l.id as level_id
+                    from levels_blocks lb
+                    join levels l on lb.level_id = l.id
+                    where lb.block_id = ${rows[i].id};
+                `);
+                levels.forEach(element => {
+                    element.level_id = element.level_id.toString();
+                });
+                rows[i].levels = levels;
+            };
             res.json(rows);
         } catch (error) {
             console.log(error);
@@ -150,6 +178,20 @@ export const blocksById = async (req, res) => {
                     element.skill_id = element.skill_id.toString();
                 });
                 rows[i].skills = skills;
+            };
+            for(let i = 0; rows.length > i; i++){
+                let levels = await conn.query(`
+                    select
+                        l.name as level,
+                        l.id as level_id
+                    from levels_blocks lb
+                    join levels l on lb.level_id = l.id
+                    where lb.block_id = ${rows[i].id};
+                `);
+                levels.forEach(element => {
+                    element.level_id = element.level_id.toString();
+                });
+                rows[i].levels = levels;
             };
             res.json(rows);
         } catch (error) {
@@ -334,7 +376,7 @@ export const selectedChange = async (req, res) => {
     };
 };
 
-//?ADD LEVEL TO SKILL
+//?ADD SKILL TO BLOCK
 export const addSkilltoBlock = async (req, res) => {
     if ( req.data ) {
         let conn;
@@ -364,7 +406,7 @@ export const addSkilltoBlock = async (req, res) => {
     };
 };
 
-//?DELETE LEVEL TO SKILL
+//?DELETE SKILL TO BLOCK
 export const deleteSkilltoBlock = async (req, res) => {
     if ( req.data ) {
         let conn;
@@ -386,6 +428,68 @@ export const deleteSkilltoBlock = async (req, res) => {
                 element.skill_id = element.skill_id.toString();
             });
             res.json(skills);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        };
+    };
+};
+
+
+
+//?ADD LEVEL TO BLOCK
+export const addLeveltoBlock = async (req, res) => {
+    if ( req.data ) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            await conn.query(`
+                INSERT INTO levels_blocks (block_id, level_id)
+                VALUES (${req.body.block_id}, ${req.body.level_id});
+            `);
+            let levels = await conn.query(`
+                select
+                    l.name as level,
+                    l.id as level_id
+                from levels_blocks lb
+                join levels l on lb.level_id = l.id
+                where lb.block_id = ${req.body.block_id};
+            `);
+            levels.forEach(element => {
+                element.level_id = element.level_id.toString();
+            });
+            res.json(levels);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        };
+    };
+};
+
+//?DELETE LEVEL TO BLOCK
+export const deleteLeveltoBlock = async (req, res) => {
+    if ( req.data ) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            await conn.query(`
+                DELETE FROM levels_blocks
+                WHERE level_id = ${req.body.level_id} and block_id = ${req.body.block_id};
+            `);
+            let levels = await conn.query(`
+                select
+                    l.name as level,
+                    l.id as level_id
+                from levels_blocks sb
+                join levels l on sb.level_id = l.id
+                where sb.block_id = ${req.body.block_id};
+            `);
+            levels.forEach(element => {
+                element.level_id = element.level_id.toString();
+            });
+            res.json(levels);
         } catch (error) {
             console.log(error);
         } finally {

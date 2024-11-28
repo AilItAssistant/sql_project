@@ -12,7 +12,9 @@ import {
     blocksById,
     selectedChange,
     addSkilltoBlock,
-    deleteSkilltoBlock
+    deleteSkilltoBlock,
+    addLeveltoBlock,
+    deleteLeveltoBlock
 } from "../../controllers/blocks/blocks.controller.mjs";
 
 export const blocks = Router();
@@ -49,3 +51,9 @@ blocks.post("/addSkilltoBlock", verifyToken, addSkilltoBlock);
 
 //?DELETE SKILL TO BLOCK
 blocks.put("/deleteSkilltoBlock", verifyToken, deleteSkilltoBlock);
+
+//?ADD LEVEL TO BLOCK
+blocks.post("/addLeveltoBlock", verifyToken, addLeveltoBlock);
+
+//?DELETE LEVEL TO BLOCK
+blocks.put("/deleteLeveltoBlock", verifyToken, deleteLeveltoBlock);
