@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-11-2024 a las 12:07:42
+-- Tiempo de generación: 28-11-2024 a las 11:38:58
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -59,7 +59,11 @@ CREATE TABLE `blocks` (
 --
 
 INSERT INTO `blocks` (`id`, `name`, `status_id`, `is_selected`, `max_score`, `question_type_id`, `individual_score`) VALUES
-(75, 'Estar o hay', 1, 1, 2, 7, 1);
+(75, 'Estar o hay', 1, 1, 2, 7, 1),
+(78, 'Gustar y similares', 1, 1, 2, 7, 1),
+(79, 'Preguntas con frases', 1, 1, 2, 7, 1),
+(80, 'Presente irregular', 1, 1, 2, 7, 1),
+(81, 'Pronombres OD y OI gustar', 1, 1, 2, 7, 1);
 
 -- --------------------------------------------------------
 
@@ -220,7 +224,12 @@ CREATE TABLE `levels` (
 --
 
 INSERT INTO `levels` (`id`, `name`, `status_id`) VALUES
-(41, 'A1', 1);
+(41, 'A1', 1),
+(42, 'A2', 1),
+(43, 'B1', 1),
+(44, 'B2', 1),
+(45, 'C1', 1),
+(46, 'C2', 1);
 
 -- --------------------------------------------------------
 
@@ -238,25 +247,29 @@ CREATE TABLE `levels_blocks` (
 --
 
 INSERT INTO `levels_blocks` (`level_id`, `block_id`) VALUES
+(41, 78),
 (41, 75);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `levels_skils`
+-- Estructura de tabla para la tabla `levels_skills`
 --
 
-CREATE TABLE `levels_skils` (
+CREATE TABLE `levels_skills` (
   `level_id` bigint(20) NOT NULL,
   `skill_id` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `levels_skils`
+-- Volcado de datos para la tabla `levels_skills`
 --
 
-INSERT INTO `levels_skils` (`level_id`, `skill_id`) VALUES
-(41, 349);
+INSERT INTO `levels_skills` (`level_id`, `skill_id`) VALUES
+(41, 349),
+(42, 349),
+(41, 351),
+(42, 351);
 
 -- --------------------------------------------------------
 
@@ -268,6 +281,13 @@ CREATE TABLE `levels_unions` (
   `level_id` bigint(20) NOT NULL,
   `union_id` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `levels_unions`
+--
+
+INSERT INTO `levels_unions` (`level_id`, `union_id`) VALUES
+(41, 4);
 
 -- --------------------------------------------------------
 
@@ -343,6 +363,12 @@ CREATE TABLE `question_types` (
 --
 
 INSERT INTO `question_types` (`id`, `name`, `statement`, `photo`, `text`, `question`, `answer`, `space`, `test_type`) VALUES
+(1, 'Preguntas a granel', 0, 0, 0, 30, 3, 4, 1),
+(2, 'Redactar', 1, 1, 0, 0, 0, 2, 0),
+(3, 'Compresión lectora', 1, 0, 1, 2, 4, 2, 1),
+(4, 'Audio con frases', 0, 0, 0, 5, 5, 1, 0),
+(5, 'Audio con fotos', 0, 9, 0, 1, 9, 2, 0),
+(6, 'Oral', 1, 1, 0, 0, 0, 1, 0),
 (7, 'Granel', 1, 0, 0, 30, 3, 4, 1);
 
 -- --------------------------------------------------------
@@ -362,7 +388,8 @@ CREATE TABLE `skills` (
 --
 
 INSERT INTO `skills` (`id`, `name`, `status_id`) VALUES
-(349, 'Léxico', 1);
+(349, 'Léxico', 1),
+(351, 'Gramática', 1);
 
 -- --------------------------------------------------------
 
@@ -380,7 +407,33 @@ CREATE TABLE `skills_blocks` (
 --
 
 INSERT INTO `skills_blocks` (`skill_id`, `block_id`) VALUES
-(349, 75);
+(349, 75),
+(349, 78),
+(351, 75),
+(351, 78),
+(349, 79),
+(351, 79),
+(349, 80),
+(351, 80);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `skills_to_unions`
+--
+
+CREATE TABLE `skills_to_unions` (
+  `skill_id` bigint(20) NOT NULL,
+  `union_id` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Volcado de datos para la tabla `skills_to_unions`
+--
+
+INSERT INTO `skills_to_unions` (`skill_id`, `union_id`) VALUES
+(351, 4),
+(349, 4);
 
 -- --------------------------------------------------------
 
@@ -392,11 +445,16 @@ CREATE TABLE `skills_unions` (
   `id` bigint(20) NOT NULL,
   `name` text NOT NULL,
   `statement` text DEFAULT NULL,
-  `skill_id_1` bigint(20) NOT NULL,
-  `skill_id_2` bigint(20) NOT NULL,
   `status_id` bigint(20) NOT NULL DEFAULT 1,
   `max_score` int(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `skills_unions`
+--
+
+INSERT INTO `skills_unions` (`id`, `name`, `statement`, `status_id`, `max_score`) VALUES
+(4, 'Lexico y gramatica', 'union de lexico y gramatica', 1, 30);
 
 -- --------------------------------------------------------
 
@@ -502,21 +560,6 @@ CREATE TABLE `teachers` (
 INSERT INTO `teachers` (`id`, `name`, `email`, `hire_date`, `phone_number`, `address`, `department_id`, `last_name`, `status_id`) VALUES
 (10, 'María', 'maria@gmail.com', '2024-01-20', '987521364', 'su casa nº3, su ciudad 852641', 1, 'Fernández', 1),
 (11, 'Francisco', 'pepe@gmail.com', '2024-11-07', '789654212', 'calle barbara de braganza, 155 alcala de hernares, comunidada de madrid', 1, 'Jiménez Alvarez', 1);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `triggers`
---
-
-CREATE TABLE `triggers` (
-  `id` bigint(20) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `event` enum('INSERT','UPDATE','DELETE') NOT NULL,
-  `table_name` varchar(255) NOT NULL,
-  `action` text NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -664,9 +707,9 @@ ALTER TABLE `levels_blocks`
   ADD KEY `block_levels` (`block_id`);
 
 --
--- Indices de la tabla `levels_skils`
+-- Indices de la tabla `levels_skills`
 --
-ALTER TABLE `levels_skils`
+ALTER TABLE `levels_skills`
   ADD KEY `level_skills` (`level_id`),
   ADD KEY `skill_levels` (`skill_id`);
 
@@ -721,8 +764,6 @@ ALTER TABLE `skills_blocks`
 --
 ALTER TABLE `skills_unions`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `skill_id_1` (`skill_id_1`),
-  ADD KEY `skill_id_2` (`skill_id_2`),
   ADD KEY `union_status` (`status_id`);
 
 --
@@ -770,12 +811,6 @@ ALTER TABLE `teachers`
   ADD KEY `teacher_department` (`department_id`);
 
 --
--- Indices de la tabla `triggers`
---
-ALTER TABLE `triggers`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indices de la tabla `users`
 --
 ALTER TABLE `users`
@@ -807,7 +842,7 @@ ALTER TABLE `answers`
 -- AUTO_INCREMENT de la tabla `blocks`
 --
 ALTER TABLE `blocks`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
 
 --
 -- AUTO_INCREMENT de la tabla `cities`
@@ -843,7 +878,7 @@ ALTER TABLE `exam_requests`
 -- AUTO_INCREMENT de la tabla `levels`
 --
 ALTER TABLE `levels`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT de la tabla `permissions`
@@ -873,13 +908,13 @@ ALTER TABLE `question_types`
 -- AUTO_INCREMENT de la tabla `skills`
 --
 ALTER TABLE `skills`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=350;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=352;
 
 --
 -- AUTO_INCREMENT de la tabla `skills_unions`
 --
 ALTER TABLE `skills_unions`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `statements`
@@ -904,12 +939,6 @@ ALTER TABLE `students`
 --
 ALTER TABLE `teachers`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
-
---
--- AUTO_INCREMENT de la tabla `triggers`
---
-ALTER TABLE `triggers`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
@@ -1006,9 +1035,9 @@ ALTER TABLE `levels_blocks`
   ADD CONSTRAINT `level_blocks` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`);
 
 --
--- Filtros para la tabla `levels_skils`
+-- Filtros para la tabla `levels_skills`
 --
-ALTER TABLE `levels_skils`
+ALTER TABLE `levels_skills`
   ADD CONSTRAINT `level_skills` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`),
   ADD CONSTRAINT `skill_levels` FOREIGN KEY (`skill_id`) REFERENCES `skills` (`id`);
 
@@ -1052,8 +1081,6 @@ ALTER TABLE `skills_blocks`
 -- Filtros para la tabla `skills_unions`
 --
 ALTER TABLE `skills_unions`
-  ADD CONSTRAINT `skills_unions_ibfk_1` FOREIGN KEY (`skill_id_1`) REFERENCES `skills` (`id`),
-  ADD CONSTRAINT `skills_unions_ibfk_2` FOREIGN KEY (`skill_id_2`) REFERENCES `skills` (`id`),
   ADD CONSTRAINT `union_status` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`);
 
 --
