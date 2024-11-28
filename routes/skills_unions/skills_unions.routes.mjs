@@ -6,7 +6,11 @@ import {
     deleteSkillsUnions,
     desactivateSkillsUnions,
     editSkillsUnions,
-    addSkillsUnions
+    addSkillsUnions,
+    addSkilltoUnion,
+    deleteSkilltoUnion,
+    addLeveltoUnion,
+    deleteLeveltoUnion
 } from "../../controllers/skills_unions/skills_unions.controller.mjs";
 
 export const skills_unions = Router();
@@ -25,3 +29,15 @@ skills_unions.put("/edit", verifyToken, editSkillsUnions);
 
 //?ADD SKILL_UNION
 skills_unions.post("/add", verifyToken, addSkillsUnions);
+
+//?ADD SKILL TO UNION
+skills_unions.post("/addSkilltoUnion", verifyToken, addSkilltoUnion);
+
+//?DELETE SKILL TO UNION
+skills_unions.put("/deleteSkilltoUnion", verifyToken, deleteSkilltoUnion);
+
+//?ADD LEVEL TO UNION
+skills_unions.post("/addLeveltoUnion", verifyToken, addLeveltoUnion);
+
+//?DELETE LEVEL TO UNION
+skills_unions.put("/deleteLeveltoUnion", verifyToken, deleteLeveltoUnion);

@@ -436,8 +436,6 @@ export const deleteSkilltoBlock = async (req, res) => {
     };
 };
 
-
-
 //?ADD LEVEL TO BLOCK
 export const addLeveltoBlock = async (req, res) => {
     if ( req.data ) {
