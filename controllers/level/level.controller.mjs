@@ -168,24 +168,37 @@ export const getActiveLevelsSkillsBlocks = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            let levels = await conn.query("select * from levels where status = 'active';");
+            let levels = await conn.query("select * from levels where status_id = 1;");
             levels.forEach(element => {
                 element.id = element.id.toString();
+                element.status_id = element.status_id.toString();
             });
             for( let i = 0; i < levels.length; i++ ){
-                let skills = await conn.query(`select * from skills where status = 'active' and level_id = ${levels[i].id}`);
+                let skills = await conn.query(`
+                    select * from skills s
+                    left join levels_skills ls on s.id = ls.skill_id
+                    where s.status_id = 1 and ls.level_id = ${levels[i].id}
+                `);
                 skills.forEach( element => {
                     element.id = element.id.toString();
+                    element.status_id = element.status_id.toString();
                     if (element.level_id) { element.level_id = element.level_id.toString(); };
+                    if (element.skill_id) { element.skill_id = element.skill_id.toString(); };
                 });
                 levels[i].skills = skills;
 
                 for( let x = 0; x < levels[i].skills.length; x++ ) {
-                    let blocks = await conn.query(`select * from blocks where status = 'active' and skill_id = ${levels[i].skills[x].id}`);
+                    let blocks = await conn.query(`
+                        select * from blocks b
+                        left join skills_blocks sb on b.id = sb.block_id
+                        where b.status_id = 1 and sb.skill_id = ${levels[i].skills[x].id}
+                    `);
                     blocks.forEach( element => {
                         element.id = element.id.toString();
+                        element.status_id = element.status_id.toString();
                         if (element.skill_id) { element.skill_id = element.skill_id.toString(); };
                         if (element.question_type_id) { element.question_type_id = element.question_type_id.toString(); };
+                        if (element.block_id) { element.block_id = element.block_id.toString(); };
                     });
                     levels[i].skills[x].blocks = blocks;
                 };
