@@ -89,10 +89,11 @@ export const skillsId = async (req, res) => {
                 left join levels_skills ls on s.id = ls.skill_id
                 left join levels l on ls.level_id = l.id
                 left join status st on s.status_id = st.id
-                where level_id = ${req.body.level_id} and status_id = 1;
+                where l.id = ${req.body.level_id} and s.status_id = 1;
             `);
             rows.forEach(element => {
                 element.id = element.id.toString();
+                element.status_id = element.status_id.toString();
                 if(element.level_id){element.level_id = element.level_id.toString();}
             });
             res.json(rows);

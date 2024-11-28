@@ -12,10 +12,11 @@ export const getActivePhotoById = async (req, res) => {
                 FROM
                     photos
                 WHERE
-                    id = ${req.body.id} AND status = 'active';
+                    id = ${req.body.id} AND status_id = 1;
             `);
             photos.forEach((element) => {
                 element.id = element.id.toString();
+                element.status_id = element.status_id.toString();
             });
             res.json(photos);
         } catch (error) {

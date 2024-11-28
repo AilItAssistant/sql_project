@@ -136,7 +136,7 @@ export const getActiveBlocks = async (req, res) => {
     };
 };
 
-//?GET BLOCKS BY ID
+//?GET BLOCKS BY SKILL_ID
 export const blocksById = async (req, res) => {
     if ( req.data ) {
         let conn;
@@ -156,7 +156,8 @@ export const blocksById = async (req, res) => {
                 FROM blocks b
                 LEFT JOIN question_types qt ON b.question_type_id = qt.id
                 left join status st on b.status_id = st.id
-                where b.skill_id = ${req.body.skill_id} and b.status = 1
+                left join skills_blocks sb on b.id = sb.block_id
+                where sb.skill_id = ${req.body.skill_id} and st.id = 1
                 order by b.id;
             `);
             rows.forEach(element => {

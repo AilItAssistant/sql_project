@@ -19,7 +19,7 @@ export const addQuestion = async (req, res) => {
                     let questions = await conn.query(`
                         INSERT INTO
                             questions (
-                                content, skill_id, puntuation, level_id, statement_id, photo_id, block_id)
+                                content, skill_id, score, level_id, statement_id, photo_id, block_id)
                         VALUES (
                             '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${req.body.statement_id}, ${id}, ${req.body.block});
                     `);
@@ -28,7 +28,7 @@ export const addQuestion = async (req, res) => {
                     let questions = await conn.query(`
                         INSERT INTO
                             questions (
-                                content, skill_id, puntuation, level_id, photo_id, block_id)
+                                content, skill_id, score, level_id, photo_id, block_id)
                         VALUES (
                             '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${id}, ${req.body.block});
                     `);
@@ -39,7 +39,7 @@ export const addQuestion = async (req, res) => {
                     let questions = await conn.query(`
                         INSERT INTO
                             questions (
-                                content, skill_id, puntuation, level_id, statement_id, block_id)
+                                content, skill_id, score, level_id, statement_id, block_id)
                         VALUES (
                             '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${req.body.statement_id}, ${req.body.block});
                     `);
@@ -48,7 +48,7 @@ export const addQuestion = async (req, res) => {
                     let questions = await conn.query(`
                         INSERT INTO
                             questions (
-                                content, skill_id, puntuation, level_id, block_id)
+                                content, skill_id, score, level_id, block_id)
                         VALUES (
                             '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${req.body.block});
                     `);
@@ -157,9 +157,11 @@ export const getQuestionsAnswers = async (req, res) => {
                     q.id,
                     q.photo_id,
                     q.content,
-                    q.puntuation,
-                    q.block_id,
-                    q.status,
+                    q.score,
+                    b.id as block_id,
+                    b.name as block,
+                    s.id as status_id,
+                    s.name as status,
                     p.base64_data,
                     (
                         SELECT
@@ -169,15 +171,15 @@ export const getQuestionsAnswers = async (req, res) => {
                         WHERE
                             a.question_id = q.id
                     ) AS answers_ids
-                FROM
-                    questions q
-                LEFT JOIN
-                    photos p ON q.photo_id = p.id
-                WHERE
-                    q.statement_id = ${req.body.statement_id};
+                FROM questions q
+                LEFT JOIN photos p ON q.photo_id = p.id
+                left join status s on q.status_id = s.id
+                left join blocks b on q.block_id = b.id
+                WHERE q.statement_id = ${req.body.statement_id};
             `);
             for (const question of questions) {
                 question.id = question.id.toString();
+                question.status_id = question.status_id.toString();
                 if (question.photo_id) question.photo_id = question.photo_id.toString();
                 if (question.block_id) question.block_id = question.block_id.toString();
                 question.answers = [];
@@ -192,24 +194,26 @@ export const getQuestionsAnswers = async (req, res) => {
                                 a.is_correct,
                                 a.letter,
                                 a.photo_id,
-                                a.status,
+                                s.name as status,
+                                s.id as status_id,
                                 a.response,
                                 p.base64_data
-                            FROM
-                                answers a
-                            LEFT JOIN
-                                photos p ON a.photo_id = p.id
-                            WHERE
-                                a.id = ${answer_id};
+                            FROM answers a
+                            LEFT JOIN photos p ON a.photo_id = p.id
+                            left join status s on a.status_id = s.id
+                            WHERE a.id = ${answer_id};
                         `);
+                        console.log(answers)
                         answers.forEach((answer) => {
                             answer.id = answer.id.toString();
+                            if(answer.status_id !== null)answer.status_id = answer.status_id.toString();
                             if (answer.photo_id) answer.photo_id = answer.photo_id.toString();
                         });
                         question.answers.push(answers[0]);
                     };
                 };
             };
+            console.log(questions)
             res.json(questions);
         } catch (error) {
             console.log(error);
@@ -322,9 +326,11 @@ export const getQuestionsAnswersByBlockId = async (req, res) => {
                     q.id,
                     q.photo_id,
                     q.content,
-                    q.puntuation,
-                    q.block_id,
-                    q.status,
+                    q.score,
+                    b.id as block_id,
+                    b.name as block,
+                    s.id as status_id,
+                    s.name as status,
                     p.base64_data,
                     (
                         SELECT
@@ -334,12 +340,11 @@ export const getQuestionsAnswersByBlockId = async (req, res) => {
                         WHERE
                             a.question_id = q.id
                     ) AS answers_ids
-                FROM
-                    questions q
-                LEFT JOIN
-                    photos p ON q.photo_id = p.id
-                WHERE
-                    q.block_id = ${req.body.block_id};
+                FROM questions q
+                LEFT JOIN photos p ON q.photo_id = p.id
+                left join status s on q.status_id = s.id
+                left join blocks b on q.block_id = b.id
+                WHERE q.block_id = ${req.body.block_id};
             `);
             for (const question of questions) {
                 question.id = question.id.toString();
@@ -357,25 +362,25 @@ export const getQuestionsAnswersByBlockId = async (req, res) => {
                                 a.is_correct,
                                 a.letter,
                                 a.photo_id,
-                                a.status,
+                                s.id as status_id,
+                                s.name as status,
                                 a.response,
                                 p.base64_data
-                            FROM
-                                answers a
-                            LEFT JOIN
-                                photos p ON a.photo_id = p.id
-                            WHERE
-                                a.id = ${answer_id};
+                            FROM answers a
+                            LEFT JOIN photos p ON a.photo_id = p.id
+                            left join status s on a.status_id = s.id
+                            WHERE a.id = ${answer_id};
                         `);
                         answers.forEach((answer) => {
                             answer.id = answer.id.toString();
+                            answer.status_id = answer.status_id.toString();
                             if (answer.photo_id) answer.photo_id = answer.photo_id.toString();
                         });
                         question.answers.push(answers[0]);
                     };
                 };
             };
-            res.json(questions);
+            res.json(questions[0].answers);
         } catch (error) {
             console.log(error);
         } finally {

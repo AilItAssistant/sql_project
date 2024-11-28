@@ -46,22 +46,20 @@ export const levelSkillStatements = async (req, res) => {
                     s.text,
                     s.score,
                     s.level_id,
-                    s.status,
+                    st.name as status,
+                    st.id as status_id,
                     s.photo_id,
                     GROUP_CONCAT(q.id ORDER BY q.id ASC SEPARATOR ', ') AS questionsId
-                FROM
-                    statements s
-                LEFT JOIN
-                    questions q ON q.statement_id = s.id
-                WHERE
-                    s.skill_id = ${req.body.skill_id}
-                    AND
-                    s.level_id = ${req.body.level_id}
+                FROM statements s
+                LEFT JOIN questions q ON q.statement_id = s.id
+                left join status st on s.status_id = st.id
+                WHERE s.skill_id = ${req.body.skill_id} AND s.level_id = ${req.body.level_id}
                 GROUP BY
                     s.id, s.content, s.skill_id, s.text, s.score,
-                    s.level_id, s.status, s.photo_id;;
+                    s.level_id, st.id, s.photo_id;
             `);
             rows.forEach((element) => {
+                element.status_id = element.status_id.toString();
                 if (element.id) {
                     element.id = element.id.toString();
                 };
