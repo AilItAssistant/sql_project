@@ -269,10 +269,10 @@ export const deleteBlock = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            await conn.query(`DELETE FROM blocks WHERE id = ${req.body.id};`);
+            let res = await conn.query(`DELETE FROM blocks WHERE id = ${req.body.id};`);
             res.json(200);
         } catch (error) {
-            console.log(error);
+            //console.log(error);
         } finally {
             if (conn) return conn.end();
         };
@@ -383,21 +383,33 @@ export const addSkilltoBlock = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            await conn.query(`
-                INSERT INTO skills_blocks (block_id, skill_id)
-                VALUES (${req.body.block_id}, ${req.body.skill_id});
-            `);
-            let skills = await conn.query(`
-                select
-                    l.name as skill,
-                    l.id as skill_id
-                from skills_blocks sb
-                join skills l on sb.skill_id = l.id
-                where sb.block_id = ${req.body.block_id};
-            `);
-            skills.forEach(element => {
-                element.skill_id = element.skill_id.toString();
-            });
+            let exist = await conn.query(`
+                select * from skills_blocks
+                where block_id = ${req.body.block_id};`);
+                let skills;
+            if (exist.length === 0){
+                await conn.query(`
+                    INSERT INTO skills_blocks (block_id, skill_id)
+                    VALUES (${req.body.block_id}, ${req.body.skill_id});
+                `);
+                skills = await conn.query(`
+                    select
+                        l.name as skill,
+                        l.id as skill_id
+                    from skills_blocks sb
+                    join skills l on sb.skill_id = l.id
+                    where sb.block_id = ${req.body.block_id};
+                `);
+                skills.forEach(element => {
+                    element.skill_id = element.skill_id.toString();
+                });
+            } else {
+                skills = "Already exist";
+            };
+            console.log(exist)
+            console.log(exist.length)
+            console.log(exist.length >= 1)
+            console.log(skills)
             res.json(skills);
         } catch (error) {
             console.log(error);
