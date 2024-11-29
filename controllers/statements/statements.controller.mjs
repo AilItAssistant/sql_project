@@ -48,30 +48,31 @@ export const levelSkillStatements = async (req, res) => {
                     s.level_id,
                     st.name as status,
                     st.id as status_id,
-                    s.photo_id,
-                    GROUP_CONCAT(q.id ORDER BY q.id ASC SEPARATOR ', ') AS questionsId
+                    s.photo_id
                 FROM statements s
-                LEFT JOIN questions q ON q.statement_id = s.id
                 left join status st on s.status_id = st.id
                 WHERE s.skill_id = ${req.body.skill_id} AND s.level_id = ${req.body.level_id}
-                GROUP BY
-                    s.id, s.content, s.skill_id, s.text, s.score,
-                    s.level_id, st.id, s.photo_id;
+                GROUP BY s.id;
             `);
+            for(let row of rows){
+                let questions_id = await conn.query(`
+                    select q.id
+                    from questions q
+                    where q.statement_id = ${row.id}
+                `);
+                questions_id.forEach((element) => {
+                    element = element.id.toString();
+                });
+                let questions_ids = questions_id.map((element) => element.id.toString());
+                row.questions_ids = questions_ids
+            };
             rows.forEach((element) => {
                 element.status_id = element.status_id.toString();
-                if (element.id) {
-                    element.id = element.id.toString();
-                };
-                if (element.skill_id) {
-                    element.skill_id = element.skill_id.toString();
-                };
-                if (element.level_id) {
-                    element.level_id = element.level_id.toString();
-                };
-                if (element.photo_id) {
-                    element.photo_id = element.photo_id.toString();
-                };
+                element.id = element.id.toString();
+                if (element.skill_id) {element.skill_id = element.skill_id.toString();};
+                if (element.level_id) {element.level_id = element.level_id.toString();};
+                if (element.photo_id) {element.photo_id = element.photo_id.toString();};
+                if (element.questionsId) {element.questionsId = element.questionsId.toString();};
             });
             res.json(rows);
         } catch (error) {
@@ -216,7 +217,8 @@ export const postStatements = async (req, res) => {
                         text,
                         score,
                         level_id,
-                        photo_id
+                        photo_id,
+                        block_id
                     )
                 VALUES (
                 '${req.body.statement}',
@@ -224,7 +226,8 @@ export const postStatements = async (req, res) => {
                 '${req.body.text}',
                 ${req.body.puntuation},
                 ${req.body.level},
-                ${id});`
+                ${id},
+                ${req.body.block});`
             );
             res.status(200).json(rows.insertId.toString());
         } catch (error) {

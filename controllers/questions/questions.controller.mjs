@@ -3,6 +3,7 @@ import { pool } from "../../index.mjs"
 
 //?ADD QUESTION
 export const addQuestion = async (req, res) => {
+    console.log(req.body)
     if ( req.data ) {
         let conn;
         let question_id;
@@ -10,27 +11,24 @@ export const addQuestion = async (req, res) => {
             conn = await pool.getConnection();
             if ( req.body.photoQuestion ) {
                 let photo = await conn.query(`
-                    INSERT INTO
-                        photos ( base64_data )
+                    INSERT INTO photos ( base64_data )
                     VALUES ( '${req.body.photoQuestion}' );
                 `);
                 let id = photo.insertId.toString();
                 if( req.body.statement_id ){
                     let questions = await conn.query(`
                         INSERT INTO
-                            questions (
-                                content, skill_id, score, level_id, statement_id, photo_id, block_id)
+                            questions (content, skill_id, score, level_id, statement_id, photo_id, block_id, type)
                         VALUES (
-                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${req.body.statement_id}, ${id}, ${req.body.block});
+                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${req.body.statement_id}, ${id}, ${req.body.block}, '${req.body.typeAnswers}');
                     `);
                     question_id = questions.insertId.toString();
                 } else {
                     let questions = await conn.query(`
                         INSERT INTO
-                            questions (
-                                content, skill_id, score, level_id, photo_id, block_id)
+                            questions (content, skill_id, score, level_id, photo_id, block_id, type)
                         VALUES (
-                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${id}, ${req.body.block});
+                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${id}, ${req.body.block}, '${req.body.typeAnswers}');
                     `);
                     question_id = questions.insertId.toString();
                 };
@@ -38,19 +36,17 @@ export const addQuestion = async (req, res) => {
                 if( req.body.statement_id ){
                     let questions = await conn.query(`
                         INSERT INTO
-                            questions (
-                                content, skill_id, score, level_id, statement_id, block_id)
+                            questions ( content, skill_id, score, level_id, statement_id, block_id, type)
                         VALUES (
-                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${req.body.statement_id}, ${req.body.block});
+                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${req.body.statement_id}, ${req.body.block}, '${req.body.typeAnswers}');
                     `);
                     question_id = questions.insertId.toString();
                 } else {
                     let questions = await conn.query(`
                         INSERT INTO
-                            questions (
-                                content, skill_id, score, level_id, block_id)
+                            questions (content, skill_id, score, level_id, block_id, type)
                         VALUES (
-                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${req.body.block});
+                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${req.body.block}, '${req.body.typeAnswers}');
                     `);
                     question_id = questions.insertId.toString();
                 };
@@ -70,7 +66,7 @@ export const addQuestion = async (req, res) => {
                             ${question_id}, '${req.body.responses[i].content}', ${req.body.responses[i].is_correct}, '${req.body.responses[i].letter}', ${id});
                     `);
                 };
-            } else if ( req.body.typeAnswers === "phrase" ) {
+            } else if ( req.body.typeAnswers === "phrase" || req.body.typeAnswers === "test" ) {
                 for(let i = 0; req.body.responses.length > i; i++){
                     await conn.query(`
                         INSERT INTO
@@ -213,7 +209,6 @@ export const getQuestionsAnswers = async (req, res) => {
                     };
                 };
             };
-            console.log(questions)
             res.json(questions);
         } catch (error) {
             console.log(error);
@@ -348,6 +343,7 @@ export const getQuestionsAnswersByBlockId = async (req, res) => {
             `);
             for (const question of questions) {
                 question.id = question.id.toString();
+                question.status_id = question.status_id.toString();
                 if (question.photo_id) question.photo_id = question.photo_id.toString();
                 if (question.block_id) question.block_id = question.block_id.toString();
                 question.answers = [];
@@ -380,7 +376,7 @@ export const getQuestionsAnswersByBlockId = async (req, res) => {
                     };
                 };
             };
-            res.json(questions[0].answers);
+            res.json(questions);
         } catch (error) {
             console.log(error);
         } finally {

@@ -138,6 +138,7 @@ export const getActiveBlocks = async (req, res) => {
 
 //?GET BLOCKS BY SKILL_ID
 export const blocksById = async (req, res) => {
+    console.log(req.body)
     if ( req.data ) {
         let conn;
         try {
