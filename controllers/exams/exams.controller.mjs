@@ -33,82 +33,94 @@ export const generateExamByLevel = async (req, res) => {
                     if (element.level_id) element.level_id = element.level_id.toString();
                     return element;
                 })[0];
-
                 skill_union[u] = { content: union_skills[0].statement, score: union_skills[0].max_puntuation, questions: [], type: type, score: union_skills[0].max_score };
-                console.log(skill_union[u])
 
                 //*BLOCK 1
                 let blocks_1 = await conn.query(`
                     select b.id, b.max_score, b.question_type_id, b.individual_score
-                    from blocks b left join skills_blocks sb on sb.block_id = b.id
-                    where sb.skill_id = ${skills_unions[0].skill} and b.status_id = 1 and b.is_selected = 1;
+                    from blocks b
+                    left join levels_blocks lb on lb.block_id = b.id
+                    left join skills_blocks sb on sb.block_id = b.id
+                    where sb.skill_id = ${skills_unions[0].skill} and b.status_id = 1 and b.is_selected = 1 and level_id = ${req.body.level_id};
                 `);
                 for(let b1 = 0; blocks_1.length > b1; b1++){
-                    let questions_ids = await conn.query(`select id from questions where status_id = 1 and block_id = ${blocks_1[b1].id};`);
-                    let question_id = [];
-                    for(let rep = 0; blocks_1[b1].max_score / blocks_1[b1].individual_score > rep; rep++ ){
-                        let id = questions_ids[Math.floor( Math.random() * questions_ids.length )];
-                        questions_ids = questions_ids.filter(q => q != id);
-                        question_id.push(id);
-                    };
-                    let question = {};
-                    for(let q = 0; question_id.length > q; q++){
-                        let questionResult = await conn.query(`select * from questions where id = ${question_id[q].id}`);
-                        question = questionResult.map( element => {
-                            element.id = element.id.toString();
-                            if (element.block_id) element.block_id = element.block_id.toString();
-                            if (element.skill_id) element.skill_id = element.skill_id.toString();
-                            if (element.level_id) element.level_id = element.level_id.toString();
-                            if (element.status_id) element.status_id = element.status_id.toString();
-                            return element;
-                        })[0];
-                        let answer = await conn.query(`SELECT * FROM answers WHERE status_id = 1 AND question_id = ${question.id}`);
-                        question.answers = answer.map( element => {
-                            element.id = element.id.toString();
-                            if (element.question_id) element.question_id = element.question_id.toString();
-                            if (element.status_id) element.status_id = element.status_id.toString();
-                            return element;
-                        });
-                        skill_union[u].questions.push(question);
-                    };
+                    let questions_ids = await conn.query(`
+                        select id from questions
+                        where status_id = 1 and block_id = ${blocks_1[b1].id} and level_id = ${req.body.level_id};
+                    `);
+                    if(questions_ids.length > 0){
+                        let question_id = [];
+                        for(let rep = 0; blocks_1[b1].max_score / blocks_1[b1].individual_score > rep; rep++ ){
+                            let id = questions_ids[Math.floor( Math.random() * questions_ids.length )];
+                            questions_ids = questions_ids.filter(q => q != id);
+                            question_id.push(id);
+                        };
+                        let question = {};
+                        console.log(question_id)
+                        for(let q = 0; question_id.length > q; q++){
+                            let questionResult = await conn.query(`select * from questions where id = ${question_id[q].id}`);
+                            question = questionResult.map( element => {
+                                element.id = element.id.toString();
+                                if (element.block_id) element.block_id = element.block_id.toString();
+                                if (element.skill_id) element.skill_id = element.skill_id.toString();
+                                if (element.level_id) element.level_id = element.level_id.toString();
+                                if (element.status_id) element.status_id = element.status_id.toString();
+                                return element;
+                            })[0];
+                            let answer = await conn.query(`SELECT * FROM answers WHERE status_id = 1 AND question_id = ${question.id}`);
+                            question.answers = answer.map( element => {
+                                element.id = element.id.toString();
+                                if (element.question_id) element.question_id = element.question_id.toString();
+                                if (element.status_id) element.status_id = element.status_id.toString();
+                                return element;
+                            });
+                            skill_union[u].questions.push(question);
+                        };
+                    }
                 };
 
-                //*BLOCK 1
+                //*BLOCK 2
                 let blocks_2 = await conn.query(`
                     select b.id, b.max_score, b.question_type_id, b.individual_score
-                    from blocks b left join skills_blocks sb on sb.block_id = b.id
-                    where sb.skill_id = ${skills_unions[1].skill} and b.status_id = 1 and b.is_selected = 1;
+                    from blocks b
+                    left join levels_blocks lb on lb.block_id = b.id
+                    left join skills_blocks sb on sb.block_id = b.id
+                    where sb.skill_id = ${skills_unions[1].skill} and b.status_id = 1 and b.is_selected = 1 and level_id = ${req.body.level_id};
                 `);
                 for(let b2 = 0; blocks_2.length > b2; b2++){
-
-                    let questions_ids = await conn.query(`select id from questions where status_id = 1 and block_id = ${blocks_2[b2].id};`);
-                    let question_id = [];
-                    for(let rep = 0; blocks_2[b2].max_score / blocks_2[b2].individual_score > rep; rep++ ){
-                        let id = questions_ids[Math.floor( Math.random() * questions_ids.length )];
-                        questions_ids = questions_ids.filter(q => q != id);
-                        question_id.push(id);
-                    };
-
-                    let question = {};
-                    for(let q = 0; question_id.length > q; q++){
-                        let questionResult = await conn.query(`select * from questions where id = ${question_id[q].id}`);
-                        question = questionResult.map( element => {
-                            element.id = element.id.toString();
-                            if (element.block_id) element.block_id = element.block_id.toString();
-                            if (element.skill_id) element.skill_id = element.skill_id.toString();
-                            if (element.level_id) element.level_id = element.level_id.toString();
-                            if (element.status_id) element.status_id = element.status_id.toString();
-                            return element;
-                        })[0];
-                        let answer = await conn.query(`SELECT * FROM answers WHERE status_id = 1 AND question_id = ${question.id}`);
-                        question.answers = answer.map( element => {
-                            element.id = element.id.toString();
-                            if (element.question_id) element.question_id = element.question_id.toString();
-                            if (element.status_id) element.status_id = element.status_id.toString();
-                            return element;
-                        });
-                        skill_union[u].questions.push(question);
-                    };
+                    let questions_ids = await conn.query(`
+                        select id from questions
+                        where status_id = 1 and block_id = ${blocks_2[b2].id} and level_id = ${req.body.level_id};
+                    `);
+                        if(questions_ids.length > 0){
+                            let question_id = [];
+                            for(let rep = 0; blocks_2[b2].max_score / blocks_2[b2].individual_score > rep; rep++ ){
+                                let id = questions_ids[Math.floor( Math.random() * questions_ids.length )];
+                                questions_ids = questions_ids.filter(q => q != id);
+                                question_id.push(id);
+                            };
+                            let question = {};
+                            for(let q = 0; question_id.length > q; q++){
+                                let questionResult = await conn.query(`select * from questions where id = ${question_id[q].id}`);
+                                question = questionResult.map( element => {
+                                    element.id = element.id.toString();
+                                    if (element.block_id) element.block_id = element.block_id.toString();
+                                    if (element.skill_id) element.skill_id = element.skill_id.toString();
+                                    if (element.level_id) element.level_id = element.level_id.toString();
+                                    if (element.status_id) element.status_id = element.status_id.toString();
+                                    return element;
+                                })[0];
+                                let answer = await conn.query(`SELECT * FROM answers WHERE status_id = 1 AND question_id = ${question.id}`);
+                                question.answers = answer.map( element => {
+                                    element.id = element.id.toString();
+                                    if (element.question_id) element.question_id = element.question_id.toString();
+                                    if (element.status_id) element.status_id = element.status_id.toString();
+                                    return element;
+                                });
+                                console.log(question)
+                                skill_union[u].questions.push(question);
+                            };
+                        }
                 };
 
                 //*ADD TO EXAM
@@ -143,96 +155,102 @@ export const generateExamByLevel = async (req, res) => {
                     blocks[b].type.push(type);
                     //WITH STATEMENT
                     if(type.statement === 1){
-                        let stataments_ids = await conn.query(`select id from statements where skill_id = ${blocks[b].skill_id} and status_id = 1`);
+                        let stataments_ids = await conn.query(`
+                            select id from statements where skill_id = ${blocks[b].skill_id} and status_id = 1 and level_id = ${req.body.level_id}
+                        `);
                         let statement_id = [];
-                        for(let rep = 0; blocks[b].max_score / blocks[b].individual_score > rep; rep++ ){
-                            let id = stataments_ids[Math.floor( Math.random() * stataments_ids.length )];
-                            stataments_ids = stataments_ids.filter(q => q != id);
-                            statement_id.push(id);
-                        };
-                        for(let st = 0; statement_id.length > st; st++){
-                            let statement = await conn.query(`select * from statements where id = ${statement_id[st].id};`);
-                            statement = statement.map( element => {
-                                element.id = element.id.toString();
-                                if (element.skill_id) element.skill_id = element.skill_id.toString();
-                                if (element.level_id) element.level_id = element.level_id.toString();
-                                if (element.photo_id) element.photo_id = element.photo_id.toString();
-                                if (element.status_id) element.status_id = element.status_id.toString();
-                                if (element.block_id) element.block_id = element.block_id.toString();
-                                return element;
-                            })[0];
-                            statement.type = type;
-                            if(type.photo >= 1 && statement.photo_id ){
-                                let photo = await conn.query(`select base64_data from photos where status_id = 1 and id = ${statement.photo_id}`);
-                                statement.photo = photo[0].base64_data;
+                        if(stataments_ids.length > 0){
+                            for(let rep = 0; blocks[b].max_score / blocks[b].individual_score > rep; rep++ ){
+                                let id = stataments_ids[Math.floor( Math.random() * stataments_ids.length )];
+                                stataments_ids = stataments_ids.filter(q => q != id);
+                                statement_id.push(id);
                             };
-                            if(type.question >= 1){
-                                let questions = await conn.query(`select * from questions where status_id = 1 and statement_id = ${statement.id}`);
-                                questions = questions.map( element => {
+                            for(let st = 0; statement_id.length > st; st++){
+                                let statement = await conn.query(`select * from statements where id = ${statement_id[st].id};`);
+                                statement = statement.map( element => {
                                     element.id = element.id.toString();
-                                    if (element.statement_id) element.statement_id = element.statement_id.toString();
+                                    if (element.skill_id) element.skill_id = element.skill_id.toString();
+                                    if (element.level_id) element.level_id = element.level_id.toString();
+                                    if (element.photo_id) element.photo_id = element.photo_id.toString();
+                                    if (element.status_id) element.status_id = element.status_id.toString();
+                                    if (element.block_id) element.block_id = element.block_id.toString();
+                                    return element;
+                                })[0];
+                                statement.type = type;
+                                if(type.photo >= 1 && statement.photo_id ){
+                                    let photo = await conn.query(`select base64_data from photos where status_id = 1 and id = ${statement.photo_id}`);
+                                    statement.photo = photo[0].base64_data;
+                                };
+                                if(type.question >= 1){
+                                    let questions = await conn.query(`select * from questions where status_id = 1 and statement_id = ${statement.id}`);
+                                    questions = questions.map( element => {
+                                        element.id = element.id.toString();
+                                        if (element.statement_id) element.statement_id = element.statement_id.toString();
+                                        if (element.block_id) element.block_id = element.block_id.toString();
+                                        if (element.skill_id) element.skill_id = element.skill_id.toString();
+                                        if (element.level_id) element.level_id = element.level_id.toString();
+                                        if (element.status_id) element.status_id = element.status_id.toString();
+                                        return element;
+                                    });
+                                    if(type.answer >= 1){
+                                        for(let q = 0; questions.length > q; q++){
+                                            let answers = await conn.query(`select * from answers where status_id = 1 and question_id = ${questions[q].id}`);
+                                            answers = answers.map( element => {
+                                                element.id = element.id.toString();
+                                                if (element.question_id) element.question_id = element.question_id.toString();
+                                                if (element.photo_id && element.photo_id !== null) element.photo_id = element.photo_id.toString();
+                                                if (element.status_id) element.status_id = element.status_id.toString();
+                                                return element;
+                                            });
+                                            questions[q].answers = answers;
+                                        };
+                                    };
+                                    statement.questions = questions;
+                                };
+                                exam.push(statement)
+                            };
+                        }
+
+                    //WITHOUT STATEMENT
+                    } else if (type.question >= 1){
+                        let questions_ids = await conn.query(`select id from questions where block_id = ${blocks[b].id} and level_id = ${req.body.level_id}`);
+                        let question_id = [];
+                        if(questions_ids.length > 0){
+                            for(let rep = 0; blocks[b].max_score / blocks[b].individual_score > rep; rep++ ){
+                                let id = questions_ids[Math.floor( Math.random() * questions_ids.length )];
+                                questions_ids = questions_ids.filter(q => q != id);
+                                question_id.push(id);
+                            };
+                            for(let st = 0; question_id.length > st; st++){
+                                let question = await conn.query(`select * from questions where id = ${question_id[st].id};`);
+                                let answers = await conn.query(`select * from answers where status_id = 1 and question_id = ${question[0].id}`);
+                                if(type.photo >= 1){
+                                    for(let a = 0; answers.length > a; a++){
+                                        let photo = await conn.query(`select base64_data from photos where status_id = 1 and id = ${answers[a].photo_id}`);
+                                        answers[a].photo = photo[0].base64_data;
+                                    };
+                                };
+                                question = question.map( element => {
+                                    element.id = element.id.toString();
                                     if (element.block_id) element.block_id = element.block_id.toString();
                                     if (element.skill_id) element.skill_id = element.skill_id.toString();
                                     if (element.level_id) element.level_id = element.level_id.toString();
                                     if (element.status_id) element.status_id = element.status_id.toString();
                                     return element;
+                                })[0];
+                                answers = answers.map( element => {
+                                    element.id = element.id.toString();
+                                    if (element.question_id) element.question_id = element.question_id.toString();
+                                    if (element.photo_id && element.photo_id !== null) element.photo_id = element.photo_id.toString();
+                                    if (element.status_id) element.status_id = element.status_id.toString();
+                                    return element;
                                 });
-                                if(type.answer >= 1){
-                                    for(let q = 0; questions.length > q; q++){
-                                        let answers = await conn.query(`select * from answers where status_id = 1 and question_id = ${questions[q].id}`);
-                                        answers = answers.map( element => {
-                                            element.id = element.id.toString();
-                                            if (element.question_id) element.question_id = element.question_id.toString();
-                                            if (element.photo_id && element.photo_id !== null) element.photo_id = element.photo_id.toString();
-                                            if (element.status_id) element.status_id = element.status_id.toString();
-                                            return element;
-                                        });
-                                        questions[q].answers = answers;
-                                    };
-                                };
-                                statement.questions = questions;
+                                let result = question;
+                                result.answers = answers;
+                                result.type = type;
+                                exam.push(result)
                             };
-                            exam.push(statement)
-                        };
-
-                    //WITHOUT STATEMENT
-                    } else if (type.question >= 1){
-                        let questions_ids = await conn.query(`select id from questions where block_id = ${blocks[b].id}`);
-                        let question_id = [];
-                        for(let rep = 0; blocks[b].max_score / blocks[b].individual_score > rep; rep++ ){
-                            let id = questions_ids[Math.floor( Math.random() * questions_ids.length )];
-                            questions_ids = questions_ids.filter(q => q != id);
-                            question_id.push(id);
-                        };
-                        for(let st = 0; question_id.length > st; st++){
-                            let question = await conn.query(`select * from questions where id = ${question_id[st].id};`);
-                            let answers = await conn.query(`select * from answers where status_id = 1 and question_id = ${question[0].id}`);
-                            if(type.photo >= 1){
-                                for(let a = 0; answers.length > a; a++){
-                                    let photo = await conn.query(`select base64_data from photos where status_id = 1 and id = ${answers[a].photo_id}`);
-                                    answers[a].photo = photo[0].base64_data;
-                                };
-                            };
-                            question = question.map( element => {
-                                element.id = element.id.toString();
-                                if (element.block_id) element.block_id = element.block_id.toString();
-                                if (element.skill_id) element.skill_id = element.skill_id.toString();
-                                if (element.level_id) element.level_id = element.level_id.toString();
-                                if (element.status_id) element.status_id = element.status_id.toString();
-                                return element;
-                            })[0];
-                            answers = answers.map( element => {
-                                element.id = element.id.toString();
-                                if (element.question_id) element.question_id = element.question_id.toString();
-                                if (element.photo_id && element.photo_id !== null) element.photo_id = element.photo_id.toString();
-                                if (element.status_id) element.status_id = element.status_id.toString();
-                                return element;
-                            });
-                            let result = question;
-                            result.answers = answers;
-                            result.type = type;
-                            exam.push(result)
-                        };
+                        }
                     };
                 };
             };
