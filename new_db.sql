@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-11-2024 a las 15:56:05
+-- Tiempo de generación: 02-12-2024 a las 15:49:37
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `test`
+-- Base de datos: `db_project_2.0`
 --
 
 -- --------------------------------------------------------
@@ -290,7 +290,19 @@ INSERT INTO `answers` (`id`, `question_id`, `content`, `is_correct`, `status_id`
 (786, 255, 'Suyas', 0, 1, 'C', NULL, NULL),
 (787, 256, 'A la derecha', 0, 1, 'A', NULL, NULL),
 (788, 256, 'Al lado del', 1, 1, 'B', NULL, NULL),
-(789, 256, 'Cerca', 0, 1, 'C', NULL, NULL);
+(789, 256, 'Cerca', 0, 1, 'C', NULL, NULL),
+(790, 257, 'Hay', 1, 1, 'A', NULL, NULL),
+(791, 257, 'Está', 0, 1, 'B', NULL, NULL),
+(792, 257, 'Son', 0, 1, 'C', NULL, NULL),
+(793, 258, 'Hay', 1, 1, 'A', NULL, NULL),
+(794, 258, 'Están', 0, 1, 'B', NULL, NULL),
+(795, 258, 'Son', 0, 1, 'C', NULL, NULL),
+(796, 259, 'Hay', 1, 1, 'A', NULL, NULL),
+(797, 259, 'Está', 0, 1, 'B', NULL, NULL),
+(798, 259, 'Es', 0, 1, 'C', NULL, NULL),
+(799, 260, 'Está', 1, 1, 'A', NULL, NULL),
+(800, 260, 'Hay', 0, 1, 'B', NULL, NULL),
+(801, 260, 'Es', 0, 1, 'C', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -318,7 +330,7 @@ INSERT INTO `blocks` (`id`, `name`, `status_id`, `is_selected`, `max_score`, `qu
 (80, 'Presente irregular', 1, 1, 2, 1, 1),
 (81, 'Pronombres OD y OI gustar', 1, 1, 2, 1, 1),
 (82, 'Género y número', 1, 1, 2, 1, 1),
-(83, 'Preguntas con imágenes', 1, 1, 5, 5, 1),
+(83, 'Preguntas con imágenes', 1, 1, 5, 5, 5),
 (84, 'Tener y haber', 1, 1, 2, 1, 1),
 (85, 'Descripción física', 1, 1, 2, 1, 1),
 (86, 'Cantidad', 1, 1, 2, 1, 1),
@@ -330,9 +342,23 @@ INSERT INTO `blocks` (`id`, `name`, `status_id`, `is_selected`, `max_score`, `qu
 (92, 'Vocabulario', 1, 1, 2, 1, 1),
 (93, 'Variadas gramatica', 1, 1, 2, 1, 1),
 (94, 'General comprensión lectora', 1, 1, 15, 3, 15),
-(95, 'Preguntas con frases', 1, 1, 5, 4, 1),
+(95, 'Preguntas con frases', 1, 1, 5, 4, 5),
 (96, 'General oral', 1, 1, 25, 6, 25),
-(97, 'General redacción', 1, 1, 20, 2, 20);
+(97, 'General redacción', 1, 1, 20, 2, 20),
+(99, 'Verbales compuestos', 1, 1, 2, 1, 1),
+(100, 'Conjugación de verbos regulares e irregulares', 1, 1, 2, 1, 1),
+(101, 'Subjuntivo presente', 1, 1, 2, 1, 1),
+(102, 'Pronombres reflexivos y posesivos', 1, 1, 2, 1, 1),
+(103, 'Uso de \"por\" y \"para\"', 1, 1, 2, 1, 1),
+(104, 'Condicional y futuro', 1, 1, 2, 1, 1),
+(105, 'Comida y bebida', 1, 1, 2, 1, 1),
+(106, 'La familia', 1, 1, 2, 1, 1),
+(107, 'La casa', 1, 1, 2, 1, 1),
+(108, 'Ropa y colores', 1, 1, 2, 1, 1),
+(109, 'Viajes y transporte', 1, 1, 2, 1, 1),
+(110, 'Habilidades y preferencias', 1, 1, 2, 1, 1),
+(111, 'Trabajo y profesiones', 1, 1, 2, 1, 1),
+(112, 'Fiestas y celebraciones', 1, 1, 2, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -343,7 +369,7 @@ INSERT INTO `blocks` (`id`, `name`, `status_id`, `is_selected`, `max_score`, `qu
 CREATE TABLE `cities` (
   `id` bigint(20) NOT NULL,
   `name` text NOT NULL,
-  `status_id` bigint(20) NOT NULL
+  `status_id` bigint(20) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -485,7 +511,7 @@ CREATE TABLE `exam_statements` (
 CREATE TABLE `levels` (
   `id` bigint(20) NOT NULL,
   `name` text NOT NULL,
-  `status_id` bigint(20) NOT NULL
+  `status_id` bigint(20) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -518,36 +544,22 @@ CREATE TABLE `levels_blocks` (
 INSERT INTO `levels_blocks` (`level_id`, `block_id`) VALUES
 (41, 78),
 (41, 75),
-(42, 78),
 (42, 75),
 (41, 80),
-(42, 80),
 (41, 81),
-(42, 81),
 (41, 82),
-(42, 82),
 (41, 83),
 (42, 83),
 (41, 84),
-(42, 84),
 (41, 85),
-(42, 85),
 (41, 86),
-(42, 86),
 (41, 87),
-(42, 87),
 (41, 88),
-(42, 88),
 (41, 89),
-(42, 89),
 (41, 90),
-(42, 90),
 (41, 91),
-(42, 91),
 (41, 92),
-(42, 92),
 (41, 93),
-(42, 93),
 (41, 94),
 (42, 94),
 (41, 95),
@@ -555,7 +567,21 @@ INSERT INTO `levels_blocks` (`level_id`, `block_id`) VALUES
 (41, 96),
 (42, 96),
 (41, 97),
-(42, 97);
+(42, 97),
+(42, 99),
+(42, 100),
+(42, 101),
+(42, 102),
+(42, 103),
+(42, 104),
+(42, 105),
+(42, 106),
+(42, 107),
+(42, 108),
+(42, 109),
+(42, 110),
+(42, 111),
+(42, 112);
 
 -- --------------------------------------------------------
 
@@ -698,89 +724,92 @@ CREATE TABLE `questions` (
   `statement_id` bigint(20) DEFAULT NULL,
   `photo_id` bigint(20) DEFAULT NULL,
   `score` int(3) DEFAULT NULL,
-  `status_id` bigint(20) NOT NULL,
-  `type` text NOT NULL
+  `status_id` bigint(20) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `questions`
 --
 
-INSERT INTO `questions` (`id`, `content`, `block_id`, `skill_id`, `level_id`, `statement_id`, `photo_id`, `score`, `status_id`, `type`) VALUES
-(180, 'Francisco escribe una carta sobre:', 94, 352, 41, 83, NULL, 2, 1, ''),
-(181, 'Va a empezar a trabajar: ', 94, 352, 41, 83, NULL, 2, 0, ''),
-(182, 'Va a trabajar en:', 94, 352, 41, 83, NULL, 2, 0, ''),
-(183, 'En su trabajo, Francisco tiene que:', 94, 352, 41, 83, NULL, 2, 0, ''),
-(184, 'Cuándo tiene Francisco prácticas de laboratorio:', 94, 352, 41, 83, NULL, 2, 0, ''),
-(185, 'Rose todos los dias:', 94, 352, 41, 84, NULL, 2, 0, ''),
-(186, 'Ha visitado:', 94, 352, 41, 84, NULL, 2, 0, ''),
-(187, 'Rose va a visitar con sus padres: a) el Museo Reina Sofía. b) el Palacio Real y el Reina Sofía. c) el Palacio Real d) el Museo del Prado y Reina Sofia.', 94, 352, 41, 84, NULL, 2, 0, ''),
-(188, 'Sus padres:', 94, 352, 41, 84, NULL, 2, 0, ''),
-(189, 'Sus abuelos:', 94, 352, 41, 84, NULL, 2, 0, ''),
-(190, 'A continuación, escuchará cinco mensajes muy breves. Oirá cada mensaje dos veces. Relacione los textos con las imágenes. Después de la segunda audición, marque la opción correcta. Hay tres imágenes que no debe seleccionar:', 96, 354, 41, NULL, NULL, 5, 0, ''),
-(191, 'A continuación escuchará cinco mensajes muy breves. Oirá cada mensaje dos veces. Relacione los textos con las imágenes. Después de la segunda audición, marque la opción correcta. Hay tres imágenes que no debe seleccionar:', 83, 355, 41, NULL, NULL, 5, 0, ''),
-(192, 'Pedro es profesor en un instituto de idiomas y cuenta a su amiga cómo es su trabajo. Complete el texto con la información. Escuchará la audición tres veces:', 95, 355, 41, NULL, NULL, 5, 0, ''),
-(193, 'Petra habla con una amiga sobre su alimentación. Oirá la audición tres veces. Complete el texto con la información:', 95, 355, 41, NULL, NULL, 5, 0, 'phrase'),
-(197, '¿Dónde ______ una papelera? Necesito tirar este papel.', 75, 351, 41, NULL, NULL, 1, 0, 'test'),
-(198, 'Disculpe, ¿puede decirme dónde _____ la estación de metro más cercana?', 75, 351, 41, NULL, NULL, 1, 0, 'test'),
-(199, 'En la esquina de la avenida ______ tres bancos.', 75, 351, 41, NULL, NULL, 1, 0, 'test'),
-(200, 'Algunas personas de la clase ______ en el pasillo.', 75, 351, 41, NULL, NULL, 1, 0, 'test'),
-(201, 'En mi ciudad ______ muchas zonas verdes.', 84, 351, 41, NULL, NULL, 1, 0, 'test'),
-(202, 'Mi barrio ______ varias floristerías.', 84, 351, 41, NULL, NULL, 1, 0, 'test'),
-(203, 'Al final de la clase ______ un mapa y un perchero.', 84, 351, 41, NULL, NULL, 1, 0, 'test'),
-(204, 'La tienda de ropa _______ dos probadores.', 84, 351, 41, NULL, NULL, 1, 0, 'test'),
-(205, 'A mí me _______ los helados de chocolate.', 78, 351, 41, NULL, NULL, 1, 0, 'test'),
-(206, '¿Te ________ la cultura española?', 78, 351, 41, NULL, NULL, 1, 0, 'test'),
-(207, 'A mi hermano le _______ hacer senderismo.', 78, 351, 41, NULL, NULL, 1, 0, 'test'),
-(208, 'Nos _______ el flamenco y el tango.', 78, 351, 41, NULL, NULL, 1, 0, 'test'),
-(209, 'Mientras tú preparas la comida, yo ______ la mesa, ¿vale?', 80, 351, 41, NULL, NULL, 1, 0, 'test'),
-(210, 'Cuando yo _______, siempre escucho música.', 80, 351, 41, NULL, NULL, 1, 0, 'test'),
-(211, '¿No _______ que la comida ecuatoriana es deliciosa?', 80, 351, 41, NULL, NULL, 1, 0, 'test'),
-(212, 'Estamos buscando trabajo, pero no lo _______.', 80, 351, 41, NULL, NULL, 1, 0, 'test'),
-(213, 'Mi vecina Malena tiene el pelo ______.', 85, 349, 41, NULL, NULL, 1, 0, 'test'),
-(214, 'Mi hermana y yo _______ los ojos marrones.', 85, 349, 41, NULL, NULL, 1, 0, 'test'),
-(215, 'Su abuelo no tiene pelo, es _______.', 85, 349, 41, NULL, NULL, 1, 0, 'test'),
-(216, '¿Tú _______ gafas para leer solamente?', 85, 349, 41, NULL, NULL, 1, 0, 'test'),
-(217, 'Siempre lleva pantalones vaqueros ________, le encantan.', 82, 351, 41, NULL, NULL, 1, 0, 'test'),
-(218, 'No me gusta el agua ________, no es bueno para la garganta.', 82, 351, 41, NULL, NULL, 1, 0, 'test'),
-(219, 'En las fotos, las personas están _______.', 82, 351, 41, NULL, NULL, 1, 0, 'test'),
-(220, 'El planeta de la película es muy ______.', 82, 351, 41, NULL, NULL, 1, 0, 'test'),
-(221, 'En mi país hay ______ gente.', 86, 349, 41, NULL, NULL, 1, 0, 'test'),
-(222, 'En esta carretera, los domingos hay ________ coches.', 86, 349, 41, NULL, NULL, 1, 0, 'test'),
-(223, 'La calle donde vivo es _______ tranquila.', 86, 349, 41, NULL, NULL, 1, 0, 'test'),
-(224, 'No hay ______ farmacia cerca de mi casa.', 86, 349, 41, NULL, NULL, 1, 0, 'test'),
-(225, 'Todos los días _______ temprano, a las siete de la mañana.', 87, 351, 41, NULL, NULL, 1, 0, 'test'),
-(226, 'La niña ya _______ sola, no necesita ayuda.', 87, 351, 41, NULL, NULL, 1, 0, 'test'),
-(227, '¿A qué hora _______ vosotros los sábados?', 87, 351, 41, NULL, NULL, 1, 0, 'test'),
-(228, '¿Tú _______ los dientes tres veces al día?', 87, 351, 41, NULL, NULL, 1, 0, 'test'),
-(229, 'Voy a viajar por el norte y llueve mucho, necesito un _______.', 88, 349, 41, NULL, NULL, 1, 0, 'test'),
-(230, 'Si no me pongo los _______, tengo las manos heladas.', 88, 349, 41, NULL, NULL, 1, 0, 'test'),
-(231, 'Quiero comprarme un _______ para nadar.', 88, 349, 41, NULL, NULL, 1, 0, 'test'),
-(232, 'Carmela prefiere llevar ______ que pantalones.', 88, 349, 41, NULL, NULL, 1, 0, 'test'),
-(233, 'En junio no _______ frío, no necesitas abrigo.', 89, 349, 41, NULL, NULL, 1, 0, 'test'),
-(234, 'Hoy hace un día malo, _______ nublado.', 89, 349, 41, NULL, NULL, 1, 0, 'test'),
-(235, 'En invierno ______ mucho.', 89, 349, 41, NULL, NULL, 1, 0, 'test'),
-(236, 'Mi estación favorita es el ______, porque los árboles están amarillos y rojos.', 89, 349, 41, NULL, NULL, 1, 0, 'test'),
-(237, 'Esta mañana mis amigos y yo _____ un vídeo.', 90, 351, 41, NULL, NULL, 1, 0, 'test'),
-(238, '¿Todavía no ______ la película?', 90, 351, 41, NULL, NULL, 1, 0, 'test'),
-(239, 'El niño ______ el juguete hoy.', 90, 351, 41, NULL, NULL, 1, 0, 'test'),
-(240, '¿Alguna vez tú ______ un mensaje en español?', 90, 351, 41, NULL, NULL, 1, 0, 'test'),
-(241, 'La verdura, ¿cómo _____ preparas?', 81, 351, 41, NULL, NULL, 1, 0, 'test'),
-(242, 'A Martín _____ encanta este blog de viajes.', 81, 351, 41, NULL, NULL, 1, 0, 'test'),
-(243, 'Los huevos _____ pongo en la nevera.', 81, 351, 41, NULL, NULL, 1, 0, 'test'),
-(244, 'A mis primas _______ apasiona la montaña.', 81, 351, 41, NULL, NULL, 1, 0, 'test'),
-(245, 'Este fin de semana nos vamos _____ excursión.', 91, 351, 41, NULL, NULL, 1, 0, 'test'),
-(246, 'Aquella catarata es la más alta ____ país.', 91, 351, 41, NULL, NULL, 1, 0, 'test'),
-(247, '¿Echas de menos _______ tu familia?', 91, 351, 41, NULL, NULL, 1, 0, 'test'),
-(248, 'Elena nunca ha ido _______ exposición.', 91, 351, 41, NULL, NULL, 1, 0, 'test'),
-(249, '¿Me trae, por favor, una ______ para comer la sopa?', 92, 349, 41, NULL, NULL, 1, 0, 'test'),
-(250, 'Voy a ir a la playa y quiero llevarme una camiseta de _______.', 92, 349, 41, NULL, NULL, 1, 0, 'test'),
-(251, 'Su tío pone todas las cosas en su lugar. Es muy ________.', 92, 349, 41, NULL, NULL, 1, 0, 'test'),
-(252, 'Su barrio tiene mucha vida nocturna, todas las noches hay gente, es muy _______.', 92, 349, 41, NULL, NULL, 1, 0, 'test'),
-(253, '_______ desierto es el más grande del mundo.', 93, 351, 41, NULL, NULL, 1, 0, 'test'),
-(254, '¿ ________ son las castañuelas? ¿Un instrumento musical?', 93, 351, 41, NULL, NULL, 1, 0, 'test'),
-(255, 'Leandro tiene dos cuñadas. ______ cuñadas son de México.', 93, 351, 41, NULL, NULL, 1, 0, 'test'),
-(256, 'La heladería está ________ taller.', 93, 351, 41, NULL, NULL, 1, 0, 'test');
+INSERT INTO `questions` (`id`, `content`, `block_id`, `skill_id`, `level_id`, `statement_id`, `photo_id`, `score`, `status_id`) VALUES
+(180, 'Francisco escribe una carta sobre:', 94, 352, 41, 83, NULL, 2, 1),
+(181, 'Va a empezar a trabajar: ', 94, 352, 41, 83, NULL, 2, 1),
+(182, 'Va a trabajar en:', 94, 352, 41, 83, NULL, 2, 1),
+(183, 'En su trabajo, Francisco tiene que:', 94, 352, 41, 83, NULL, 2, 1),
+(184, 'Cuándo tiene Francisco prácticas de laboratorio:', 94, 352, 41, 83, NULL, 2, 1),
+(185, 'Rose todos los dias:', 94, 352, 41, 84, NULL, 2, 1),
+(186, 'Ha visitado:', 94, 352, 41, 84, NULL, 2, 1),
+(187, 'Rose va a visitar con sus padres:', 94, 352, 41, 84, NULL, 2, 1),
+(188, 'Sus padres:', 94, 352, 41, 84, NULL, 2, 1),
+(189, 'Sus abuelos:', 94, 352, 41, 84, NULL, 2, 1),
+(190, 'A continuación, escuchará cinco mensajes muy breves. Oirá cada mensaje dos veces. Relacione los textos con las imágenes. Después de la segunda audición, marque la opción correcta. Hay tres imágenes que no debe seleccionar:', 96, 354, 41, NULL, NULL, 5, 1),
+(191, 'A continuación escuchará cinco mensajes muy breves. Oirá cada mensaje dos veces. Relacione los textos con las imágenes. Después de la segunda audición, marque la opción correcta. Hay tres imágenes que no debe seleccionar:', 83, 355, 41, NULL, NULL, 5, 1),
+(192, 'Pedro es profesor en un instituto de idiomas y cuenta a su amiga cómo es su trabajo. Complete el texto con la información. Escuchará la audición tres veces:', 95, 355, 41, NULL, NULL, 5, 1),
+(193, 'Petra habla con una amiga sobre su alimentación. Oirá la audición tres veces. Complete el texto con la información:', 95, 355, 41, NULL, NULL, 5, 1),
+(197, '¿Dónde ______ una papelera? Necesito tirar este papel.', 75, 351, 41, NULL, NULL, 1, 1),
+(198, 'Disculpe, ¿puede decirme dónde _____ la estación de metro más cercana?', 75, 351, 41, NULL, NULL, 1, 1),
+(199, 'En la esquina de la avenida ______ tres bancos.', 75, 351, 41, NULL, NULL, 1, 1),
+(200, 'Algunas personas de la clase ______ en el pasillo.', 75, 351, 41, NULL, NULL, 1, 1),
+(201, 'En mi ciudad ______ muchas zonas verdes.', 84, 351, 41, NULL, NULL, 1, 1),
+(202, 'Mi barrio ______ varias floristerías.', 84, 351, 41, NULL, NULL, 1, 1),
+(203, 'Al final de la clase ______ un mapa y un perchero.', 84, 351, 41, NULL, NULL, 1, 1),
+(204, 'La tienda de ropa _______ dos probadores.', 84, 351, 41, NULL, NULL, 1, 1),
+(205, 'A mí me _______ los helados de chocolate.', 78, 351, 41, NULL, NULL, 1, 1),
+(206, '¿Te ________ la cultura española?', 78, 351, 41, NULL, NULL, 1, 1),
+(207, 'A mi hermano le _______ hacer senderismo.', 78, 351, 41, NULL, NULL, 1, 1),
+(208, 'Nos _______ el flamenco y el tango.', 78, 351, 41, NULL, NULL, 1, 1),
+(209, 'Mientras tú preparas la comida, yo ______ la mesa, ¿vale?', 80, 351, 41, NULL, NULL, 1, 1),
+(210, 'Cuando yo _______, siempre escucho música.', 80, 351, 41, NULL, NULL, 1, 1),
+(211, '¿No _______ que la comida ecuatoriana es deliciosa?', 80, 351, 41, NULL, NULL, 1, 1),
+(212, 'Estamos buscando trabajo, pero no lo _______.', 80, 351, 41, NULL, NULL, 1, 1),
+(213, 'Mi vecina Malena tiene el pelo ______.', 85, 349, 41, NULL, NULL, 1, 1),
+(214, 'Mi hermana y yo _______ los ojos marrones.', 85, 349, 41, NULL, NULL, 1, 1),
+(215, 'Su abuelo no tiene pelo, es _______.', 85, 349, 41, NULL, NULL, 1, 1),
+(216, '¿Tú _______ gafas para leer solamente?', 85, 349, 41, NULL, NULL, 1, 1),
+(217, 'Siempre lleva pantalones vaqueros ________, le encantan.', 82, 351, 41, NULL, NULL, 1, 1),
+(218, 'No me gusta el agua ________, no es bueno para la garganta.', 82, 351, 41, NULL, NULL, 1, 1),
+(219, 'En las fotos, las personas están _______.', 82, 351, 41, NULL, NULL, 1, 1),
+(220, 'El planeta de la película es muy ______.', 82, 351, 41, NULL, NULL, 1, 1),
+(221, 'En mi país hay ______ gente.', 86, 349, 41, NULL, NULL, 1, 1),
+(222, 'En esta carretera, los domingos hay ________ coches.', 86, 349, 41, NULL, NULL, 1, 1),
+(223, 'La calle donde vivo es _______ tranquila.', 86, 349, 41, NULL, NULL, 1, 1),
+(224, 'No hay ______ farmacia cerca de mi casa.', 86, 349, 41, NULL, NULL, 1, 1),
+(225, 'Todos los días _______ temprano, a las siete de la mañana.', 87, 351, 41, NULL, NULL, 1, 1),
+(226, 'La niña ya _______ sola, no necesita ayuda.', 87, 351, 41, NULL, NULL, 1, 1),
+(227, '¿A qué hora _______ vosotros los sábados?', 87, 351, 41, NULL, NULL, 1, 1),
+(228, '¿Tú _______ los dientes tres veces al día?', 87, 351, 41, NULL, NULL, 1, 1),
+(229, 'Voy a viajar por el norte y llueve mucho, necesito un _______.', 88, 349, 41, NULL, NULL, 1, 1),
+(230, 'Si no me pongo los _______, tengo las manos heladas.', 88, 349, 41, NULL, NULL, 1, 1),
+(231, 'Quiero comprarme un _______ para nadar.', 88, 349, 41, NULL, NULL, 1, 1),
+(232, 'Carmela prefiere llevar ______ que pantalones.', 88, 349, 41, NULL, NULL, 1, 1),
+(233, 'En junio no _______ frío, no necesitas abrigo.', 89, 349, 41, NULL, NULL, 1, 1),
+(234, 'Hoy hace un día malo, _______ nublado.', 89, 349, 41, NULL, NULL, 1, 1),
+(235, 'En invierno ______ mucho.', 89, 349, 41, NULL, NULL, 1, 1),
+(236, 'Mi estación favorita es el ______, porque los árboles están amarillos y rojos.', 89, 349, 41, NULL, NULL, 1, 1),
+(237, 'Esta mañana mis amigos y yo _____ un vídeo.', 90, 351, 41, NULL, NULL, 1, 1),
+(238, '¿Todavía no ______ la película?', 90, 351, 41, NULL, NULL, 1, 1),
+(239, 'El niño ______ el juguete hoy.', 90, 351, 41, NULL, NULL, 1, 1),
+(240, '¿Alguna vez tú ______ un mensaje en español?', 90, 351, 41, NULL, NULL, 1, 1),
+(241, 'La verdura, ¿cómo _____ preparas?', 81, 351, 41, NULL, NULL, 1, 1),
+(242, 'A Martín _____ encanta este blog de viajes.', 81, 351, 41, NULL, NULL, 1, 1),
+(243, 'Los huevos _____ pongo en la nevera.', 81, 351, 41, NULL, NULL, 1, 1),
+(244, 'A mis primas _______ apasiona la montaña.', 81, 351, 41, NULL, NULL, 1, 1),
+(245, 'Este fin de semana nos vamos _____ excursión.', 91, 351, 41, NULL, NULL, 1, 1),
+(246, 'Aquella catarata es la más alta ____ país.', 91, 351, 41, NULL, NULL, 1, 1),
+(247, '¿Echas de menos _______ tu familia?', 91, 351, 41, NULL, NULL, 1, 1),
+(248, 'Elena nunca ha ido _______ exposición.', 91, 351, 41, NULL, NULL, 1, 1),
+(249, '¿Me trae, por favor, una ______ para comer la sopa?', 92, 349, 41, NULL, NULL, 1, 1),
+(250, 'Voy a ir a la playa y quiero llevarme una camiseta de _______.', 92, 349, 41, NULL, NULL, 1, 1),
+(251, 'Su tío pone todas las cosas en su lugar. Es muy ________.', 92, 349, 41, NULL, NULL, 1, 1),
+(252, 'Su barrio tiene mucha vida nocturna, todas las noches hay gente, es muy _______.', 92, 349, 41, NULL, NULL, 1, 1),
+(253, '_______ desierto es el más grande del mundo.', 93, 351, 41, NULL, NULL, 1, 1),
+(254, '¿ ________ son las castañuelas? ¿Un instrumento musical?', 93, 351, 41, NULL, NULL, 1, 1),
+(255, 'Leandro tiene dos cuñadas. ______ cuñadas son de México.', 93, 351, 41, NULL, NULL, 1, 1),
+(256, 'La heladería está ________ taller.', 93, 351, 41, NULL, NULL, 1, 1),
+(257, '¿Dónde ______ una farmacia? Necesito comprar medicinas.', 75, 351, 42, NULL, NULL, 1, 1),
+(258, 'En el parque ______ muchos niños jugando.', 75, 351, 42, NULL, NULL, 1, 1),
+(259, 'En la casa de Juan ______ un jardín muy bonito.', 75, 351, 42, NULL, NULL, 1, 1),
+(260, '¿Dónde ______ la biblioteca?', 75, 351, 42, NULL, NULL, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -807,10 +836,12 @@ CREATE TABLE `question_types` (
 INSERT INTO `question_types` (`id`, `name`, `statement`, `photo`, `text`, `question`, `answer`, `space`, `test_type`) VALUES
 (1, 'Preguntas a granel', 0, 0, 0, 30, 3, 4, 1),
 (2, 'Redactar', 1, 1, 0, 0, 0, 2, 0),
-(3, 'Compresión lectora', 1, 0, 1, 2, 4, 2, 1),
+(3, 'Lectura corta 250 lineas', 1, 0, 1, 2, 4, 2, 1),
 (4, 'Audio con frases', 0, 0, 0, 5, 5, 1, 0),
 (5, 'Audio con fotos', 0, 9, 0, 1, 9, 2, 0),
-(6, 'Oral', 1, 1, 0, 0, 0, 1, 0);
+(6, 'Oral', 1, 1, 0, 0, 0, 1, 0),
+(8, 'Lectura media +250 -600 palabras', 1, 0, 1, 5, 4, 4, 1),
+(9, 'Lectura larga +600 palabras', 1, 0, 1, 5, 4, 4, 1);
 
 -- --------------------------------------------------------
 
@@ -871,7 +902,21 @@ INSERT INTO `skills_blocks` (`skill_id`, `block_id`) VALUES
 (355, 95),
 (354, 96),
 (353, 97),
-(351, 75);
+(351, 75),
+(351, 99),
+(351, 100),
+(351, 101),
+(351, 102),
+(351, 103),
+(351, 104),
+(349, 105),
+(349, 106),
+(349, 107),
+(349, 108),
+(349, 109),
+(349, 110),
+(349, 111),
+(349, 112);
 
 -- --------------------------------------------------------
 
@@ -941,7 +986,7 @@ INSERT INTO `statements` (`id`, `exam_id`, `content`, `skill_id`, `text`, `score
 (80, NULL, 'Tu amigo está interesado en mudarse a tu barrio. Escríbele un correo breve para contarle cómo es. Incluye un saludo, describe las características del barrio y finaliza con una despedida. El texto debe tener entre 20 y 30 palabras.', 353, '', 20, 41, 1, NULL, 97),
 (81, NULL, 'Preséntate dando información personal como tu nombre, nacionalidad y edad. Habla también de tu trabajo o estudios y explica por qué estudias español. Elige tres de estas opciones y habla durante 2 o 3 minutos.', 354, '', 25, 41, 1, 292, 96),
 (82, NULL, 'Preséntate incluyendo información personal como tu nombre, nacionalidad y edad. Además, puedes hablar sobre tu trabajo o estudios, explicar por qué estás aprendiendo español, o elegir otros temas similares. Selecciona tres de estas opciones y prepárate para hablar durante 2 o 3 minutos.', 354, '', 25, 41, 1, 293, 96),
-(83, NULL, 'Lea este mensaje de correo electrónico. A continuación, responda a cinco preguntas sobre el texto. Elija la respuesta correcta (a, b, c, d):', 352, '', 10, 41, 1, NULL, 94),
+(83, NULL, 'Lea este mensaje de correo electrónico. A continuación, responda a cinco preguntas sobre el texto. Elija la respuesta correcta (a, b, c, d):', 352, '¡Hola familia!: ¿Cómo estáis? Yo estoy muy contento porque el martes que viene empiezo a trabajar. Voy a trabajar en la biblioteca de mi universidad. Mis tareas son organizar los archivos y colocar los libros en las estanterías. Algunas veces también tengo que hablar con los estudiantes sobre los libros, pero no tengo que hacer fotocopias. Tengo un horario muy bueno: todas las tardes de 16:00 a 20:00, así que puedo estudiar por las mañanas. Una vez al mes tengo que trabajar los sábados. Las clases en la universidad son muy interesantes. Tengo clase todos los días, excepto los miércoles por la mañana, porque tengo prácticas en el laboratorio. Los fines de semana estudio con mis compañeros en la biblioteca de la universidad porque tenemos muchos exámenes. Por ejemplo, tengo un examen de lengua española el jueves. Bueno, ya sabéis las buenas noticias. Nos vemos el próximo mes porque en abril tenemos cuatro días de vacaciones. Os quiero mucho, Francisco', 10, 41, 1, NULL, 94),
 (84, NULL, 'Lea este mensaje de correo electrónico. A continuación, responda a cinco preguntas sobre el texto. Elija la respuesta correcta (a, b, c, d):', 352, '¡Hola Steven! \n\n¿Qué tal estás? yo estoy contentísima en Salamanca, estoy viviendo una experiencia única. Vivo cerca de la Plaza Mayor con dos chicas de Suecia que estudian derecho. Por las mañanas, todos los días hago un curso intensivo de español en una escuela del centro. Después, mis compañeros y yo vamos a una pequeña cafetería donde almorzamos a la 14:00 todos juntos. Por la tarde, hacemos turismo. Hace dos días, visitamos Ávila, una pequeña ciudad que está cerca y de verdad, nunca he visto una muralla tan bien conservada. Es espectacular. Ahora me falta Segovia y algunos compañeros quieren pasar dos de días en Valladolid, seguro que vamos pronto. En un par de semanas, voy a Madrid para estar con mis padres que vienen una semana. Vamos a visitar juntos el Palacio Real y algunos museos. Mi madre planea ver una exposición sola en el Museo del Prado, pero mi padre y yo vamos a ir los dos al Reina Sofía porque no lo conocemos. Bueno, dicen que la obra de Picasso es increíble, ino hay duda! \nTe escribo pronto y te cuento todo. \nUn beso, \nRose', 15, 41, 1, NULL, 94);
 
 -- --------------------------------------------------------
@@ -1307,13 +1352,13 @@ ALTER TABLE `user_actions`
 -- AUTO_INCREMENT de la tabla `answers`
 --
 ALTER TABLE `answers`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=790;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=802;
 
 --
 -- AUTO_INCREMENT de la tabla `blocks`
 --
 ALTER TABLE `blocks`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
 
 --
 -- AUTO_INCREMENT de la tabla `cities`
@@ -1367,13 +1412,13 @@ ALTER TABLE `photos`
 -- AUTO_INCREMENT de la tabla `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=257;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=261;
 
 --
 -- AUTO_INCREMENT de la tabla `question_types`
 --
 ALTER TABLE `question_types`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `skills`

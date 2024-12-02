@@ -18,17 +18,17 @@ export const addQuestion = async (req, res) => {
                 if( req.body.statement_id ){
                     let questions = await conn.query(`
                         INSERT INTO
-                            questions (content, skill_id, score, level_id, statement_id, photo_id, block_id, type)
+                            questions (content, skill_id, score, level_id, statement_id, photo_id, block_id)
                         VALUES (
-                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${req.body.statement_id}, ${id}, ${req.body.block}, '${req.body.typeAnswers}');
+                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${req.body.statement_id}, ${id}, ${req.body.block});
                     `);
                     question_id = questions.insertId.toString();
                 } else {
                     let questions = await conn.query(`
                         INSERT INTO
-                            questions (content, skill_id, score, level_id, photo_id, block_id, type)
+                            questions (content, skill_id, score, level_id, photo_id, block_id)
                         VALUES (
-                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${id}, ${req.body.block}, '${req.body.typeAnswers}');
+                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${id}, ${req.body.block});
                     `);
                     question_id = questions.insertId.toString();
                 };
@@ -36,17 +36,17 @@ export const addQuestion = async (req, res) => {
                 if( req.body.statement_id ){
                     let questions = await conn.query(`
                         INSERT INTO
-                            questions ( content, skill_id, score, level_id, statement_id, block_id, type)
+                            questions ( content, skill_id, score, level_id, statement_id, block_id)
                         VALUES (
-                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${req.body.statement_id}, ${req.body.block}, '${req.body.typeAnswers}');
+                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${req.body.statement_id}, ${req.body.block});
                     `);
                     question_id = questions.insertId.toString();
                 } else {
                     let questions = await conn.query(`
                         INSERT INTO
-                            questions (content, skill_id, score, level_id, block_id, type)
+                            questions (content, skill_id, score, level_id, block_id)
                         VALUES (
-                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${req.body.block}, '${req.body.typeAnswers}');
+                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${req.body.block});
                     `);
                     question_id = questions.insertId.toString();
                 };
