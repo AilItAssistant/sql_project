@@ -126,6 +126,7 @@ export const deleteLevel = async (req, res) => {
             res.json(200);
         } catch (error) {
             console.log(error);
+            res.json("No se pudo borrar")
         } finally {
             if (conn) return conn.end();
         };

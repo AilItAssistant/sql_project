@@ -273,7 +273,8 @@ export const deleteBlock = async (req, res) => {
             let res = await conn.query(`DELETE FROM blocks WHERE id = ${req.body.id};`);
             res.json(200);
         } catch (error) {
-            //console.log(error);
+            console.log(error);
+            res.json("No se pudo borrar")
         } finally {
             if (conn) return conn.end();
         };
