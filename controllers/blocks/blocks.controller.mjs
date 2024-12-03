@@ -270,11 +270,11 @@ export const deleteBlock = async (req, res) => {
         let conn;
         try {
             conn = await pool.getConnection();
-            let res = await conn.query(`DELETE FROM blocks WHERE id = ${req.body.id};`);
+            await conn.query(`DELETE FROM blocks WHERE id = ${req.body.id};`);
             res.json(200);
         } catch (error) {
             console.log(error);
-            res.json("No se pudo borrar")
+            res.json("No se pudo borrar " + error)
         } finally {
             if (conn) return conn.end();
         };
