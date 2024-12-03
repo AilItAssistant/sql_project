@@ -14,7 +14,8 @@ import {
     addSkilltoBlock,
     deleteSkilltoBlock,
     addLeveltoBlock,
-    deleteLeveltoBlock
+    deleteLeveltoBlock,
+    getBlocksByLevelSkill
 } from "../../controllers/blocks/blocks.controller.mjs";
 
 export const blocks = Router();
@@ -57,3 +58,6 @@ blocks.post("/addLeveltoBlock", verifyToken, addLeveltoBlock);
 
 //?DELETE LEVEL TO BLOCK
 blocks.put("/deleteLeveltoBlock", verifyToken, deleteLeveltoBlock);
+
+//?//?GET BLOCKS BY SKILL_ID AND LEVEL_ID
+blocks.post("/getBlocksByLevelSkill", verifyToken, getBlocksByLevelSkill);

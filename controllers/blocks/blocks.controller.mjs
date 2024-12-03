@@ -265,7 +265,7 @@ export const addBlock = async (req, res) => {
     };
 };
 
-export const deleteBlock = async (req, res) => {
+export const deleteBlock = async (req, res) => {55
     if ( req.data ) {
         let conn;
         try {
@@ -503,6 +503,39 @@ export const deleteLeveltoBlock = async (req, res) => {
                 element.level_id = element.level_id.toString();
             });
             res.json(levels);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        };
+    };
+};
+
+//?GET BLOCKS BY SKILL_ID AND LEVEL_ID
+export const getBlocksByLevelSkill = async (req, res) => {
+    console.log(req.body)
+    if ( req.data ) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            let rows = await conn.query(`
+                SELECT
+                    b.id AS id,
+                    b.name AS name,
+                    b.is_selected,
+                    b.max_score,
+                    b.individual_score
+                FROM blocks b
+                left join status st on b.status_id = st.id
+                left join levels_blocks lb on b.id = lb.block_id
+                left join skills_blocks sb on b.id = sb.block_id
+                where st.id = 1 and lb.level_id = ${req.body.level_id} and sb.skill_id = ${req.body.skill_id}
+                ORDER BY b.id;
+            `);
+            rows.forEach(element => {
+                element.id = element.id.toString();
+            });
+            res.json(rows);
         } catch (error) {
             console.log(error);
         } finally {

@@ -66,7 +66,7 @@ export const addQuestion = async (req, res) => {
                             ${question_id}, '${req.body.responses[i].content}', ${req.body.responses[i].is_correct}, '${req.body.responses[i].letter}', ${id});
                     `);
                 };
-            } else if ( req.body.typeAnswers === "phrase" || req.body.typeAnswers === "test" ) {
+            } else if ( req.body.typeAnswers === "test" ) {
                 for(let i = 0; req.body.responses.length > i; i++){
                     await conn.query(`
                         INSERT INTO
@@ -75,9 +75,17 @@ export const addQuestion = async (req, res) => {
                             ${question_id}, '${req.body.responses[i].content}', ${req.body.responses[i].is_correct}, '${req.body.responses[i].letter}');
                     `);
                 };
+            } else if ( req.body.typeAnswers === "phrase" ) {
+                for(let i = 0; req.body.responses.length > i; i++){
+                    await conn.query(`
+                        INSERT INTO
+                            answers (question_id, content, is_correct, letter, response)
+                        VALUES (
+                            ${question_id}, '${req.body.responses[i].content}', ${req.body.responses[i].is_correct}, '${req.body.responses[i].letter}', ${req.body.responses[i].response});
+                    `);
+                };
             } else if ( req.body.typeAnswers === "multiple" ){
                 for(let i = 0; req.body.responses.length > i; i++){
-                    console.log(req.body.responses[i].response);
                     let photoAnswer = await conn.query(`
                         INSERT INTO
                             photos ( base64_data )
