@@ -78,7 +78,7 @@ export const statusAnswerById = async (req, res) => {
                     UPDATE
                         answers
                     SET
-                        status = 'inactive'
+                        status_id = 0
                     WHERE
                         id = ${req.body.id};
                 `);
@@ -87,7 +87,7 @@ export const statusAnswerById = async (req, res) => {
                     UPDATE
                         answers
                     SET
-                        status = 'active'
+                        status_id = 1
                     WHERE
                         id = ${req.body.id};
                 `);

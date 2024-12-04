@@ -1,5 +1,6 @@
 import "dotenv/config";
 import { pool } from "../../index.mjs";
+import { answers } from "../../routes/answers/answers.routes.mjs";
 
 //?GET ALL STATEMENTS
 export const getStatements = async (req, res) => {
@@ -245,7 +246,13 @@ export const getStatementsAndDetails = async (req, res) => {
         try {
             conn = await pool.getConnection();
             let rows = await conn.query(
-                `SELECT CONCAT('[', GROUP_CONCAT(CONCAT('{','"statement_id": ', s.id, ', ','"statement_content": "', REPLACE(s.content, '"', '\\"'), '", ','"questions": [',IFNULL(q.questions, ''),']','}')ORDER BY s.id SEPARATOR ', '),']') AS result FROM statements s LEFT JOIN (SELECT q.statement_id,GROUP_CONCAT(CONCAT('{','"question_id": ', q.id, ', ','"question_to_statement_id": ', q.statement_id, ', ','"question_content": "', REPLACE(q.content, '"', '\\"'), '", ','"answers": [', IFNULL(a.answers, ''), ']','}')ORDER BY q.id SEPARATOR ', ') AS questions FROM questions q LEFT JOIN (SELECT a.question_id,GROUP_CONCAT(CONCAT('{','"answer_id": ', a.id, ', ','"answer_to_question_id": ', a.question_id, ', ','"answer_content": "', REPLACE(a.content, '"', '\\"'), '", ','"is_correct": ', a.is_correct, ', ','"letter": "', a.letter, '"','}')ORDER BY a.id SEPARATOR ', ') AS answers FROM answers a GROUP BY a.question_id) a ON q.id = a.question_id GROUP BY q.statement_id) q ON s.id = q.statement_id GROUP BY s.id; `
+                `SELECT CONCAT('[', GROUP_CONCAT(CONCAT('{','"statement_id": ', s.id, ', ','"statement_content": "',
+                    REPLACE(s.content, '"', '\\"'), '", ','"questions": [',IFNULL(q.questions, ''),']','}')ORDER BY s.id SEPARATOR ', '),']') AS result
+                FROM statements s LEFT JOIN (SELECT q.statement_id,GROUP_CONCAT(CONCAT('{','"question_id": ', q.id, ', ','"question_to_statement_id": ', q.statement_id, ', ','"question_content": "',
+                    REPLACE(q.content, '"', '\\"'), '", ','"answers": [', IFNULL(a.answers, ''), ']','}')ORDER BY q.id SEPARATOR ', ') AS questions
+                FROM questions q LEFT JOIN (SELECT a.question_id,GROUP_CONCAT(CONCAT('{','"answer_id": ', a.id, ', ','"answer_to_question_id": ', a.question_id, ', ','"answer_content": "',
+                    REPLACE(a.content, '"', '\\"'), '", ','"is_correct": ', a.is_correct, ', ','"letter": "', a.letter, '"','}')ORDER BY a.id SEPARATOR ', ') AS answers
+                FROM answers a GROUP BY a.question_id) a ON q.id = a.question_id GROUP BY q.statement_id) q ON s.id = q.statement_id GROUP BY s.id; `
             );
             let resp = [];
             for (let i = 0; rows.length > i; i++) {
@@ -311,7 +318,7 @@ export const statusStatementById = async (req, res) => {
                     UPDATE
                         statements
                     SET
-                        status = 'inactive'
+                        status_id = 0
                     WHERE
                         id = ${req.body.id};
                 `);
@@ -320,7 +327,7 @@ export const statusStatementById = async (req, res) => {
                     UPDATE
                         statements
                     SET
-                        status = 'active'
+                        status_id = 1
                     WHERE
                         id = ${req.body.id};
                 `);
@@ -367,6 +374,269 @@ export const deleteImage = async (req, res) => {
             await conn.query(`UPDATE statements SET photo_id = NULL WHERE id = ${req.body.id};`);
             conn.query(`DELETE FROM photos WHERE id = ${photoId};`);
             res.json(200);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        };
+    };
+};
+
+//?GET STATEMENTS, QUESTIONS AND ANSWERS WITH ALL DATA BY LEVEL, SKILL AND BLOCK ID
+export const getAllByStructureIds = async (req, res) => {
+    console.log(req.body);
+    if(req.data){
+        let conn;
+        try{
+            conn = await pool.getConnection();
+            //TODO FIND STATEMENTS
+            let findStatements = await conn.query(`
+                select id from statements
+                where level_id = ${req.body.level_id} and skill_id = ${req.body.skill_id} and block_id = ${req.body.block_id} and status_id = 1;
+            `);
+            let questions = [];
+            let statements = [];
+            //*GET STATEMENTS
+            //! WITH STATEMENT
+            if(findStatements.length > 0){
+                for(let s = 0; findStatements.length > s; s++){
+                    let statement = await conn.query(`
+                        select s.id, s.content, s.text, s.level_id, s.skill_id, s.block_id, s.status_id, s.photo_id,
+                            l.name as level_name, sk.name as skill_name, b.name as block_name, p.base64_data as photo, st.name as status_name
+                        from statements s
+                        left join levels l on s.level_id = l.id
+                        left join skills sk on s.skill_id = sk.id
+                        left join blocks b on s.block_id = b.id
+                        left join status st on s.status_id = st.id
+                        left join photos p on s.photo_id = p.id
+                        where s.id = ${findStatements[s].id};
+                    `);
+                    statement.forEach((element) => {
+                        element.status_id = element.status_id.toString();
+                        element.id = element.id.toString();
+                        if (element.level_id) {element.level_id = element.level_id.toString();};
+                        if (element.skill_id) {element.skill_id = element.skill_id.toString();};
+                        if (element.block_id) {element.block_id = element.block_id.toString();};
+                        if (element.photo_id) {element.photo_id = element.photo_id.toString();};
+                    });
+                    //TODO FIND QUESTION IN STATEMENT
+                    let findQuestion = await conn.query(`
+                        select id from questions where statement_id = ${statement[0].id} and status_id = 1;
+                    `);
+                    statement.questions = [];
+                    console.log(statement)
+                    //*GET QUESTIONS
+                    if(findQuestion.length > 0){
+                        for(let q = 0; findQuestion.length > q; q++){
+                            let question = await conn.query(`
+                                select q.id, q.content, q.score, q.status_id, st.name as status_name, q.statement_id,
+                                    q.level_id, l.name as level_name, q.skill_id, sk.name as skill_name, q.block_id,
+                                    b.name as block_name, q.photo_id, p.base64_data as photo
+                                from questions q
+                                left join levels l on q.level_id = l.id
+                                left join skills sk on q.skill_id = sk.id
+                                left join blocks b on q.block_id = b.id
+                                left join status st on q.status_id = st.id
+                                left join photos p on q.photo_id = p.id
+                                where q.id = ${findQuestion[q].id};
+                            `);
+                            question.forEach((element) => {
+                                element.status_id = element.status_id.toString();
+                                element.id = element.id.toString();
+                                if (element.level_id) {element.level_id = element.level_id.toString();};
+                                if (element.skill_id) {element.skill_id = element.skill_id.toString();};
+                                if (element.block_id) {element.block_id = element.block_id.toString();};
+                                if (element.photo_id) {element.photo_id = element.photo_id.toString();};
+                                if (element.statement_id) {element.statement_id = element.statement_id.toString();};
+                            });
+                            //TODO FIND ANSWERS IN QUESTIONS
+                            let findAnswer = await conn.query(`
+                                select id from answers where question_id = ${question[0].id} and status_id = 1;
+                            `);
+                            question.answers = [];
+                            //*GET ANSWERS
+                            if(findAnswer.length > 0){
+                                for(let a = 0; findAnswer > a; a++){
+                                    let answer = await conn.query(`
+                                        select a.id, a.question_id, a.content, a.is_correct, a.status_id, a.letter, a.response,
+                                        st.name as status_name, a.photo_id, p.base64_data
+                                        from answers a
+                                        left join status st on s.status_id = st.id
+                                        left join photos p on s.photo_id = p.id
+                                        where a.id = ${findAnswer[a].id};
+                                    `);
+                                    answer.forEach((element) => {
+                                        element.status_id = element.status_id.toString();
+                                        element.id = element.id.toString();
+                                        if (element.photo_id) {element.photo_id = element.photo_id.toString();};
+                                        if (element.question_id) {element.question_id = element.question_id.toString();};
+                                    });
+                                    question.answers.push(answer);
+                                };
+                            };
+                            statement.questions.push(question);
+                        };
+                    };
+                    statements.push(statement);
+                };
+                let data = {
+                    type: " statements",
+                    data: statements
+                };
+                res.json(data);
+            //! WITHOUT STATEMENT
+            } else {
+                //TODO FIND QUESTION IN STATEMENT
+                let findQuestion = await conn.query(`
+                    select id from questions
+                    where level_id = ${req.body.level_id} and skill_id = ${req.body.skill_id} and block_id = ${req.body.block_id} and status_id = 1
+                `);
+                //*GET QUESTIONS
+                if(findQuestion.length > 0){
+                    for(let q = 0; findQuestion.length > q; q++){
+                        let question = await conn.query(`
+                            select q.id, q.content, q.score, q.status_id, st.name as status_name, q.statement_id,
+                                q.level_id, l.name as level_name, q.skill_id, sk.name as  skill_name, q.block_id,
+                                b.name as block_name, q.photo_id, p.base64_data as photo
+                            from questions q
+                            left join levels l on q.level_id = l.id
+                            left join skills sk on q.skill_id = sk.id
+                            left join blocks b on q.block_id = b.id
+                            left join status st on q.status_id = st.id
+                            left join photos p on q.photo_id = p.id
+                            where q.id = ${findQuestion[q].id};
+                        `);
+                        question.forEach((element) => {
+                            element.status_id = element.status_id.toString();
+                            element.id = element.id.toString();
+                            if (element.level_id) {element.level_id = element.level_id.toString();};
+                            if (element.skill_id) {element.skill_id = element.skill_id.toString();};
+                            if (element.block_id) {element.block_id = element.block_id.toString();};
+                            if (element.photo_id) {element.photo_id = element.photo_id.toString();};
+                            if (element.statement_id) {element.statement_id = element.statement_id.toString();};
+                        });
+                        //TODO FIND ANSWERS IN QUESTIONS
+                        let findAnswer = await conn.query(`
+                            select id from answers where question_id = ${question[0].id};
+                        `);
+                        question.answers = [];
+                        //*GET ANSWERS
+                        if(findAnswer.length > 0){
+                            for(let a = 0; findAnswer > a; a++){
+                                let answer = await conn.query(`
+                                    select a.id, a.question_id, a.content, a.is_correct, a.status_id, a.letter, a.response,
+                                        st.name as status_name, photo_id, p.base64_data
+                                    from answers a
+                                    left join status st on s.status = st.id
+                                    left join photos p on s.photo_id = p.id
+                                    where a.id = ${findAnswer[a].id};
+                                `);
+                                answer.forEach((element) => {
+                                    element.status_id = element.status_id.toString();
+                                    element.id = element.id.toString();
+                                    if (element.photo_id) {element.photo_id = element.photo_id.toString();};
+                                    if (element.question_id) {element.question_id = element.question_id.toString();};
+                                });
+                                question.answers.push(answer);
+                            };
+                        };
+                        questions.push(question)
+                    };
+                };
+                let data = {
+                    type: " questions",
+                    data: questions
+                };
+                res.json(data);
+            };
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (conn) return conn.end();
+        };
+    };
+};
+
+//?GET STATEMENTS, QUESTIONS AND ANSWERS WITH ALL DATA BY STATEMENT ID
+export const getStatementByStatementId = async (req, res) => {
+    console.log(req.body);
+    if(req.data){
+        let conn;
+        try{
+            conn = await pool.getConnection();
+            let statements = [];
+            //*GET STATEMENT
+            let statement = await conn.query(`
+                select s.id, s.content, s.text, s.level_id, s.skill_id, s.block_id, s.status_id, s.photo_id,
+                    l.name as level_name, sk.name as skill_name, b.name as block_name, p.base64_data as photo, st.name as status_name
+                from statements s
+                left join levels l on s.level_id = l.id
+                left join skills sk on s.skill_id = sk.id
+                left join blocks b on s.block_id = b.id
+                left join status st on s.status_id = st.id
+                left join photos p on s.photo_id = p.id
+                where id = ${req.body.statement_id};
+            `);
+            statement.forEach((element) => {
+                element.status_id = element.status_id.toString();
+                element.id = element.id.toString();
+                if (element.level_id) {element.level_id = element.level_id.toString();};
+                if (element.skill_id) {element.skill_id = element.skill_id.toString();};
+                if (element.block_id) {element.block_id = element.block_id.toString();};
+                if (element.photo_id) {element.photo_id = element.photo_id.toString();};
+            });
+            //TODO FIND QUESTION IN STATEMENT
+            let findQuestion = await conn.query(`
+                select id from questions where statement_id = ${statement[0].id};
+            `);
+            question.answers = [];
+            //*GET QUESTIONS
+            if(findQuestion.length > 0){
+                for(let q = 0; findQuestion.length > q; q++){
+                    let question = await conn.query(`
+                        select q.id, q.content, q.score, q.status_id, st.name as status_name, q.statement_id,
+                            q.level_id, l.name as level_name, q.skill_id, sk.name as  skill_name, q.block_id,
+                            b.name as block_name, photo_id, p.base64_data as photo
+                        from questions q
+                        left join levels l on q.level_id = l.id
+                        left join skills sk on q.skill_id = sk.id
+                        left join blocks b on q.block_id = b.id
+                        left join status st on q.status = st.id
+                        left join photos p on q.photo_id = p.id
+                        where id = ${findQuestion[q].id};
+                    `);
+                    question.forEach((element) => {
+                        element.status_id = element.status_id.toString();
+                        element.id = element.id.toString();
+                        if (element.level_id) {element.level_id = element.level_id.toString();};
+                        if (element.skill_id) {element.skill_id = element.skill_id.toString();};
+                        if (element.block_id) {element.block_id = element.block_id.toString();};
+                        if (element.photo_id) {element.photo_id = element.photo_id.toString();};
+                        if (element.statement_id) {element.statement_id = element.statement_id.toString();};
+                    });
+                    //TODO FIND ANSWERS IN QUESTIONS
+                    let findAnswer = await conn.query(`
+                        select id from answers where question_id = ${question.id};
+                    `);
+                    //*GET ANSWERS
+                    if(findAnswer.length > 0){
+                        for(let a = 0; findAnswer > a; a++){
+                            let answer = await conn.query(`
+                                select a.id, a.question_id, a.content, a.is_correct, a.status_id, a.letter, a.response,
+                                st.name as status_name, a.photo_id, p.base64_data
+                                from answers a
+                                left join status st on a.status = st.id
+                                left join photos p on a.photo_id = p.id
+                                where id = ${findAnswer[a].id};
+                            `);
+                            question.answers.push(answer);
+                        };
+                    };
+                    statement.questions.push(question)
+                };
+            };
+            statements.push(statement);
+            res.json(statements);
         } catch (error) {
             console.log(error);
         } finally {

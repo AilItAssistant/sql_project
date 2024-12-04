@@ -11,7 +11,8 @@ import {
     editStatements,
     statusStatementById,
     deleteStatementById,
-    deleteImage
+    deleteImage,
+    getAllByStructureIds
 } from "../../controllers/statements/statements.controller.mjs";
 
 export const statements = Router();
@@ -45,3 +46,6 @@ statements.put("/delete", verifyToken, deleteStatementById);
 
 //?DELETE PHOTO TO STATEMENTS AND PHOTO TABLE
 statements.put("/deleteImage", verifyToken, deleteImage);
+
+//?GET STATEMENTS, QUESTIONS AND ANSWERS WITH ALL DATA BY LEVEL, SKILL AND BLOCK ID
+statements.post("/getAllByStructureIds", verifyToken, getAllByStructureIds);

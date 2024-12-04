@@ -275,7 +275,7 @@ export const statusQuestionById = async (req, res) => {
                     UPDATE
                         questions
                     SET
-                        status = 'inactive'
+                        status_id = 0
                     WHERE
                         id = ${req.body.id};
                 `);
@@ -284,7 +284,7 @@ export const statusQuestionById = async (req, res) => {
                     UPDATE
                         questions
                     SET
-                        status = 'active'
+                        status_id = 1
                     WHERE
                         id = ${req.body.id};
                 `);
@@ -347,7 +347,7 @@ export const getQuestionsAnswersByBlockId = async (req, res) => {
                 LEFT JOIN photos p ON q.photo_id = p.id
                 left join status s on q.status_id = s.id
                 left join blocks b on q.block_id = b.id
-                WHERE q.block_id = ${req.body.block_id};
+                WHERE q.block_id = ${req.body.block_id} and level_id = ${req.body.level_id};
             `);
             for (const question of questions) {
                 question.id = question.id.toString();
