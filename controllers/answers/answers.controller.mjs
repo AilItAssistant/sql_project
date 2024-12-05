@@ -36,7 +36,7 @@ export const editAnswers = async (req, res) => {
         let photoId = null;
         try {
             conn = await pool.getConnection();
-            let photo_id = null;
+            let photo_id;
             if(req.body.photo && req.body.photo !== null && req.body.photo !== undefined) {
                 photo_id = await conn.query(`
                     INSERT INTO
@@ -47,6 +47,8 @@ export const editAnswers = async (req, res) => {
                         '${req.body.photo}'
                     );`);
                     photoId = photo_id.insertId.toString();
+            } else {
+                photo_id = null;
             };
             await conn.query(`
                 UPDATE

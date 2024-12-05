@@ -243,6 +243,8 @@ export const editQuestions = async (req, res) => {
                         '${req.body.photo}'
                     );`);
                     photoId = photo_id.insertId.toString();
+            } else {
+                let photo_id = null;
             };
             await conn.query(`
                 UPDATE
@@ -250,7 +252,7 @@ export const editQuestions = async (req, res) => {
                 SET
                     statement_id = COALESCE(${req.body.statement_id}, statement_id),
                     block_id = COALESCE(${req.body.block_id}, block_id),
-                    puntuation = COALESCE(${req.body.puntuation}, puntuation),
+                    score = COALESCE(${req.body.puntuation}, score),
                     content = COALESCE('${req.body.question}', content),
                     photo_id = COALESCE(${photoId}, photo_id)
                 WHERE
