@@ -81,7 +81,7 @@ export const addQuestion = async (req, res) => {
                         INSERT INTO
                             answers (question_id, content, is_correct, letter, response)
                         VALUES (
-                            ${question_id}, '${req.body.responses[i].content}', ${req.body.responses[i].is_correct}, '${req.body.responses[i].letter}', ${req.body.responses[i].response});
+                            ${question_id}, '${req.body.responses[i].content}', ${req.body.responses[i].is_correct}, '${req.body.responses[i].letter}', '${req.body.responses[i].response}');
                     `);
                 };
             } else if ( req.body.typeAnswers === "multiple" ){
@@ -96,7 +96,7 @@ export const addQuestion = async (req, res) => {
                         INSERT INTO
                             answers ( question_id, content, letter, photo_id, response)
                         VALUES (
-                            ${question_id}, '${req.body.responses[i].content}', '${req.body.responses[i].letter}', ${id}, ${req.body.responses[i].response});
+                            ${question_id}, '${req.body.responses[i].content}', '${req.body.responses[i].letter}', ${id}, '${req.body.responses[i].response}');
                     `);
                 };
             };;

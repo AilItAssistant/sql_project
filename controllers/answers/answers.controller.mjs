@@ -32,7 +32,9 @@ export const editAnswers = async (req, res) => {
     console.log(req.body)
     if ( req.data ) {
         let conn;
-        if(req.body.content === undefined) {req.body.content = null} else {req.body.content = `'${req.body.content}'`};
+        if(req.body.content === undefined || req.body.content === "null") {req.body.content = null}// else {req.body.content = `'${req.body.content}'`};
+        if(req.body.link === undefined  || req.body.link === "null") {req.body.link = null} //else {req.body.link = `'${req.body.link}'`};
+        console.log(req.body)
         let photoId = null;
         try {
             conn = await pool.getConnection();
@@ -51,15 +53,13 @@ export const editAnswers = async (req, res) => {
                 photo_id = null;
             };
             await conn.query(`
-                UPDATE
-                    answers
+                UPDATE answers
                 SET
-                    is_correct = COALESCE(${req.body.is_correct}, is_correct),
-                    photo_id = COALESCE(${photoId}, photo_id),
-                    content = COALESCE(${req.body.content}, content),
-                    response = COALESCE(${req.body.link}, response)
-                WHERE
-                    id = ${req.body.id};
+                    is_correct = CASE WHEN ${req.body.is_correct} IS NOT NULL AND ${req.body.is_correct} != 'null' THEN ${req.body.is_correct} ELSE is_correct END,
+                    photo_id = CASE WHEN ${photoId} IS NOT NULL AND ${photoId} != 'null' THEN ${photoId} ELSE photo_id END,
+                    content = CASE WHEN '${req.body.content}' IS NOT NULL AND '${req.body.content}' != 'null' THEN '${req.body.content}' ELSE content END,
+                    response = CASE WHEN '${req.body.link}' IS NOT NULL AND '${req.body.link}' != 'null' THEN '${req.body.link}' ELSE response END
+                WHERE id = ${req.body.id};
                 `);
             res.json(200);
         } catch (error) {
