@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import { verifyToken } from "../../controllers/users/users.controller.mjs";
+import { getInfo } from "../../controllers/user_actions/user_actions.controller.mjs";
 import {
     getLevels,
     editLevel,
@@ -24,7 +25,7 @@ levels.get("/active", verifyToken, getActiveLevels);
 levels.put("/edit", verifyToken, editLevel);
 
 //?LEVEL CHANGE STATUS
-levels.put("/status", verifyToken, statusLevel);
+levels.put("/status", verifyToken, getInfo, statusLevel);
 
 //?LEVEL ADD
 levels.post("/add", verifyToken, addLevel);

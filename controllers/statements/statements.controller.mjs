@@ -1,6 +1,5 @@
 import "dotenv/config";
 import { pool } from "../../index.mjs";
-import { answers } from "../../routes/answers/answers.routes.mjs";
 
 //?GET ALL STATEMENTS
 export const getStatements = async (req, res) => {
@@ -11,9 +10,6 @@ export const getStatements = async (req, res) => {
             let rows = await conn.query("select * from statements;");
             rows.forEach((element) => {
                 element.id = element.id.toString();
-                if (element.exam_id) {
-                    element.exam_id = element.exam_id.toString();
-                }
                 if (element.skill_id) {
                     element.skill_id = element.skill_id.toString();
                 }
@@ -22,6 +18,12 @@ export const getStatements = async (req, res) => {
                 }
                 if (element.photo_id) {
                     element.photo_id = element.photo_id.toString();
+                }
+                if (element.status_id) {
+                    element.status_id = element.status_id.toString();
+                }
+                if (element.block_id) {
+                    element.block_id = element.block_id.toString();
                 }
             });
             res.json(rows);

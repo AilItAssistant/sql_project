@@ -233,7 +233,7 @@ export const login = async ( req, res ) => {
         conn = await pool.getConnection();
         let hash = await conn.query(`
             select
-                u.username, p.name as permissions, u.name, u.last_name, u.password_hash
+                u.id, u.username, p.name as permissions, u.name, u.last_name, u.password_hash
             from users u
             left join permissions p on u.permission_id = p.id
             where username = '${req.body.user}';
@@ -242,6 +242,7 @@ export const login = async ( req, res ) => {
         if(hash.length === 0){
             res.json('Usuario o clave incorrecto');
         } else {
+            hash[0].id = hash[0].id.toString();
             bcrypt.compare(req.body.pass, hash[0].password_hash, function(err, result) {
                 correct = result;
                 if( correct ){
