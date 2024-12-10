@@ -56,7 +56,6 @@ export const generateExamByLevel = async (req, res) => {
                             question_id.push(id);
                         };
                         let question = {};
-                        console.log(question_id)
                         for(let q = 0; question_id.length > q; q++){
                             let questionResult = await conn.query(`select * from questions where id = ${question_id[q].id}`);
                             question = questionResult.map( element => {
@@ -117,7 +116,6 @@ export const generateExamByLevel = async (req, res) => {
                                     if (element.status_id) element.status_id = element.status_id.toString();
                                     return element;
                                 });
-                                console.log(question)
                                 skill_union[u].questions.push(question);
                             };
                         }

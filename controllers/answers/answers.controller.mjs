@@ -32,8 +32,8 @@ export const editAnswers = async (req, res) => {
     console.log(req.body)
     if ( req.data ) {
         let conn;
-        if(req.body.content === undefined || req.body.content === "null") {req.body.content = null}// else {req.body.content = `'${req.body.content}'`};
-        if(req.body.link === undefined  || req.body.link === "null") {req.body.link = null} //else {req.body.link = `'${req.body.link}'`};
+        if(req.body.content === undefined || req.body.content === "null") {req.body.content = null}
+        if(req.body.link === undefined  || req.body.link === "null") {req.body.link = null}
         console.log(req.body)
         let photoId = null;
         try {
@@ -51,6 +51,11 @@ export const editAnswers = async (req, res) => {
                     photoId = photo_id.insertId.toString();
             } else {
                 photo_id = null;
+            };
+            let test = await conn.query(`select question_id from answers where id = ${req.body.id}`);
+            let test2 = await conn.query(`select id from answers where question_id = ${test[0].question_id}`);
+            for(let i = 0; test2.length > i; i++){
+                await conn.query(`update answers set is_correct = 0 where id = ${test2[i].id}`);
             };
             await conn.query(`
                 UPDATE answers
