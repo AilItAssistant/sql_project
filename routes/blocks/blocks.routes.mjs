@@ -2,6 +2,13 @@ import { Router } from "express";
 
 import { verifyToken } from "../../controllers/users/users.controller.mjs";
 import {
+    beforeCRUD,
+    afterCRUD,
+    add,
+    filter
+} from "../../controllers/user_actions/user_actions.controller.mjs";
+
+import {
     getBlocks,
     editBlock,
     statusBlock,
@@ -27,25 +34,25 @@ blocks.get("/", verifyToken, getBlocks);
 blocks.get("/active", verifyToken, getActiveBlocks);
 
 //?EDIT BLOCKS
-blocks.put("/edit", verifyToken, editBlock);
+blocks.put("/edit", verifyToken, beforeCRUD, editBlock, afterCRUD);
 
 //?BLOCKS CHANGE STATUS
-blocks.put("/status", verifyToken, statusBlock);
+blocks.put("/status", verifyToken, beforeCRUD, statusBlock, afterCRUD);
 
 //?ADD BLOCKS
-blocks.post("/add", verifyToken, addBlock);
+blocks.post("/add", verifyToken, add, addBlock);
 
 //?DELETE BLOCKS
-blocks.put("/delete", verifyToken, deleteBlock);
+blocks.put("/delete", verifyToken, beforeCRUD, deleteBlock);
 
 //?SEARCH BLOCKS
-blocks.put("/search", verifyToken, searchBlock);
+blocks.put("/search", verifyToken, filter, searchBlock);
 
 //?GET BLOCK BY ID
 blocks.post("/blocksId", verifyToken, blocksById);
 
 //?BLOCKS CHANGE IS_SELECTED
-blocks.put("/selected", verifyToken, selectedChange);
+blocks.put("/selected", verifyToken, beforeCRUD, selectedChange);
 
 //?ADD SKILL TO BLOCK
 blocks.post("/addSkilltoBlock", verifyToken, addSkilltoBlock);

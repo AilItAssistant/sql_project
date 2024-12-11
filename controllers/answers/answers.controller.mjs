@@ -28,13 +28,12 @@ export const getAnswerById = async (req, res) => {
     };
 };
 
-export const editAnswers = async (req, res) => {
+export const editAnswers = async (req, res, next) => {
     console.log(req.body)
     if ( req.data ) {
         let conn;
         if(req.body.content === undefined || req.body.content === "null") {req.body.content = null}
         if(req.body.link === undefined  || req.body.link === "null") {req.body.link = null}
-        console.log(req.body)
         let photoId = null;
         try {
             conn = await pool.getConnection();
@@ -67,6 +66,7 @@ export const editAnswers = async (req, res) => {
                 WHERE id = ${req.body.id};
                 `);
             res.json(200);
+            next();
         } catch (error) {
             console.log(error);
         } finally {
@@ -75,7 +75,7 @@ export const editAnswers = async (req, res) => {
     }
 };
 
-export const statusAnswerById = async (req, res) => {
+export const statusAnswerById = async (req, res, next) => {
     if ( req.data ) {
         let conn;
         try {
@@ -100,6 +100,7 @@ export const statusAnswerById = async (req, res) => {
                 `);
             };
             res.json(200);
+            next();
         } catch (error) {
             console.log(error);
         } finally {

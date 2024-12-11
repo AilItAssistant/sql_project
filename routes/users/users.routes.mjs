@@ -1,6 +1,13 @@
 import { Router } from "express";
 
 import {
+    beforeCRUD,
+    afterCRUD,
+    add,
+    filter
+} from "../../controllers/user_actions/user_actions.controller.mjs";
+
+import {
     getUsers,
     filterUsers,
     statusUsers,
@@ -18,19 +25,19 @@ export const users = Router();
 users.get("/", verifyToken, getUsers);
 
 //?GET ALL USERS WITH FILTERS
-users.put("/filter", verifyToken, filterUsers);
+users.put("/filter", verifyToken, filter, filterUsers);
 
 //?MODIFY STATUS TO USERS
-users.put("/status", verifyToken, statusUsers);
+users.put("/status", verifyToken, beforeCRUD, statusUsers, afterCRUD);
 
 //?DELETE USERS
-users.put("/delete", verifyToken, deleteUsers);
+users.put("/delete", verifyToken, beforeCRUD, deleteUsers);
 
 //?EDIT USERS
-users.put("/edit", verifyToken, editUsers);
+users.put("/edit", verifyToken, beforeCRUD, editUsers, afterCRUD);
 
 //?ADD USERS
-users.post("/add", verifyToken, addUsers);
+users.post("/add", verifyToken, add, addUsers);
 
 //?LOG IN
 users.post("/login", login);

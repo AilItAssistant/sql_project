@@ -20,6 +20,7 @@ import { cities } from "./routes/cities/cities.routes.mjs";
 import { permissions } from "./routes/permissions/permissions.routes.mjs";
 import { status } from "./routes/status/status.routes.mjs";
 import { departments } from "./routes/departments/departments.routes.mjs";
+import { user_actions } from "./routes/user_actions/user_actions.routes.mjs";
 
 const app = express();
 
@@ -88,5 +89,8 @@ app.use("/api/permissions", permissions);
 
 //DEPARTMENTS
 app.use("/api/departments", departments);
+
+//USERS_ACTIONS
+app.use("/api/user_actions", user_actions);
 
 export default app;

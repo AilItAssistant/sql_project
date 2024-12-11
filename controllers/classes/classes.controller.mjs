@@ -232,7 +232,7 @@ export const filterClasses = async (req, res) => {
     };
 };
 
-export const statusClass = async (req, res) => {
+export const statusClass = async (req, res, next) => {
     console.log(req.body)
     if ( req.data ) {
         let conn;
@@ -267,6 +267,7 @@ export const statusClass = async (req, res) => {
                 `);
             };
             res.json(200);
+            next();
         } catch (error) {
             console.log(error);
         } finally {
@@ -354,6 +355,7 @@ export const editClass = async (req, res) => {
                         id = ${req.body.id};
                 `);
             res.json(200);
+            next();
         } catch (error) {
             console.log(error);
         } finally {

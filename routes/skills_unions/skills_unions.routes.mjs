@@ -2,6 +2,11 @@ import { Router } from "express";
 
 import { verifyToken } from "../../controllers/users/users.controller.mjs";
 import {
+    beforeCRUD,
+    afterCRUD
+} from "../../controllers/user_actions/user_actions.controller.mjs";
+
+import {
     getSkillsUnions,
     deleteSkillsUnions,
     desactivateSkillsUnions,
@@ -19,13 +24,13 @@ export const skills_unions = Router();
 skills_unions.get("/", verifyToken, getSkillsUnions);
 
 //?DELETE SKILL_UNION
-skills_unions.put("/delete", verifyToken, deleteSkillsUnions);
+skills_unions.put("/delete", verifyToken, beforeCRUD, deleteSkillsUnions);
 
 //?DESACTIVATE SKILL_UNION
-skills_unions.put("/status", verifyToken, desactivateSkillsUnions);
+skills_unions.put("/status", verifyToken, beforeCRUD, desactivateSkillsUnions, afterCRUD);
 
 //?EDIT SKILL_UNION
-skills_unions.put("/edit", verifyToken, editSkillsUnions);
+skills_unions.put("/edit", verifyToken, beforeCRUD, editSkillsUnions, afterCRUD);
 
 //?ADD SKILL_UNION
 skills_unions.post("/add", verifyToken, addSkillsUnions);

@@ -1,6 +1,11 @@
 import { Router } from "express";
 
 import  { verifyToken } from "../../controllers/users/users.controller.mjs";
+import {
+    beforeCRUD,
+    afterCRUD,
+    add
+} from "../../controllers/user_actions/user_actions.controller.mjs";
 
 import {
     getStatements,
@@ -34,16 +39,16 @@ statements.get("/details", verifyToken, getStatementsAndDetails);
 statements.get("/:statementId", verifyToken, getStatementsById);
 
 //?POST STATEMENTS
-statements.post("/add", verifyToken, postStatements);
+statements.post("/add", verifyToken, add, postStatements);
 
 //?EDIT STATEMENTS
-statements.put("/edit", verifyToken, editStatements);
+statements.put("/edit", verifyToken, beforeCRUD, editStatements, afterCRUD);
 
 //?INACTIVATE STATEMENT
-statements.put("/status", verifyToken, statusStatementById);
+statements.put("/status", verifyToken, beforeCRUD, statusStatementById, afterCRUD);
 
 //?DELETE STATEMENT
-statements.put("/delete", verifyToken, deleteStatementById);
+statements.put("/delete", verifyToken, beforeCRUD, deleteStatementById);
 
 //?DELETE PHOTO TO STATEMENTS AND PHOTO TABLE
 statements.put("/deleteImage", verifyToken, deleteImage);

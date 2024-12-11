@@ -98,7 +98,7 @@ export const filterUsers = async (req, res) => {
     };
 };
 
-export const statusUsers = async (req, res) => {
+export const statusUsers = async (req, res, next) => {
     if ( req.data ) {
         let conn;
         try {
@@ -132,6 +132,7 @@ export const statusUsers = async (req, res) => {
                 `);
             };
             res.json(200);
+            next();
         } catch (error) {
             console.log(error);
         } finally {
@@ -192,7 +193,7 @@ export const addUsers = async (req, res) => {
     };
 };
 
-export const editUsers = async (req, res) => {
+export const editUsers = async (req, res, next) => {
     console.log(req.body)
     if ( req.data ) {
         let conn;
@@ -218,6 +219,7 @@ export const editUsers = async (req, res) => {
                     id = ${req.body.id};
                 `);
             res.json(200);
+            next();
         } catch (error) {
             console.log(error);
         } finally {

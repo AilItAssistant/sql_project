@@ -2,6 +2,11 @@ import { Router } from "express";
 
 import { verifyToken } from "../../controllers/users/users.controller.mjs";
 import {
+    beforeCRUD,
+    afterCRUD
+} from "../../controllers/user_actions/user_actions.controller.mjs";
+
+import {
     getAnswerById,
     editAnswers,
     statusAnswerById,
@@ -15,13 +20,13 @@ export const answers = Router();
 answers.put("/getById", verifyToken, getAnswerById);
 
 //?EDIT ANSWERS
-answers.put("/edit", verifyToken, editAnswers);
+answers.put("/edit", verifyToken, beforeCRUD, editAnswers, afterCRUD);
 
 //?INACTIVATE ANSWER
-answers.put("/status", verifyToken, statusAnswerById);
+answers.put("/status", verifyToken, beforeCRUD, statusAnswerById, afterCRUD);
 
 //?DELETE ANSWER
-answers.put("/delete", verifyToken, deleteAnswerById);
+answers.put("/delete", verifyToken, beforeCRUD, deleteAnswerById);
 
 //?DELETE PHOTO TO ANSWERS AND PHOTO TABLE
 answers.put("/deleteImage", verifyToken, deleteImage);

@@ -270,7 +270,7 @@ export const getStatementsAndDetails = async (req, res) => {
     };
 };
 
-export const editStatements = async (req, res) => {
+export const editStatements = async (req, res, next) => {
     if ( req.data ) {
         let conn;
         let photoId = null;
@@ -300,6 +300,7 @@ export const editStatements = async (req, res) => {
                     id = ${req.body.id};
                 `);
             res.json(200);
+            next();
         } catch (error) {
             console.log(error);
         } finally {
@@ -308,7 +309,7 @@ export const editStatements = async (req, res) => {
     }
 };
 
-export const statusStatementById = async (req, res) => {
+export const statusStatementById = async (req, res, next) => {
     if ( req.data ) {
         let conn;
         try {
@@ -333,6 +334,7 @@ export const statusStatementById = async (req, res) => {
                 `);
             };
             res.json(200);
+            next();
         } catch (error) {
             console.log(error);
         } finally {

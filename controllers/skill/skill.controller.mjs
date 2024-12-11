@@ -105,7 +105,7 @@ export const skillsId = async (req, res) => {
     };
 };
 
-export const editSkill = async (req, res) => {
+export const editSkill = async (req, res, next) => {
     console.log(req.body)
     if ( req.data ) {
         let conn;
@@ -118,6 +118,7 @@ export const editSkill = async (req, res) => {
                     WHERE id = ${req.body.id};
                 `);
             res.json(200);
+            next();
         } catch (error) {
             console.log(error);
         } finally {
@@ -126,7 +127,7 @@ export const editSkill = async (req, res) => {
     };
 };
 
-export const statusSkill = async (req, res) => {
+export const statusSkill = async (req, res, next) => {
     if ( req.data ) {
         let conn;
         try {
@@ -137,6 +138,7 @@ export const statusSkill = async (req, res) => {
                 WHERE id = ${req.body.id};
             `);
             res.json(200);
+            next();
         } catch (error) {
             console.log(error);
         } finally {

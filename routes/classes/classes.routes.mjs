@@ -1,6 +1,12 @@
 import { Router } from "express";
 
 import { verifyToken } from "../../controllers/users/users.controller.mjs";
+import {
+    beforeCRUD,
+    afterCRUD,
+    add,
+    filter
+} from "../../controllers/user_actions/user_actions.controller.mjs";
 
 import {
     getClasses,
@@ -19,19 +25,19 @@ export const classes = Router();
 classes.get("/", verifyToken, getClasses);
 
 //?GET CLASSES WITH FILTER
-classes.put("/filter", verifyToken, filterClasses);
+classes.put("/filter", verifyToken, filter, filterClasses);
 
 //?MODIFY STATUS TO CLASSES
-classes.put("/status", verifyToken, statusClass);
+classes.put("/status", verifyToken, beforeCRUD, statusClass, afterCRUD);
 
 //?DELETE CLASSES
-classes.put("/delete", verifyToken, deleteClass);
+classes.put("/delete", verifyToken, beforeCRUD, deleteClass);
 
 //?EDIT CLASSES
-classes.put("/edit", verifyToken, editClass);
+classes.put("/edit", verifyToken, beforeCRUD, editClass, afterCRUD);
 
 //?ADD CLASSES
-classes.post("/add", verifyToken, addClass);
+classes.post("/add", verifyToken, add, addClass);
 
 //?SEARCH CLASSES BY ALUMNO ID
 classes.put("/studentId", verifyToken, getClassesByStudentId);

@@ -226,7 +226,7 @@ export const getQuestionsAnswers = async (req, res) => {
     };
 };
 
-export const editQuestions = async (req, res) => {
+export const editQuestions = async (req, res, next) => {
     console.log(req.body)
     if ( req.data ) {
         let conn;
@@ -259,6 +259,7 @@ export const editQuestions = async (req, res) => {
                     id = ${req.body.id};
                 `);
             res.json(200);
+            next();
         } catch (error) {
             console.log(error);
         } finally {
@@ -267,7 +268,7 @@ export const editQuestions = async (req, res) => {
     }
 };
 
-export const statusQuestionById = async (req, res) => {
+export const statusQuestionById = async (req, res, next) => {
     if ( req.data ) {
         let conn;
         try {
@@ -292,6 +293,7 @@ export const statusQuestionById = async (req, res) => {
                 `);
             };
             res.json(200);
+            next();
         } catch (error) {
             console.log(error);
         } finally {

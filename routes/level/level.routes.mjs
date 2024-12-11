@@ -1,7 +1,13 @@
 import { Router } from "express";
 
 import { verifyToken } from "../../controllers/users/users.controller.mjs";
-import { getInfo } from "../../controllers/user_actions/user_actions.controller.mjs";
+import {
+    beforeCRUD,
+    afterCRUD,
+    add,
+    filter
+} from "../../controllers/user_actions/user_actions.controller.mjs";
+
 import {
     getLevels,
     editLevel,
@@ -22,19 +28,19 @@ levels.get("/", verifyToken, getLevels);
 levels.get("/active", verifyToken, getActiveLevels);
 
 //?EDIT LEVEL
-levels.put("/edit", verifyToken, editLevel);
+levels.put("/edit", verifyToken, beforeCRUD, editLevel, afterCRUD);
 
 //?LEVEL CHANGE STATUS
-levels.put("/status", verifyToken, getInfo, statusLevel);
+levels.put("/status", verifyToken, beforeCRUD, statusLevel, afterCRUD);
 
 //?LEVEL ADD
-levels.post("/add", verifyToken, addLevel);
+levels.post("/add", verifyToken, add, addLevel);
 
 //?DELETE LEVEL
-levels.put("/delete", verifyToken, deleteLevel);
+levels.put("/delete", verifyToken, beforeCRUD, deleteLevel);
 
 //?SEARCH LEVELS
-levels.put("/search", verifyToken, searchLevel);
+levels.put("/search", verifyToken, filter, searchLevel);
 
 //?GET ACTIVE LEVELS, SKILLS AND BLOCKS
 levels.get("/activeLevelsSkillsBlocks", verifyToken, getActiveLevelsSkillsBlocks);

@@ -204,7 +204,7 @@ export const blocksById = async (req, res) => {
     };
 };
 
-export const editBlock = async (req, res) => {
+export const editBlock = async (req, res, next) => {
     console.log(req.body)
     if ( req.data ) {
         let conn;
@@ -221,6 +221,7 @@ export const editBlock = async (req, res) => {
                 WHERE id = ${req.body.id};
             `);
             res.json(200);
+            next();
         } catch (error) {
             console.log(error);
         } finally {
@@ -229,7 +230,7 @@ export const editBlock = async (req, res) => {
     };
 };
 
-export const statusBlock = async (req, res) => {
+export const statusBlock = async (req, res, next) => {
     if ( req.data ) {
         let conn;
         try {
@@ -239,6 +240,7 @@ export const statusBlock = async (req, res) => {
                 WHERE id = ${req.body.id};
             `);
             res.json(200);
+            next();
         } catch (error) {
             console.log(error);
         } finally {

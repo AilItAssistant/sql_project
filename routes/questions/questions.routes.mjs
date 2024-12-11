@@ -2,6 +2,12 @@ import { Router } from "express";
 
 import { verifyToken } from "../../controllers/users/users.controller.mjs";
 import {
+    beforeCRUD,
+    afterCRUD,
+    add
+} from "../../controllers/user_actions/user_actions.controller.mjs";
+
+import {
     addQuestion,
     getQuestionById,
     getQuestionsAnswers,
@@ -15,7 +21,7 @@ import {
 export const questions = Router();
 
 //?PUSH QUESTION
-questions.post("/add", verifyToken, addQuestion);
+questions.post("/add", verifyToken, add, addQuestion);
 
 //?GET QUESTION BY ID
 questions.put("/getById", verifyToken, getQuestionById);
@@ -24,13 +30,13 @@ questions.put("/getById", verifyToken, getQuestionById);
 questions.post("/getQuestionsAnswers", verifyToken, getQuestionsAnswers);
 
 //?EDIT QUESTIONS
-questions.put("/edit", verifyToken, editQuestions);
+questions.put("/edit", verifyToken, beforeCRUD, editQuestions, afterCRUD);
 
 //?INACTIVATE QUESTION
-questions.put("/status", verifyToken, statusQuestionById);
+questions.put("/status", verifyToken, beforeCRUD, statusQuestionById, afterCRUD);
 
 //?DELETE QUESTION
-questions.put("/delete", verifyToken, deleteQuestionById);
+questions.put("/delete", verifyToken, beforeCRUD, deleteQuestionById);
 
 //?GET QUESTIONS AND ANSWERS BY BLOCK ID
 questions.post("/getQuestionsAnswersByBlockId", verifyToken, getQuestionsAnswersByBlockId);

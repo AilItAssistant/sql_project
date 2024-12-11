@@ -1,6 +1,13 @@
 import { Router } from "express";
 
-import { verifyToken } from "../../controllers/users/users.controller.mjs"
+import { verifyToken } from "../../controllers/users/users.controller.mjs";
+import {
+    beforeCRUD,
+    afterCRUD,
+    add,
+    filter
+} from "../../controllers/user_actions/user_actions.controller.mjs";
+
 import {
     getTeachers,
     filterTeachers,
@@ -19,19 +26,19 @@ export const teachers = Router();
 teachers.get("/", verifyToken, getTeachers);
 
 //?GET ALL TEACHERS WITH FILTERS
-teachers.put("/filter", verifyToken, filterTeachers);
+teachers.put("/filter", verifyToken, filter,  filterTeachers);
 
 //?DELETE TEACHER BY ID
-teachers.put("/delete", verifyToken, deleteTeacher);
+teachers.put("/delete", verifyToken, beforeCRUD, deleteTeacher);
 
 //?CHANGE STATUS
-teachers.put("/status", verifyToken, statusTeacher);
+teachers.put("/status", verifyToken, beforeCRUD, statusTeacher, afterCRUD);
 
 //?ADD TEACHER
-teachers.post("/add", verifyToken, addTeacher);
+teachers.post("/add", verifyToken, add, addTeacher);
 
 //?EDIT TEACHER
-teachers.put("/edit", verifyToken, editTeacher);
+teachers.put("/edit", verifyToken, beforeCRUD, editTeacher, afterCRUD);
 
 //?ADD CLASS TO TEACHER
 teachers.put("/addClass", verifyToken, addClass);

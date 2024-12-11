@@ -62,7 +62,7 @@ export const getActiveLevels = async (req, res) => {
     };
 };
 
-export const editLevel = async (req, res) => {
+export const editLevel = async (req, res, next) => {
     if ( req.data ) {
         let conn;
         try {
@@ -74,6 +74,7 @@ export const editLevel = async (req, res) => {
                     id = ${req.body.id};
             `);
             res.json(200);
+            next();
         } catch (error) {
             console.log(error);
         } finally {
@@ -82,7 +83,7 @@ export const editLevel = async (req, res) => {
     };
 };
 
-export const statusLevel = async (req, res) => {
+export const statusLevel = async (req, res, next) => {
     if ( req.data ) {
         let conn;
         try {
@@ -93,6 +94,7 @@ export const statusLevel = async (req, res) => {
                 WHERE id = ${req.body.id};
             `);
             res.json(200);
+            next();
         } catch (error) {
             console.log(error);
         } finally {

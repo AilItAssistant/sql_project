@@ -204,13 +204,13 @@ export const filterAlumnos = async (req, res) => {
     };
 };
 
-export const statusAlumno = async (req, res) => {
+export const statusAlumno = async (req, res, next) => {
     if ( req.data ) {
         let conn;
         try {
             conn = await pool.getConnection();
             if( req.body.status === "active" ) {
-                let rows = await conn.query(`
+                await conn.query(`
                     UPDATE
                         students
                     SET
@@ -219,7 +219,7 @@ export const statusAlumno = async (req, res) => {
                         id = ${req.body.id};
                 `);
             } else if( req.body.status === "inactive" ) {
-                let rows = await conn.query(`
+                await conn.query(`
                     UPDATE
                         students
                     SET
@@ -228,7 +228,7 @@ export const statusAlumno = async (req, res) => {
                         id = ${req.body.id};
                 `);
             }else {
-                let rows = await conn.query(`
+                await conn.query(`
                     UPDATE
                         students
                     SET
@@ -238,6 +238,7 @@ export const statusAlumno = async (req, res) => {
                 `);
             };
             res.json(200);
+            next();
         } catch (error) {
             console.log(error);
         } finally {
@@ -308,7 +309,7 @@ export const addAlumno = async (req, res) => {
     };
 };
 
-export const editAlumno = async (req, res) => {
+export const editAlumno = async (req, res, next) => {
     if ( req.data ) {
         let conn;
         try {
@@ -330,6 +331,7 @@ export const editAlumno = async (req, res) => {
                     id = ${req.body.id};
             `);
             res.json(200);
+            next();
         } catch (error) {
             console.log(error);
         } finally {

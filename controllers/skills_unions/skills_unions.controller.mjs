@@ -74,7 +74,7 @@ export const deleteSkillsUnions = async (req, res) => {
 };
 
 //?DESACTIVATE UNIONS
-export const desactivateSkillsUnions = async (req, res) => {
+export const desactivateSkillsUnions = async (req, res, next) => {
     if ( req.data ) {
         let conn;
         try {
@@ -91,6 +91,7 @@ export const desactivateSkillsUnions = async (req, res) => {
                 await conn.query(`UPDATE skills_unions SET status_id = 1 WHERE id = ${req.body.id};`);
             };
             res.json(200);
+            next();
         } catch (error) {
             console.log(error);
         } finally {
@@ -100,7 +101,7 @@ export const desactivateSkillsUnions = async (req, res) => {
 };
 
 //?EDIT UNION
-export const editSkillsUnions = async (req, res) => {
+export const editSkillsUnions = async (req, res, next) => {
     console.log(req.body)
     if ( req.data ) {
         let conn;
@@ -115,6 +116,7 @@ export const editSkillsUnions = async (req, res) => {
                 WHERE id = ${req.body.id};
             `);
             res.json(200);
+            next();
         } catch (error) {
             console.log(error);
         } finally {

@@ -207,7 +207,7 @@ export const deleteTeacher = async (req, res) => {
     };
 };
 
-export const statusTeacher = async (req, res) => {
+export const statusTeacher = async (req, res, next) => {
     if ( req.data ) {
         let conn;
         try {
@@ -241,6 +241,7 @@ export const statusTeacher = async (req, res) => {
                 `);
             };
             res.json(200);
+            next();
         } catch (error) {
             console.log(error);
         } finally {
@@ -271,7 +272,7 @@ export const addTeacher = async (req, res) => {
     };
 };
 
-export const editTeacher = async (req, res) => {
+export const editTeacher = async (req, res, next) => {
     if ( req.data ) {
         let conn;
         try {
@@ -291,6 +292,7 @@ export const editTeacher = async (req, res) => {
                         id = ${req.body.id};
                 `);
             res.json(200);
+            next();
         } catch (error) {
             console.log(error);
         } finally {
