@@ -207,7 +207,6 @@ export const entryPage = async (req, res, next) => {
     if ( req.data ) {
         try {
             conn = await pool.getConnection();
-            console.log(req.body)
             await conn.query(`
                 INSERT
                     INTO user_actions(user_id, action_type)
