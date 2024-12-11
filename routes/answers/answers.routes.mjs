@@ -3,7 +3,8 @@ import { Router } from "express";
 import { verifyToken } from "../../controllers/users/users.controller.mjs";
 import {
     beforeCRUD,
-    afterCRUD
+    afterCRUD,
+    getInfo
 } from "../../controllers/user_actions/user_actions.controller.mjs";
 
 import {
@@ -17,7 +18,7 @@ import {
 export const answers = Router();
 
 //?GET ANSWERS BY ID
-answers.put("/getById", verifyToken, getAnswerById);
+answers.put("/getById", verifyToken, getInfo, getAnswerById);
 
 //?EDIT ANSWERS
 answers.put("/edit", verifyToken, beforeCRUD, editAnswers, afterCRUD);
@@ -29,4 +30,4 @@ answers.put("/status", verifyToken, beforeCRUD, statusAnswerById, afterCRUD);
 answers.put("/delete", verifyToken, beforeCRUD, deleteAnswerById);
 
 //?DELETE PHOTO TO ANSWERS AND PHOTO TABLE
-answers.put("/deleteImage", verifyToken, deleteImage);
+answers.put("/deleteImage", verifyToken, getInfo, deleteImage);

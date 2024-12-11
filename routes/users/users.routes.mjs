@@ -4,7 +4,8 @@ import {
     beforeCRUD,
     afterCRUD,
     add,
-    filter
+    filter,
+    getInfo
 } from "../../controllers/user_actions/user_actions.controller.mjs";
 
 import {
@@ -22,7 +23,7 @@ import {
 export const users = Router();
 
 //?GET ALL USERS
-users.get("/", verifyToken, getUsers);
+users.get("/", verifyToken,  getInfo, getUsers);
 
 //?GET ALL USERS WITH FILTERS
 users.put("/filter", verifyToken, filter, filterUsers);

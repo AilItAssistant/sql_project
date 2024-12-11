@@ -5,7 +5,8 @@ import {
     beforeCRUD,
     afterCRUD,
     add,
-    filter
+    filter,
+    getInfo
 } from "../../controllers/user_actions/user_actions.controller.mjs";
 
 import {
@@ -46,13 +47,13 @@ skills.put("/delete", verifyToken, beforeCRUD, deleteSkill);
 skills.put("/search", verifyToken, filter,  searchSkill);
 
 //?GET SKILLS BY ID
-skills.post("/skillsId", verifyToken, skillsId);
+skills.post("/skillsId", verifyToken, getInfo, skillsId);
 
 //?GET SKILL BY LEVEL ID
-skills.post("/skillsLevel", verifyToken, getSkillsByLevels);
+skills.post("/skillsLevel", verifyToken, getInfo, getSkillsByLevels);
 
 //?ADD LEVEL TO SKILL
-skills.post("/addLeveltoSkill", verifyToken, addLeveltoSkill);
+skills.post("/addLeveltoSkill", verifyToken, getInfo, addLeveltoSkill);
 
 //?DELETE LEVEL TO SKILL
-skills.put("/deleteLeveltoSkill", verifyToken, deleteLeveltoSkill);
+skills.put("/deleteLeveltoSkill", verifyToken, getInfo, deleteLeveltoSkill);

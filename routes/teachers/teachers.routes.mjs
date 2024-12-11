@@ -5,7 +5,8 @@ import {
     beforeCRUD,
     afterCRUD,
     add,
-    filter
+    filter,
+    getInfo
 } from "../../controllers/user_actions/user_actions.controller.mjs";
 
 import {
@@ -41,10 +42,10 @@ teachers.post("/add", verifyToken, add, addTeacher);
 teachers.put("/edit", verifyToken, beforeCRUD, editTeacher, afterCRUD);
 
 //?ADD CLASS TO TEACHER
-teachers.put("/addClass", verifyToken, addClass);
+teachers.put("/addClass", verifyToken, getInfo, addClass);
 
 //?DELETE CLASS TO TEACHER
-teachers.put("/deleteClass", verifyToken, deleteClass);
+teachers.put("/deleteClass", verifyToken, getInfo, deleteClass);
 
 //?TEACHERS BY CLASSID
-teachers.put("/teachersByClassId", verifyToken, teacherByClassId);
+teachers.put("/teachersByClassId", verifyToken, getInfo, teacherByClassId);

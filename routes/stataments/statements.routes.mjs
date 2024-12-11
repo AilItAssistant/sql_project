@@ -4,7 +4,8 @@ import  { verifyToken } from "../../controllers/users/users.controller.mjs";
 import {
     beforeCRUD,
     afterCRUD,
-    add
+    add,
+    getInfo
 } from "../../controllers/user_actions/user_actions.controller.mjs";
 
 import {
@@ -27,10 +28,10 @@ export const statements = Router();
 statements.get("/", verifyToken, getStatements);
 
 //?GET STATEMENTS BY LEVEL_ID AND SKILL_ID
-statements.post("/levelSkill", verifyToken, levelSkillStatements);
+statements.post("/levelSkill", verifyToken, getInfo, levelSkillStatements);
 
 //?GET STATEMENTS BY LEVEL_ID, BLOCK_ID AND SKILL_ID
-statements.post("/levelSkillBlock", verifyToken, levelSkillBlockStatements);
+statements.post("/levelSkillBlock", verifyToken, getInfo, levelSkillBlockStatements);
 
 //?GET STATEMENTS AND DETAILS
 statements.get("/details", verifyToken, getStatementsAndDetails);
@@ -51,7 +52,7 @@ statements.put("/status", verifyToken, beforeCRUD, statusStatementById, afterCRU
 statements.put("/delete", verifyToken, beforeCRUD, deleteStatementById);
 
 //?DELETE PHOTO TO STATEMENTS AND PHOTO TABLE
-statements.put("/deleteImage", verifyToken, deleteImage);
+statements.put("/deleteImage", verifyToken, getInfo, deleteImage);
 
 //?GET STATEMENTS, QUESTIONS AND ANSWERS WITH ALL DATA BY LEVEL, SKILL AND BLOCK ID
-statements.post("/getAllByStructureIds", verifyToken, getAllByStructureIds);
+statements.post("/getAllByStructureIds", verifyToken, getInfo, getAllByStructureIds);

@@ -3,7 +3,8 @@ import { Router } from "express";
 import { verifyToken } from "../../controllers/users/users.controller.mjs";
 import {
     beforeCRUD,
-    afterCRUD
+    afterCRUD,
+    getInfo
 } from "../../controllers/user_actions/user_actions.controller.mjs";
 
 import {
@@ -33,16 +34,16 @@ skills_unions.put("/status", verifyToken, beforeCRUD, desactivateSkillsUnions, a
 skills_unions.put("/edit", verifyToken, beforeCRUD, editSkillsUnions, afterCRUD);
 
 //?ADD SKILL_UNION
-skills_unions.post("/add", verifyToken, addSkillsUnions);
+skills_unions.post("/add", verifyToken, getInfo, addSkillsUnions);
 
 //?ADD SKILL TO UNION
-skills_unions.post("/addSkilltoUnion", verifyToken, addSkilltoUnion);
+skills_unions.post("/addSkilltoUnion", verifyToken, getInfo, addSkilltoUnion);
 
 //?DELETE SKILL TO UNION
-skills_unions.put("/deleteSkilltoUnion", verifyToken, deleteSkilltoUnion);
+skills_unions.put("/deleteSkilltoUnion", verifyToken, getInfo, deleteSkilltoUnion);
 
 //?ADD LEVEL TO UNION
-skills_unions.post("/addLeveltoUnion", verifyToken, addLeveltoUnion);
+skills_unions.post("/addLeveltoUnion", verifyToken, getInfo, addLeveltoUnion);
 
 //?DELETE LEVEL TO UNION
-skills_unions.put("/deleteLeveltoUnion", verifyToken, deleteLeveltoUnion);
+skills_unions.put("/deleteLeveltoUnion", verifyToken, getInfo, deleteLeveltoUnion);

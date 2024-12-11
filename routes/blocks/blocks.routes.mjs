@@ -5,7 +5,8 @@ import {
     beforeCRUD,
     afterCRUD,
     add,
-    filter
+    filter,
+    getInfo
 } from "../../controllers/user_actions/user_actions.controller.mjs";
 
 import {
@@ -49,22 +50,22 @@ blocks.put("/delete", verifyToken, beforeCRUD, deleteBlock);
 blocks.put("/search", verifyToken, filter, searchBlock);
 
 //?GET BLOCK BY ID
-blocks.post("/blocksId", verifyToken, blocksById);
+blocks.post("/blocksId", verifyToken, getInfo, blocksById);
 
 //?BLOCKS CHANGE IS_SELECTED
 blocks.put("/selected", verifyToken, beforeCRUD, selectedChange);
 
 //?ADD SKILL TO BLOCK
-blocks.post("/addSkilltoBlock", verifyToken, addSkilltoBlock);
+blocks.post("/addSkilltoBlock", verifyToken, getInfo, addSkilltoBlock);
 
 //?DELETE SKILL TO BLOCK
-blocks.put("/deleteSkilltoBlock", verifyToken, deleteSkilltoBlock);
+blocks.put("/deleteSkilltoBlock", verifyToken, getInfo, deleteSkilltoBlock);
 
 //?ADD LEVEL TO BLOCK
-blocks.post("/addLeveltoBlock", verifyToken, addLeveltoBlock);
+blocks.post("/addLeveltoBlock", verifyToken, getInfo, addLeveltoBlock);
 
 //?DELETE LEVEL TO BLOCK
-blocks.put("/deleteLeveltoBlock", verifyToken, deleteLeveltoBlock);
+blocks.put("/deleteLeveltoBlock", verifyToken, getInfo, deleteLeveltoBlock);
 
 //?//?GET BLOCKS BY SKILL_ID AND LEVEL_ID
-blocks.post("/getBlocksByLevelSkill", verifyToken, getBlocksByLevelSkill);
+blocks.post("/getBlocksByLevelSkill", verifyToken, getInfo, getBlocksByLevelSkill);

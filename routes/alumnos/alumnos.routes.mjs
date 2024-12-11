@@ -5,7 +5,8 @@ import {
     beforeCRUD,
     afterCRUD,
     add,
-    filter
+    filter,
+    getInfo
 } from "../../controllers/user_actions/user_actions.controller.mjs";
 
 import {
@@ -41,10 +42,10 @@ alumnos.put("/edit", verifyToken, beforeCRUD, editAlumno, afterCRUD);
 alumnos.post("/add", verifyToken, add, addAlumno);
 
 //?ADD CLASS TO ALUMNO
-alumnos.put("/addClass", verifyToken, addClass);
+alumnos.put("/addClass", verifyToken, getInfo, addClass);
 
 //?DELETE CLASS TO ALUMNO
-alumnos.put("/deleteClass", verifyToken, deleteClass);
+alumnos.put("/deleteClass", verifyToken, getInfo, deleteClass);
 
 //?STUDENTS BY CLASSID
-alumnos.put("/alumnosByClassId", verifyToken, alumnoByClassId);
+alumnos.put("/alumnosByClassId", verifyToken, getInfo, alumnoByClassId);

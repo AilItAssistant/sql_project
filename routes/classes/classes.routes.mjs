@@ -5,7 +5,8 @@ import {
     beforeCRUD,
     afterCRUD,
     add,
-    filter
+    filter,
+    getInfo
 } from "../../controllers/user_actions/user_actions.controller.mjs";
 
 import {
@@ -40,7 +41,7 @@ classes.put("/edit", verifyToken, beforeCRUD, editClass, afterCRUD);
 classes.post("/add", verifyToken, add, addClass);
 
 //?SEARCH CLASSES BY ALUMNO ID
-classes.put("/studentId", verifyToken, getClassesByStudentId);
+classes.put("/studentId", verifyToken, getInfo, getClassesByStudentId);
 
 //?SEARCH CLASSES BY TEACHER ID
-classes.put("/teacherId", verifyToken, getClassesByTeacherId);
+classes.put("/teacherId", verifyToken, getInfo, getClassesByTeacherId);

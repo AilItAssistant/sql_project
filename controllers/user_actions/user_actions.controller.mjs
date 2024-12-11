@@ -213,9 +213,36 @@ export const entryPage = async (req, res, next) => {
                 VALUES
                     (${req.data.id}, 'entry in page: ${req.body.name}');
             `);
-            res.status(200);
+            res.status(200).end();
+            next();
         } catch (error) {
             console.log(error);
+            next();
+        } finally {
+            if (conn) return conn.end();
+        };
+    };
+};
+
+export const getInfo = async (req, res, next) => {
+    let conn;
+    let table = req.baseUrl.split('/')[2];
+    if(table === "alumnos"){table = "students"};
+    let action = "filter";
+    if ( req.data ) {
+        try {
+            conn = await pool.getConnection();
+            let content = JSON.stringify(req.body);
+            await conn.query(`
+                INSERT
+                    INTO user_actions(user_id, action_type, input_data)
+                VALUES
+                    (${req.data.id}, '${table + " " + action}','${content}');
+            `);
+            next();
+        } catch (error) {
+            console.log(error);
+            next();
         } finally {
             if (conn) return conn.end();
         };
