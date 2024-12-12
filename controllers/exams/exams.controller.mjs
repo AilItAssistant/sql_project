@@ -140,9 +140,11 @@ export const generateExamByLevel = async (req, res) => {
 
             for(let s = 0; skillsWithoutUnions.length > s; s++){
                 let blocks = await conn.query(`
-                    select b.id, b.question_type_id, sb.skill_id, b.individual_score, b.max_score from blocks b
+                    select b.id, b.question_type_id, sb.skill_id, b.individual_score, b.max_score
+                    from blocks b
                     left join skills_blocks sb on sb.block_id = b.id
-                    where b.status_id = 1 and b.is_selected = 1 and sb.skill_id = ${skillsWithoutUnions[s].id}`);
+                    left join levels_blocks lb on lb.block_id = b.id
+                    where b.status_id = 1 and b.is_selected = 1 and sb.skill_id = ${skillsWithoutUnions[s].id} and lb.level_id = ${req.body.level_id}`);
                 for(let b = 0; blocks.length > b; b++){
                     let type = await conn.query(`select * from question_types where id = ${blocks[b].question_type_id}`);
                     type = type.map( element => {

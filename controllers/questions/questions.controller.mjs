@@ -20,7 +20,7 @@ export const addQuestion = async (req, res) => {
                         INSERT INTO
                             questions (content, skill_id, score, level_id, statement_id, photo_id, block_id)
                         VALUES (
-                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${req.body.statement_id}, ${id}, ${req.body.block});
+                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${req.body.statement_id}, ${id}, ${req.body.block_id});
                     `);
                     question_id = questions.insertId.toString();
                 } else {
@@ -28,7 +28,7 @@ export const addQuestion = async (req, res) => {
                         INSERT INTO
                             questions (content, skill_id, score, level_id, photo_id, block_id)
                         VALUES (
-                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${id}, ${req.body.block});
+                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${id}, ${req.body.block_id});
                     `);
                     question_id = questions.insertId.toString();
                 };
@@ -38,7 +38,7 @@ export const addQuestion = async (req, res) => {
                         INSERT INTO
                             questions ( content, skill_id, score, level_id, statement_id, block_id)
                         VALUES (
-                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${req.body.statement_id}, ${req.body.block});
+                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${req.body.statement_id}, ${req.body.block_id});
                     `);
                     question_id = questions.insertId.toString();
                 } else {
@@ -46,7 +46,7 @@ export const addQuestion = async (req, res) => {
                         INSERT INTO
                             questions (content, skill_id, score, level_id, block_id)
                         VALUES (
-                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${req.body.block});
+                            '${req.body.question}', ${req.body.skill_id}, ${req.body.puntuation}, ${req.body.level_id}, ${req.body.block_id});
                     `);
                     question_id = questions.insertId.toString();
                 };
@@ -246,18 +246,22 @@ export const editQuestions = async (req, res, next) => {
             } else {
                 let photo_id = null;
             };
+            console.log(req.body)
+            console.log()
             await conn.query(`
                 UPDATE
                     questions
                 SET
-                    statement_id = COALESCE(${req.body.statement_id}, statement_id),
-                    block_id = COALESCE(${req.body.block_id}, block_id),
-                    score = COALESCE(${req.body.puntuation}, score),
-                    content = COALESCE('${req.body.question}', content),
-                    photo_id = COALESCE(${photoId}, photo_id)
+                    score = CASE WHEN '${req.body.puntuation}' != 'null' THEN '${req.body.puntuation}' ELSE score END,
+                    statement_id = CASE WHEN ${req.body.statement_id} IS NOT NULL THEN ${req.body.statement_id} ELSE statement_id END,
+                    level_id = CASE WHEN ${req.body.level_id} IS NOT NULL THEN ${req.body.level_id} ELSE level_id END,
+                    skill_id = CASE WHEN ${req.body.skill_id} IS NOT NULL THEN ${req.body.skill_id} ELSE skill_id END,
+                    block_id = CASE WHEN ${req.body.block_id} IS NOT NULL THEN ${req.body.block_id} ELSE block_id END,
+                    content = CASE WHEN '${req.body.question}' != 'null' THEN '${req.body.question}' ELSE content END,
+                    photo_id = CASE WHEN ${photoId} IS NOT NULL THEN ${photoId} ELSE photo_id END
                 WHERE
                     id = ${req.body.id};
-                `);
+            `);
             res.json(200);
             next();
         } catch (error) {

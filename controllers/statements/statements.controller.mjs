@@ -563,9 +563,9 @@ export const getStatementByStatementId = async (req, res) => {
                     left join levels l on q.level_id = l.id
                     left join skills sk on q.skill_id = sk.id
                     left join blocks b on q.block_id = b.id
-                    left join status st on q.status = st.id
+                    left join status st on q.status_id = st.id
                     left join photos p on q.photo_id = p.id
-                    where q.statment_id = ${statement[q].id};
+                    where q.statement_id = ${statement[q].id};
                 `);
                 question.forEach((element) => {
                     element.status_id = element.status_id.toString();
@@ -583,16 +583,21 @@ export const getStatementByStatementId = async (req, res) => {
                         select a.id, a.question_id, a.content, a.is_correct, a.status_id, a.letter, a.response,
                         st.name as status_name, a.photo_id, p.base64_data
                         from answers a
-                        left join status st on a.status = st.id
+                        left join status st on a.status_id = st.id
                         left join photos p on a.photo_id = p.id
                         where a.question_id = ${question[a].id};
                     `);
+                    answer.forEach((element) => {
+                        element.status_id = element.status_id.toString();
+                        element.id = element.id.toString();
+                        if (element.photo_id) {element.photo_id = element.photo_id.toString();};
+                        if (element.question_id) {element.question_id = element.question_id.toString();};
+                    });
                     question[a].answers.push(answer);
                 };
                 statement[q].questions.push(question)
             };
-            statements.push(statement);
-            res.json(statements);
+            res.json(statement);
         } catch (error) {
             console.log(error);
         } finally {

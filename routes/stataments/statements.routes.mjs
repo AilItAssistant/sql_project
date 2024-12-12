@@ -19,7 +19,8 @@ import {
     statusStatementById,
     deleteStatementById,
     deleteImage,
-    getAllByStructureIds
+    getAllByStructureIds,
+    getStatementByStatementId
 } from "../../controllers/statements/statements.controller.mjs";
 
 export const statements = Router();
@@ -56,3 +57,6 @@ statements.put("/deleteImage", verifyToken, getInfo, deleteImage);
 
 //?GET STATEMENTS, QUESTIONS AND ANSWERS WITH ALL DATA BY LEVEL, SKILL AND BLOCK ID
 statements.post("/getAllByStructureIds", verifyToken, getInfo, getAllByStructureIds);
+
+//?GET STATEMENTS, QUESTIONS AND ANSWERS WITH ALL DATA BY STATEMENT ID
+statements.post("/getStatementByStatementId", verifyToken, getInfo, getStatementByStatementId);

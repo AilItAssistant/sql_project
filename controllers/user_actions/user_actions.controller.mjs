@@ -6,7 +6,6 @@ export const beforeCRUD = async (req, res, next) => {
     let table = req.baseUrl.split('/')[2];
     if(table === "alumnos"){table = "students"};
     let action = req.route.path.split('/')[1];
-    console.log(req.data)
     if ( req.data ) {
         try {
             conn = await pool.getConnection();
@@ -33,21 +32,22 @@ export const beforeCRUD = async (req, res, next) => {
                 if(before.block_id){before.block_id = before.block_id.toString();};
                 if(before.department_id){before.department_id = before.department_id.toString();};
                 if(before.permission_id){before.permission_id = before.permission_id.toString();};
+                if(before.statement_id){before.statement_id = before.statement_id.toString();};
                 if(before.question_type_id){before.question_type_id = before.question_type_id.toString();};
-
+                console.log(before)
                 before = JSON.stringify(before);
                 await conn.query(`
                     INSERT
-                        INTO user_actions(user_id, action_type, input_data, data_before)
+                        INTO user_actions(user_id, affected_table, action_type, input_data, data_before)
                     VALUES
-                        (${req.data.id}, '${table + " " + action}','${content}', '${before}');
+                        (${req.data.id}, '${table}', '${action}','${content}', '${before}');
                 `);
             } else {
                 await conn.query(`
                     INSERT
-                        INTO user_actions(user_id, action_type, input_data)
+                        INTO user_actions(user_id, affected_table, action_type, input_data)
                     VALUES
-                        (${req.data.id}, '${table + " " + action}','${content}');
+                        (${req.data.id}, '${table}', '${action}','${content}');
                 `);
             };
             next();
@@ -62,7 +62,7 @@ export const beforeCRUD = async (req, res, next) => {
                 INSERT
                     INTO user_actions(user_id, input_data)
                 VALUES
-                    (${req.data.id},'Without data login');
+                    (${req.data.id}, 'Without data login');
             `);
             next();
         } catch (error) {
@@ -72,7 +72,7 @@ export const beforeCRUD = async (req, res, next) => {
     };
 };
 
-export const afterCRUD = async (req, res, next) => {
+export const afterCRUD = async (req, res,  next) => {
     let conn;
     let table = req.baseUrl.split('/')[2];
     if(table === "alumnos"){table = "students"};
@@ -103,21 +103,22 @@ export const afterCRUD = async (req, res, next) => {
                 if(before.block_id){before.block_id = before.block_id.toString();};
                 if(before.department_id){before.department_id = before.department_id.toString();};
                 if(before.permission_id){before.permission_id = before.permission_id.toString();};
+                if(before.statement_id){before.statement_id = before.statement_id.toString();};
                 if(before.question_type_id){before.question_type_id = before.question_type_id.toString();};
                 console.log(before)
                 before = JSON.stringify(before);
                 await conn.query(`
                     INSERT
-                        INTO user_actions(user_id, action_type, input_data, data_after)
+                        INTO user_actions(user_id, affected_table, action_type, input_data, data_after)
                     VALUES
-                        (${req.data.id}, '${table + " " + action}','${content}', '${before}');
+                        (${req.data.id}, '${table}', '${action}', '${content}', '${before}');
                 `);
             } else {
                 await conn.query(`
                     INSERT
-                        INTO user_actions(user_id, action_type, input_data)
+                        INTO user_actions(user_id, affected_table, action_type, input_data)
                     VALUES
-                        (${req.data.id}, '${table + " " + action}','${content}');
+                        (${req.data.id}, '${table}', '${action}', '${content}');
                 `);
             };
             next();
@@ -130,7 +131,7 @@ export const afterCRUD = async (req, res, next) => {
     };
 };
 
-export const exam = async (req, res, next) => {
+export const exam = async (req, res,  next) => {
     let conn;
     if ( req.data ) {
         try {
@@ -140,7 +141,7 @@ export const exam = async (req, res, next) => {
                 INSERT
                     INTO user_actions(user_id, action_type, input_data)
                 VALUES
-                    (${req.data.id}, 'create exam','${exam}');
+                    (${req.data.id}, 'create exam', '${exam}');
             `);
             next();
         } catch (error) {
@@ -152,7 +153,7 @@ export const exam = async (req, res, next) => {
     };
 };
 
-export const add = async (req, res, next) => {
+export const add = async (req, res,  next) => {
     let conn;
     let table = req.baseUrl.split('/')[2];
     if(table === "alumnos"){table = "students"};
@@ -163,9 +164,9 @@ export const add = async (req, res, next) => {
             let content = JSON.stringify(req.body);
             await conn.query(`
                 INSERT
-                    INTO user_actions(user_id, action_type, input_data)
+                    INTO user_actions(user_id, affected_table, action_type, input_data)
                 VALUES
-                    (${req.data.id}, '${table + " " + action}','${content}');
+                    (${req.data.id}, '${table}', '${action}','${content}');
             `);
             next();
         } catch (error) {
@@ -177,7 +178,7 @@ export const add = async (req, res, next) => {
     };
 };
 
-export const filter = async (req, res, next) => {
+export const filter = async (req, res,  next) => {
     let conn;
     let table = req.baseUrl.split('/')[2];
     if(table === "alumnos"){table = "students"};
@@ -188,9 +189,9 @@ export const filter = async (req, res, next) => {
             let filter = JSON.stringify(req.body);
             await conn.query(`
                 INSERT
-                    INTO user_actions(user_id, action_type, input_data)
+                    INTO user_actions(user_id, affected_table, action_type, input_data)
                 VALUES
-                    (${req.data.id}, '${table + " " + action}','${filter}');
+                    (${req.data.id}, '${table}', '${action}', '${filter}');
             `);
             next();
         } catch (error) {
@@ -209,9 +210,9 @@ export const entryPage = async (req, res, next) => {
             conn = await pool.getConnection();
             await conn.query(`
                 INSERT
-                    INTO user_actions(user_id, action_type)
+                    INTO user_actions(user_id, page)
                 VALUES
-                    (${req.data.id}, 'entry in page: ${req.body.name}');
+                    (${req.data.id}, '${req.body.name}');
             `);
             res.status(200).end();
             next();
@@ -224,7 +225,7 @@ export const entryPage = async (req, res, next) => {
     };
 };
 
-export const getInfo = async (req, res, next) => {
+export const getInfo = async (req, res,  next) => {
     let conn;
     let table = req.baseUrl.split('/')[2];
     if(table === "alumnos"){table = "students"};
@@ -235,9 +236,9 @@ export const getInfo = async (req, res, next) => {
             let content = JSON.stringify(req.body);
             await conn.query(`
                 INSERT
-                    INTO user_actions(user_id, action_type, input_data)
+                    INTO user_actions(user_id, affected_table, action_type, input_data)
                 VALUES
-                    (${req.data.id}, '${table + " " + action}','${content}');
+                    (${req.data.id}, '${table}', '${action}', '${content}');
             `);
             next();
         } catch (error) {
