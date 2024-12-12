@@ -213,11 +213,11 @@ export const editBlock = async (req, res, next) => {
             await conn.query(`
                 UPDATE blocks
                 SET
-                    name = COALESCE(${req.body.name}, name),
-                    question_type_id = COALESCE(${req.body.type}, question_type_id),
-                    max_score = COALESCE(${req.body.score}, max_score),
-                    individual_score = COALESCE(${req.body.individual_score}, individual_score),
-                    is_selected = COALESCE(${req.body.is_selected}, is_selected)
+                    name = CASE WHEN '${req.body.name}' IS NOT NULL AND '${req.body.name}' != 'null' THEN '${req.body.name}' ELSE name END,
+                    question_type_id = CASE WHEN ${req.body.type} IS NOT NULL THEN ${req.body.type} ELSE question_type_id END,
+                    max_score = CASE WHEN ${req.body.score} IS NOT NULL THEN '${req.body.score}' ELSE max_score END,
+                    individual_score = CASE WHEN ${req.body.individual_score} IS NOT NULL THEN '${req.body.individual_score}' ELSE individual_score END,
+                    is_selected = CASE WHEN ${req.body.is_selected} IS NOT NULL THEN '${req.body.is_selected}' ELSE is_selected END
                 WHERE id = ${req.body.id};
             `);
             res.json(200);

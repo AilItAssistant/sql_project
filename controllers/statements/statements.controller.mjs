@@ -292,6 +292,7 @@ export const editStatements = async (req, res, next) => {
                 SET
                     level_id = CASE WHEN ${req.body.level_id} IS NOT NULL THEN '${req.body.level_id}' ELSE level_id END,
                     skill_id = CASE WHEN ${req.body.skill_id} IS NOT NULL THEN '${req.body.skill_id}' ELSE skill_id END,
+                    block_id = CASE WHEN ${req.body.block_id} IS NOT NULL THEN '${req.body.block_id}' ELSE block_id END,
                     score = CASE WHEN ${req.body.score} IS NOT NULL THEN '${req.body.score}' ELSE score END,
                     text = CASE WHEN '${req.body.text}' IS NOT NULL AND '${req.body.text}' != 'null' THEN '${req.body.text}' ELSE text END,
                     content = CASE WHEN '${req.body.content}' IS NOT NULL AND '${req.body.content}' != 'null' THEN '${req.body.content}' ELSE content END,
