@@ -191,9 +191,10 @@ export const searchSkill = async (req, res) => {
         let conn;
         try {
             console.log(req.body)
+            let rows = "";
             conn = await pool.getConnection();
             if ( req.body.name === "" || req.body.name === null ){
-                let rows = await conn.query(`
+                rows = await conn.query(`
                     select
                         s.id as id,
                         s.name as name,
@@ -201,15 +202,15 @@ export const searchSkill = async (req, res) => {
                         st.id as status_id
                     from skills s
                     left join status st on s.status_id = st.id
-                    WHERE level_id LIKE ${req.body.level};
+                    left join levels_skills ls on ls.skill_id = s.id
+                    WHERE ls.level_id LIKE ${req.body.level};
                 `);
                 rows.forEach(element => {
                     element.id = element.id.toString();
-                    if(element.level_id){element.level_id = element.level_id.toString();}
+                    if(element.status_id){element.status_id = element.status_id.toString();}
                 });
-                res.json(rows);
             } else if( req.body.level === "" || req.body.level === null ){
-                let rows = await conn.query(`
+                rows = await conn.query(`
                         select
                         s.id as id,
                         s.name as name,
@@ -218,16 +219,13 @@ export const searchSkill = async (req, res) => {
                     from skills s
                     left join status st on s.status_id = st.id
                     WHERE s.name LIKE '${req.body.name}%';
-                    `);
-                console.log(rows)
+                `);
                 rows.forEach(element => {
                     element.id = element.id.toString();
-                    if(element.level_id){element.level_id = element.level_id.toString();}
                     if(element.status_id){element.status_id = element.status_id.toString();}
                 });
-                res.json(rows);
             } else if( req.body.level !== "" && req.body.name !== "" ){
-                let rows = await conn.query(`
+                rows = await conn.query(`
                     select
                         s.id as id,
                         s.name as name,
@@ -235,14 +233,33 @@ export const searchSkill = async (req, res) => {
                         st.id as status_id
                     from skills s
                     left join status st on s.status_id = st.id
-                    WHERE s.name LIKE '${req.body.name}%' AND level_id = ${req.body.level};`);
+                    left join levels_skills ls on ls.skill_id = s.id
+                    WHERE s.name LIKE '${req.body.name}%' AND ls.level_id = ${req.body.level};
+                `);
                 rows.forEach(element => {
                     element.id = element.id.toString();
-                    if(element.level_id){element.level_id = element.level_id.toString();}
+                    if(element.skill_id){element.skill_id = element.skill_id.toString();}
+                    if(element.status_id){element.status_id = element.status_id.toString();}
                 });
-                console.log(rows)
-                res.json(rows);
-            }
+            };
+            if(rows !== ""){
+                for(let i = 0; rows.length > i; i++){
+                    let levels = await conn.query(`
+                        select
+                            l.name as level,
+                            l.id as level_id
+                        from levels_skills ls
+                        join levels l on ls.level_id = l.id
+                        where ls.skill_id = ${rows[i].id};
+                    `);
+                    levels.forEach(element => {
+                        element.level_id = element.level_id.toString();
+                    });
+                    rows[i].levels = levels;
+                };
+            };
+            console.log(rows)
+            res.json(rows);
         } catch (error) {
             console.log(error);
         } finally {

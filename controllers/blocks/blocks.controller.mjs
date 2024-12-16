@@ -287,24 +287,34 @@ export const searchBlock = async (req, res) => {
     if ( req.data ) {
         let conn;
         try {
-            console.log(req.body)
+            let rows = "";
             conn = await pool.getConnection();
             if ( req.body.name === "" || req.body.name === null ){
-                let rows = await conn.query(`
-                    select
-                        b.id as id, b.name as name, b.status as status, b.skill_id as skill_id, s.name as skill_name, b.is_selected, b.max_score, qt.name AS question_type_name
-                    from blocks b
+                rows = await conn.query(`
+                    SELECT
+                        b.id AS id,
+                        b.name AS name,
+                        st.name AS status,
+                        st.id AS status_id,
+                        b.is_selected,
+                        b.max_score,
+                        qt.name AS question_type_name,
+                        qt.id AS question_type_id,
+                        b.individual_score
+                    FROM blocks b
                     LEFT JOIN question_types qt ON b.question_type_id = qt.id
-                    left join skills s on b.skill_id = s.id
-                    WHERE skill_id LIKE ${req.body.skill};
+                    left join status st on b.status_id = st.id
+                    join skills_blocks sb on sb.block_id = b.id
+                    WHERE sb.skill_id LIKE ${req.body.skill};
                 `);
                 rows.forEach(element => {
                 element.id = element.id.toString();
-                if(element.skill_id){element.skill_id = element.skill_id.toString();}
-            });
-                res.json(rows);
+                    if(element.status_id){element.status_id = element.status_id.toString();}
+                    if(element.id){element.id = element.id.toString();}
+                    if(element.question_type_id){element.question_type_id = element.question_type_id.toString();}
+                });
             } else if( req.body.skill === ""  || req.body.skill === null ){
-                let rows = await conn.query(`
+                rows = await conn.query(`
                     SELECT
                         b.id AS id,
                         b.name AS name,
@@ -324,35 +334,55 @@ export const searchBlock = async (req, res) => {
                     if(element.skill_id){element.skill_id = element.skill_id.toString();}
                     if(element.question_type_id){element.question_type_id = element.question_type_id.toString();}
                     if(element.status_id){element.status_id = element.status_id.toString();}
-            });
-                res.json(rows);
+                });
             } else if( req.body.skill !== "" && req.body.name !== "" ){
-                let rows = await conn.query(`
-                    select b.id as id, b.name as name, b.status as status, b.skill_id as skill_id, s.name as skill_name, b.is_selected, b.max_score, qt.name AS question_type_name
+                rows = await conn.query(`
+                    select
+                        b.id as id, b.name as name,
+                        st.name AS status,
+                        st.id AS status_id,
+                        b.is_selected, b.max_score,
+                        qt.name AS question_type_name
                     from blocks b
                     LEFT JOIN question_types qt ON b.question_type_id = qt.id
-                    left join skills s on b.skill_id = s.id
-                    WHERE b.name LIKE '${req.body.name}%' AND skill_id = ${req.body.skill};`);
+                    left join status st on b.status_id = st.id
+                    join skills_blocks sb on sb.block_id = b.id
+                    WHERE b.name LIKE '${req.body.name}%' AND sb.skill_id = ${req.body.skill};`);
                 rows.forEach(element => {
-                element.id = element.id.toString();
-                if(element.skill_id){element.skill_id = element.skill_id.toString();}
-            });
-            for(let i = 0; rows.length > i; i++){
-                let skills = await conn.query(`
-                    select
-                        l.name as skill,
-                        l.id as skill_id
-                    from skills_blocks sb
-                    join skills l on sb.skill_id = l.id
-                    where sb.block_id = ${rows[i].id};
-                `);
-                skills.forEach(element => {
-                    element.skill_id = element.skill_id.toString();
+                    element.id = element.id.toString();
+                    if(element.question_type_id){element.question_type_id = element.question_type_id.toString();}
+                    if(element.status_id){element.status_id = element.status_id.toString();}
                 });
-                rows[i].skills = skills;
             };
-                res.json(rows);
-            }
+            if(rows !== ""){
+                for(let i = 0; rows.length > i; i++){
+                    let skills = await conn.query(`
+                        select
+                            l.name as skill,
+                            l.id as skill_id
+                        from skills_blocks sb
+                        join skills l on sb.skill_id = l.id
+                        where sb.block_id = ${rows[i].id};
+                    `);
+                    skills.forEach(element => {
+                        element.skill_id = element.skill_id.toString();
+                    });
+                    rows[i].skills = skills;
+                    let levels = await conn.query(`
+                        select
+                            l.name as level,
+                            l.id as level_id
+                        from levels_blocks lb
+                        join levels l on lb.level_id = l.id
+                        where lb.block_id = ${rows[i].id};
+                    `);
+                    levels.forEach(element => {
+                        element.level_id = element.level_id.toString();
+                    });
+                    rows[i].levels = levels;
+                };
+            };
+            res.json(rows);
         } catch (error) {
             console.log(error);
         } finally {
